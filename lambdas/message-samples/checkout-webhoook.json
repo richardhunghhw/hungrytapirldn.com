@@ -1,0 +1,41 @@
+{
+    "created": "2023-05-06T13:56:47.123Z",
+    "order_id": "HTT230506006",
+    "order_costs": {
+        "currency": "GBP",
+        "subtotal": 700,
+        "shipping": 0,
+        "tax": 0,
+        "total": 700
+    },
+    "order_line_items": [
+        {
+            "id": "kaya-signature",
+            "stripe_id": "prod_Nk7ZiHSHFf24mL",
+            "price": 700,
+            "quantity": 2
+        },
+        {
+            "id": "kaya-vegan",
+            "stripe_id": "prod_Nk8T1CWRimuaIF",
+            "price": 700,
+            "quantity": 1
+        }
+    ],
+    "shipping_option": "free",
+    "shipping_address":{
+        "first_name": "",
+        "last_name": "",
+        "company_name": "",
+        "address_line1": "",
+        "address_line2": "",
+        "city": "",
+        "country": "",
+        "postcode": ""
+    },
+    "payment_channel": "bank_transfer",
+    "stripe_session": null,
+    
+    "email": "jimbo@hungrytapirldn.com", 
+    "phone": ""
+}
