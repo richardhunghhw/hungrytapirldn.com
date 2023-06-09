@@ -1,0 +1,27 @@
+# See https://developers.cloudflare.com/workers/wrangler/configuration/
+name = "hungrytapir-order-id-worker-test"
+main = "index.js"
+compatibility_date = "2023-04-29"
+
+kv_namespaces = [
+    { binding = "hungrytapir-session-store-test", id = "4230953db61145a69f27b46a1e3bc485" }
+]
+
+[vars]
+ENV = "staging"
+KV = "hungrytapir-session-store-test"
+KV_SEQ_ORDERID = "SEQ_ORDERID"
+AC_ALLOW_ORIGIN = "*"
+
+[env.prod]
+name = "hungrytapir-order-id-worker-prod"
+
+kv_namespaces = [
+    { binding = "hungrytapir-session-store-prod", id = "fe202902098e4e95ba2ddc0681c69a89" }
+]
+
+[env.prod.vars]
+ENV = "production"
+KV = "hungrytapir-session-store-prod"
+KV_SEQ_ORDERID = "SEQ_ORDERID"
+AC_ALLOW_ORIGIN = "https://www.hungrytapir.com"

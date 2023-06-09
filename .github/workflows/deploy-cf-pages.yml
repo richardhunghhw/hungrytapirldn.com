@@ -1,8 +1,13 @@
 on:
     push:
+        branches:
+            - main
+            - develop
         paths-ignore:
+            - '.devcontainer/**'
             - 'functions/**'
             - 'lambdas/**'
+            - 'scripts/**'
             - 'README.md'
 
 jobs:
@@ -26,8 +31,9 @@ jobs:
             - name: Publish
               uses: cloudflare/pages-action@v1
               with:
-                  projectName: hungrytapir-store
-                  directory: public
                   apiToken: '${{ env.CLOUDFLARE_API_TOKEN }}'
                   accountId: '${{ env.CLOUDFLARE_ACCOUNT_ID }}'
+                  projectName: hungrytapir-store
+                  directory: public
                   gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+                  wranglerVersion: '3'

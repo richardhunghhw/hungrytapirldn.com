@@ -1,2 +1,33 @@
-compatibility_date = "2023-05-18"
+# See https://developers.cloudflare.com/workers/wrangler/configuration/
+name = "hungrytapir-store-test"
+compatibility_date = "2023-05-31"
 compatibility_flags = ["streams_enable_constructors"]
+
+kv_namespaces = [
+    { binding = "CONTENT_STORE", id = "079af1ba003a4629bb5565a4a96e2de4", preview_id = "fbabe5eb5d7f43cd9c336fa1656473d1" },
+    { binding = "SESSION_STORE", id = "f1fed74c6d33454693529a8d760e6adc", preview_id = "333a005e0ac74c0ba392f0bf565184cb" }
+]
+
+[vars]
+AC_ALLOW_ORIGIN = "*"
+NODE_ENV="TEST"
+SESSION_SECRET="SESSION_SECRET"
+ENCRYPTION_SECRET="ENCRYPTION_SECRET"
+CONTENT_STORE_CACHE_ENABLED=true
+HOST_URL="http://localhost:8788"
+
+[env.prod]
+name = "hungrytapir-store-prod"
+
+kv_namespaces = [
+    { binding = "CONTENT_STORE", id = "xxx" },
+    { binding = "SESSION_STORE", id = "xxx" }
+]
+
+[env.prod.vars]
+AC_ALLOW_ORIGIN = "https://www.hungrytapir.com"
+NODE_ENV="PROD"
+SESSION_SECRET="SESSION_SECRET"
+ENCRYPTION_SECRET="ENCRYPTION_SECRET"
+CONTENT_STORE_CACHE_ENABLED=true
+HOST_URL="http://localhost:8788"

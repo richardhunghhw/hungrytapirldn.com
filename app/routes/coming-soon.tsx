@@ -11,8 +11,8 @@ export const meta: V2_MetaFunction = () => {
 
 export default function Index() {
 	return (
-		<div className='h-screen bg-htgreen px-6 pt-14 lg:px-8 overflow-y-scroll'>
-			<div className='mx-auto max-w-2xl py-32 sm:py-48 lg:py-56'>
+		<div className='h-screen overflow-y-scroll bg-htgreen px-6 sm:py-4 md:py-8 lg:px-8'>
+			<div className='mx-auto max-w-2xl py-12 md:py-32 lg:py-56'>
 				<div className='flex h-full flex-col items-center justify-center text-center'>
 					<img
 						src={logo}

@@ -1,4 +1,6 @@
-/** @type {import('@remix-run/dev').AppConfig} */
+/** 
+ * @type {import('@remix-run/dev').AppConfig} 
+ */
 module.exports = {
 	devServerBroadcastDelay: 1000,
 	ignoredRouteFiles: ['**/.*'],
@@ -11,9 +13,6 @@ module.exports = {
 	serverModuleFormat: 'esm',
 	serverPlatform: 'neutral',
 	tailwind: true,
-	// appDirectory: "app",
-	// assetsBuildDirectory: "public/build",
-	// publicPath: "/build/",
 	future: {
 		v2_errorBoundary: true,
 		v2_meta: true,

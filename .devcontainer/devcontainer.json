@@ -22,9 +22,7 @@
 	},
 
 	// Use 'postStartCommand' to run commands every time the container starts.
-	"postStartCommand": {
-		"op": "bash -i -c 'op inject -i .dev.vars.tpl -o .dev.vars; exit'"
-	},
+	"postStartCommand": ["bash", "container-postStart.sh"],
 
 	// Configure tool-specific properties.
 	"customizations": {
@@ -36,12 +34,20 @@
 				"ms-vscode-remote.remote-containers",
 				"donjayamanne.githistory",
 				"github.vscode-github-actions",
+				"GitHub.copilot",
 				"hashicorp.terraform",
 				"yzhang.markdown-all-in-one",
 				"esbenp.prettier-vscode",
 				"bradlc.vscode-tailwindcss",
 				"dsznajder.es7-react-js-snippets"
 			]
+		}
+	},
+
+	// Predefined ports
+	"portsAttributes": {
+		"8788": {
+			"label": "Remix"
 		}
 	}
 

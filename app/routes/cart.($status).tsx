@@ -47,9 +47,6 @@ const db_products: Product[] = [
 
 // Supply product data
 export async function loader({ params }: LoaderArgs) {
-	if (params?.NODE_ENV === 'PROD') {
-		return redirect('/coming-soon');
-	}
 	if (params?.status) {
 		console.log(params.status);
 	}

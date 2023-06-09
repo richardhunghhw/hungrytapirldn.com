@@ -1,9 +1,6 @@
 import { LoaderArgs, redirect } from '@remix-run/cloudflare';
 
 export async function loader({ params }: LoaderArgs) {
-	if (params?.NODE_ENV === 'PROD') {
-		return redirect('/coming-soon');
-	}
 	if (params?.sessionId) {
 		// fetch cart from session, if it exists
 		console.log(params?.sessionId);

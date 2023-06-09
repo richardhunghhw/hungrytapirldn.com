@@ -2,40 +2,60 @@
  * See https://tailwindcss.com/docs/functions-and-directives 
  */
 
-/**
- * This injects Tailwind's base styles and any base styles registered by
- * plugins.
- */
+/* Tailwind */
 @tailwind base;
-
-/**
-  * This injects Tailwind's component classes and any component classes
-  * registered by plugins.
-  */
 @tailwind components;
-
-/**
-  * This injects Tailwind's utility classes and any utility classes registered
-  * by plugins.
-  */
 @tailwind utilities;
+@tailwind screens;
 
-/**
- * Custom Styles
- */
-@layer base {
-	:root {
-		--color-primary: #133e31;
-		--color-secondary: #e9b345;
-		/* ... */
-	}
+/* Site Fonts */
+@font-face {
+    font-display: swap;
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 400;
+    src: url('/fonts/source-sans-pro-v21-latin-regular.woff2') format('woff2');
 }
 
-/**
- * This injects Tailwind's hover, focus, responsive, dark mode, and other 
- * variants of each class.
- *
- * If omitted, Tailwind will append these classes to the very end of
- * your stylesheet by default.
- */
-@tailwind variants;
+@font-face {
+    font-display: swap;
+    font-family: 'Dela Gothic One';
+    font-style: normal;
+    font-weight: 400;
+    src: url('/fonts/dela-gothic-one-v10-latin-regular.woff2') format('woff2');
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'Nunito Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: url('/fonts/nunito-sans-v15-latin-regular.woff2') format('woff2');
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    src: url('/fonts/roboto-v30-latin-regular.woff2') format('woff2');
+}
+
+/* Custom Styles */
+@layer utilities {
+    .bg-primary {
+        @apply bg-ht-green;
+    }
+
+    .bg-secondary {
+        @apply bg-ht-gold-light;
+    }
+
+    .text-primary {
+        @apply text-ht-gold;
+    }
+
+    .text-secondary {
+        @apply text-ht-green-dark;
+    }
+}
