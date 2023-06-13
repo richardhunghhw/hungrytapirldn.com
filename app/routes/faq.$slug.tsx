@@ -2,28 +2,28 @@
  * FAQ page
  */
 
-import { LoaderArgs, redirect } from '@remix-run/cloudflare';
+import { redirect } from '@remix-run/cloudflare';
 import { useLoaderData } from '@remix-run/react';
 import { isProd } from '~/utils/misc';
-import { HTAppLoadContext } from '~/utils/types';
-import { ContentStoreEntry, getContentByUrl } from '~/services/content-store';
+import type { HTActionArgs, HTAppLoadContext } from '~/utils/types';
+import type { ContentStoreEntry } from '~/services/content-store';
+import { getContentByUrl } from '~/services/content-store';
 
 // Fetch faq data content-store
 export async function loader({
     request: { url },
     context,
     params,
-}: LoaderArgs) {
-    const htContext = context as HTAppLoadContext;
+}: HTActionArgs) {
     try {
-        const result = await getContentByUrl(htContext, new URL(url));
+        const result = await getContentByUrl(context, new URL(url));
         if (!result || !result.entryExists) {
             throw new Error('Entry not found');
         }
         return result;
     } catch (error) {
         console.error(error); // TODO badlink
-        if (isProd(htContext)) return redirect('/404');
+        if (isProd(context)) return redirect('/404');
     }
 }
 

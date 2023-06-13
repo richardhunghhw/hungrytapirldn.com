@@ -1,6 +1,7 @@
 import type { V2_MetaFunction } from '@remix-run/react';
 import { Link } from '@remix-run/react';
-import { LoaderArgs, redirect } from '@remix-run/cloudflare';
+import { redirect } from '@remix-run/cloudflare';
+import type { HTLoaderArgs } from '~/utils/types';
 
 import kayaImage from '~/images/kaya.webp';
 
@@ -8,7 +9,7 @@ export const meta: V2_MetaFunction = () => {
     return [{ title: 'Hungry Tapir | Best Kaya in London' }];
 };
 
-export async function loader({ context }: LoaderArgs) {
+export async function loader({ context }: HTLoaderArgs) {
     if (context.NODE_ENV === 'PROD') {
         return redirect('/coming-soon');
     }

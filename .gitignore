@@ -20,6 +20,7 @@ Thumbs.db
 # Environment files
 .dev.vars
 .env
+.devcontainer/devcontainer.env
 
 # Wranlger frontend files
 functions/
@@ -29,4 +30,3 @@ app/styles/app.css
 
 # Misc 
 .cache/
-functions/order-id-worker-api/.*.vars

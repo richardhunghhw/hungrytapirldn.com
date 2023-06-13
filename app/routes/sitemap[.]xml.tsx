@@ -2,12 +2,11 @@
  * Sitemap page, generated from the content-store data
  */
 
-import { LoaderArgs } from '@remix-run/cloudflare';
 import {
     getAllContentURLs,
     purgeAndRebuildAll,
 } from '~/services/content-store';
-import { HTAppLoadContext } from '~/utils/types';
+import type { HTLoaderArgs } from '~/utils/types';
 
 type SitemapData = {
     hostname: string;
@@ -37,15 +36,14 @@ const generateSitemapXml = (sitemapData: SitemapData) => {
 };
 
 // Fetch all content data from content-store
-export async function loader({ context }: LoaderArgs) {
-    const htContext = context as HTAppLoadContext;
+export async function loader({ context }: HTLoaderArgs) {
     let sitemapData: SitemapData;
     if (context.NODE_ENV === 'PROD') {
         sitemapData = {
-            hostname: htContext.HOST_URL,
+            hostname: context.HOST_URL,
             urls: [
                 {
-                    url: new URL('/coming-soon', htContext.HOST_URL),
+                    url: new URL('/coming-soon', context.HOST_URL),
                     lastMod: new Date().toISOString(),
                     changeFreq: 'daily',
                     priority: '1.0',
@@ -53,10 +51,10 @@ export async function loader({ context }: LoaderArgs) {
             ],
         };
     } else {
-        await purgeAndRebuildAll(htContext);
-        const contentUrls = await getAllContentURLs(htContext);
+        await purgeAndRebuildAll(context);
+        const contentUrls = await getAllContentURLs(context);
         sitemapData = {
-            hostname: htContext.HOST_URL,
+            hostname: context.HOST_URL,
             urls: contentUrls.map((url) => ({
                 url,
                 lastMod: new Date().toISOString(),

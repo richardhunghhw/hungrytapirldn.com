@@ -5,7 +5,7 @@
         "build": "concurrently \"npm run build:*\"",
         "build:remix": "remix build",
         "build:css": "tailwindcss -m -i ./app/styles/tailwind.css -o app/styles/app.css",
-        "dev": "cross-env NODE_ENV=DEV concurrently \"npm run dev:*\"",
+        "dev": "cross-env concurrently \"npm run dev:*\"",
         "dev:css": "tailwindcss -w -i ./app/styles/tailwind.css -o app/styles/app.css",
         "dev:remix": "remix watch",
         "dev:wrangler": "wrangler pages dev ./public --live-reload true",
@@ -51,6 +51,7 @@
         "stripe-event-types": "^2.3.0",
         "tailwindcss": "^3.3.2",
         "typescript": "^4.9.5",
+        "vitest": "^0.32.0",
         "wrangler": "^2.20.0"
     },
     "engines": {

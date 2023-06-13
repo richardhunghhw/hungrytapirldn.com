@@ -6,7 +6,7 @@
  * - Purge & Rebuild CS using Notion service
  */
 
-import { HTAppLoadContext, JSONValue } from '~/utils/types';
+import type { HTAppLoadContext, JSONValue } from '~/utils/types';
 import { queryDbByType, queryDbByTypeSlug } from '../notion';
 import {
     getAllKeysByType,

@@ -1,0 +1,32 @@
+name = "hungrytapir-store-config"
+main = "src/index.ts"
+compatibility_date = "2023-06-13"
+
+[vars]
+NODE_ENV="DEV"
+
+[durable_objects]
+bindings = [
+  { name = "DO_ORDERID", class_name = "OrderIdObject" } 
+]
+
+[[migrations]]
+tag = "v0" 
+new_classes = ["OrderIdObject"] 
+
+[env.test]
+
+[env.test.vars]
+NODE_ENV="TEST"
+
+durable_objects.bindings = [
+  { name = "DO_ORDERID", class_name = "OrderIdObject" } 
+]
+[env.prod]
+
+[env.prod.vars]
+NODE_ENV="PROD"
+
+durable_objects.bindings = [
+  { name = "DO_ORDERID", class_name = "OrderIdObject" } 
+]

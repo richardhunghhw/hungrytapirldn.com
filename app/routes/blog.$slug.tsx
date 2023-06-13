@@ -2,29 +2,29 @@
  * Blog page
  */
 
-import { LoaderArgs, redirect } from '@remix-run/cloudflare';
+import { redirect } from '@remix-run/cloudflare';
 import { useLoaderData } from '@remix-run/react';
 import { isProd } from '~/utils/misc';
-import { HTAppLoadContext } from '~/utils/types';
-import { ContentStoreEntry, getContentByUrl } from '~/services/content-store';
+import type { HTActionArgs } from '~/utils/types';
+import type { ContentStoreEntry } from '~/services/content-store';
+import { getContentByUrl } from '~/services/content-store';
 
 // Fetch blog data content-store
 export async function loader({
     request: { url },
     context,
     params,
-}: LoaderArgs) {
-    const htContext = context as HTAppLoadContext;
+}: HTActionArgs) {
     try {
-        const result = await getContentByUrl(htContext, new URL(url));
-        console.log(`result ${JSON.stringify(htContext)}`);
+        const result = await getContentByUrl(context, new URL(url));
+        console.log(`result ${JSON.stringify(context)}`);
         if (!result || !result.entryExists) {
             throw new Error('Entry not found');
         }
         return result;
     } catch (error) {
         console.error(error); // TODO badlink
-        if (isProd(htContext)) return redirect('/404');
+        if (isProd(context)) return redirect('/404');
         return null;
     }
 }

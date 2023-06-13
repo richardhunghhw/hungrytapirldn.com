@@ -1,4 +1,5 @@
-import { ActionArgs, LoaderArgs, Session, json, redirect } from '@remix-run/cloudflare';
+import type { LoaderArgs} from '@remix-run/cloudflare';
+import { json, redirect } from '@remix-run/cloudflare';
 import type { V2_MetaFunction } from '@remix-run/react';
 import { Form, Link, useLoaderData } from '@remix-run/react';
 import type { Stripe } from 'stripe';
@@ -6,6 +7,7 @@ import type { Stripe } from 'stripe';
 import kayaImage1 from '~/images/kaya.webp';
 import kayaImage2 from '~/images/kaya2.jpg';
 import { getStripe } from '~/services/stripe';
+import type { HTActionArgs } from '~/utils/types';
 
 export const meta: V2_MetaFunction = () => {
 	return [{ title: 'Hungry Tapir | Order Kaya' }];
@@ -54,7 +56,7 @@ export async function loader({ params }: LoaderArgs) {
 }
 
 // Handle form POST request
-export async function action({ request, context }: ActionArgs) {
+export async function action({ request, context }: HTActionArgs) {
 	const formData = await request.formData();
 
 	// todo: validate form data
@@ -75,23 +77,16 @@ export async function action({ request, context }: ActionArgs) {
 	// Get a unique order ID from worker
 	let orderId: string | undefined = undefined;
 	try {
-		const response = await fetch(context.ORDER_ID_WORKER_ENDPOINT as string, {
-			method: 'POST',
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				token: context.ORDER_ID_WORKER_SECRET as string,
-				type: 'order',
-			}),
-		});
-		if (!response.ok) throw new Error(`Failed to fetch order ID from worker. Message: ${await response.text()}`);
+		const response = await context.CONFIGSTORE_WORKER.fetch(request.clone());
+		if (response.status !== 200) {
+			throw new Error(`Failed to fetch order ID from worker. Status: ${response.status}`);
+		}
 		const responseBody: { orderId: string } = await response.json();
 		orderId = responseBody.orderId;
 		console.debug(`Fetched order ID from worker: ${orderId}`);
 	} catch (error) {
-		console.error(`Failed to fetch order ID from worker: ${error}`);
+		// TODO Sentry
+		console.error(`Failed to fetch order ID from worker, proceeding without an order ID: ${error}`);
 	}
 
 	// Create checkout session

@@ -1,4 +1,11 @@
-import { AppLoadContext } from '@remix-run/cloudflare';
+import type { AppLoadContext } from '@remix-run/cloudflare';
+
+export type JSONValue =
+    | { [key: string]: JSONValue }
+    | Array<JSONValue>
+    | string
+    | number
+    | boolean;
 
 export type HTAppLoadContext = AppLoadContext & {
     /** Base **/
@@ -16,7 +23,8 @@ export type HTAppLoadContext = AppLoadContext & {
     readonly CONTENT_STORE: KVNamespace;
     readonly SESSION_STORE: KVNamespace;
 
-    // Durable Objects
+    /** Store Config Worker **/
+    readonly CONFIGSTORE_WORKER: ServiceWorkerGlobalScope;
 
     /** Stripe **/
 
@@ -28,9 +36,11 @@ export type HTAppLoadContext = AppLoadContext & {
     readonly NOTION_API_DB_PRODUCTS: string;
 };
 
-export type JSONValue =
-    | { [key: string]: JSONValue }
-    | Array<JSONValue>
-    | string
-    | number
-    | boolean;
+interface HTDataFunctionArgs {
+    request: Request;
+    context: HTAppLoadContext;
+    params: Params;
+}
+
+export type HTLoaderArgs = HTDataFunctionArgs;
+export type HTActionArgs = HTDataFunctionArgs;
