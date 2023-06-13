@@ -1,8 +1,8 @@
 import { Link, useLocation } from '@remix-run/react';
 
 const NAVBAR_LINKS = [
-    { name: 'Signature Kaya', to: '/products/signature-kaya-jam-8oz' },
-    { name: 'Vegan Kaya', to: '/products/vegan-kaya-jam-8oz' },
+    { name: 'Signature Kaya', to: '/product/signature-kaya-jam-8oz' },
+    { name: 'Vegan Kaya', to: '/product/vegan-kaya-jam-8oz' },
     { name: 'Blog', to: '/blog' },
     { name: 'About', to: '/about' },
 ];
