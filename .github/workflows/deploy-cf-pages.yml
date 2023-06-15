@@ -32,6 +32,7 @@ jobs:
                   SENTRY_DSN: 'op://${{ vars.VAULT_NAME }}/Sentry/dsn'
                   SENTRY_ORG: 'op://${{ vars.VAULT_NAME }}/Sentry/org-slug'
                   SENTRY_PROJECT: 'op://${{ vars.VAULT_NAME }}/Sentry/username'
+
             - name: Set SENTRY_ENV
               run: |
                   if [ "${{ github.ref }}" = "refs/heads/main" ]; then
@@ -43,7 +44,7 @@ jobs:
             - name: Build
               env:
                   SENTRY_DSN: ${{ env.SENTRY_DSN }}
-                  environment: ${{ env.SENTRY_ENV }}
+                  SENTRY_ENV: ${{ env.SENTRY_ENV }}
               run: npm install && npm run build
 
             - name: Find sourcemaps
