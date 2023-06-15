@@ -2,7 +2,7 @@
  * KV Cache client for content-store
  */
 
-import { HTAppLoadContext, JSONValue } from '~/utils/types';
+import type { HTAppLoadContext, JSONValue } from '~/utils/types';
 
 export type KVStoreEntry = {
     cacheKey: string;

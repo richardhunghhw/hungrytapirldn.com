@@ -8,27 +8,27 @@ export type JSONValue =
     | boolean;
 
 export type HTAppLoadContext = AppLoadContext & {
-    /** Base **/
+    /** Base */
     readonly NODE_ENV: string;
     readonly HOST_URL: string;
 
     readonly SESSION_SECRET: string;
+    readonly ENCRYPTION_SECRET: string;
 
-    /** Feature Toggles */
-    readonly CONTENT_STORE_CACHE_ENABLED: boolean;
-
-    /** Cloudflare Workers **/
-
-    // KV namespaces
+    /** KV namespaces */
     readonly CONTENT_STORE: KVNamespace;
+    readonly CONTENT_STORE_CACHE_ENABLED: boolean; // Feature toggle
+
     readonly SESSION_STORE: KVNamespace;
 
-    /** Store Config Worker **/
+    /** Store Config Worker */
     readonly CONFIGSTORE_WORKER: ServiceWorkerGlobalScope;
 
-    /** Stripe **/
+    /** Stripe */
+    readonly STRIPE_PUBLIC_KEY: string;
+    readonly STRIPE_SECRET_KEY: string;
 
-    /** Notion **/
+    /** Notion */
     readonly NOTION_API_SECRET: string;
 
     readonly NOTION_API_DB_BLOG: string;

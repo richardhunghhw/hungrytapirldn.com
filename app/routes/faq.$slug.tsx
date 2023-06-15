@@ -25,6 +25,7 @@ export async function loader({
         console.error(error); // TODO badlink
         if (isProd(context)) return redirect('/404');
     }
+    return null;
 }
 
 export default function Faq() {

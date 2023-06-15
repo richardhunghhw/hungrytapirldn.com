@@ -5,7 +5,6 @@ on:
             - develop
         paths-ignore:
             - '.devcontainer/**'
-            - 'functions/**'
             - 'lambdas/**'
             - 'scripts/**'
             - 'README.md'
@@ -20,15 +19,49 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v3
-            - name: Build
-              run: npm install && npm run build
+              with:
+                  fetch-depth: 0
+
             - name: Load secrets from 1Password
               uses: 1Password/load-secrets-action@v1
               env:
                   OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN_TEST }}
                   CLOUDFLARE_API_TOKEN: 'op://${{ vars.VAULT_NAME }}/Cloudflare API Token/credential'
                   CLOUDFLARE_ACCOUNT_ID: 'op://${{ vars.VAULT_NAME }}/Cloudflare API Token/username'
-            - name: Publish
+                  SENTRY_AUTH_TOKEN: 'op://${{ vars.VAULT_NAME }}/Sentry/credential'
+                  SENTRY_DSN: 'op://${{ vars.VAULT_NAME }}/Sentry/dsn'
+                  SENTRY_ORG: 'op://${{ vars.VAULT_NAME }}/Sentry/org-slug'
+                  SENTRY_PROJECT: 'op://${{ vars.VAULT_NAME }}/Sentry/username'
+            - name: Set SENTRY_ENV
+              run: |
+                  if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+                    echo "SENTRY_ENV=PROD" >> $GITHUB_ENV
+                  elif [ "${{ github.ref }}" = "refs/heads/develop" ]; then
+                    echo "SENTRY_ENV=TEST" >> $GITHUB_ENV
+                  fi
+
+            - name: Build
+              env:
+                  SENTRY_DSN: ${{ env.SENTRY_DSN }}
+                  environment: ${{ env.SENTRY_ENV }}
+              run: npm install && npm run build
+
+            - name: Find sourcemaps
+              id: sourcemaps
+              run: |
+                  echo "files=$(find functions public -name '*.map' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+
+            - name: Create Sentry release
+              uses: getsentry/action-release@v1
+              env:
+                  SENTRY_AUTH_TOKEN: ${{ env.SENTRY_AUTH_TOKEN }}
+                  SENTRY_ORG: ${{ env.SENTRY_ORG }}
+                  SENTRY_PROJECT: ${{ env.SENTRY_PROJECT }}
+              with:
+                  environment: ${{ env.SENTRY_ENV }}
+                  sourcemaps: ${{ steps.sourcemaps.outputs.files }}
+
+            - name: Publish to Cloudflare Pages
               uses: cloudflare/pages-action@v1
               with:
                   apiToken: '${{ env.CLOUDFLARE_API_TOKEN }}'

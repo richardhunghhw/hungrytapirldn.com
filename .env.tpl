@@ -1,0 +1,2 @@
+SENTRY_ENV=DEV
+SENTRY_DSN=op://HT-TEST/Sentry/dsn
