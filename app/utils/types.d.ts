@@ -19,8 +19,6 @@ export type HTAppLoadContext = AppLoadContext & {
 
     /** KV namespaces */
     readonly CONTENT_STORE: KVNamespace;
-    readonly CONTENT_STORE_CACHE_ENABLED: boolean; // Feature toggle
-
     readonly SESSION_STORE: KVNamespace;
 
     /** Store Config Worker */
@@ -31,8 +29,10 @@ export type HTAppLoadContext = AppLoadContext & {
     readonly STRIPE_SECRET_KEY: string;
 
     /** Notion */
+    readonly CACHE_TTL_DAYS: number;
     readonly NOTION_API_SECRET: string;
 
+    readonly NOTION_API_DB_GENERAL: string;
     readonly NOTION_API_DB_BLOG: string;
     readonly NOTION_API_DB_FAQ: string;
     readonly NOTION_API_DB_PRODUCTS: string;

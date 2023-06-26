@@ -2,7 +2,7 @@
  * Sitemap page, generated from the content-store data
  */
 
-import { listAllContent, makeUrlFromContent } from '~/services/content-store';
+import { listAll, makeUrlFromContent } from '~/services/content-store';
 import type { HTLoaderArgs } from '~/utils/types';
 
 type SitemapData = {
@@ -48,10 +48,10 @@ export async function loader({ context }: HTLoaderArgs) {
             ],
         };
     } else {
-        const contentUrls = await listAllContent(context);
+        const allContent = await listAll(context);
         sitemapData = {
             hostname: context.HOST_URL,
-            urls: contentUrls.map((content) => ({
+            urls: allContent.map((content) => ({
                 url: makeUrlFromContent(context.HOST_URL, content),
                 lastMod: new Date().toISOString(),
                 changeFreq: 'daily',

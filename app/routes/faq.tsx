@@ -6,7 +6,7 @@ import { redirect } from '@remix-run/cloudflare';
 import { Outlet } from '@remix-run/react';
 import { isProd } from '~/utils/misc';
 import { listFaqs } from '~/services/content-store';
-import { HTActionArgs } from '~/utils/types';
+import type { HTActionArgs } from '~/utils/types';
 
 // Fetch faq data content-store
 export async function loader({ request, context, params }: HTActionArgs) {

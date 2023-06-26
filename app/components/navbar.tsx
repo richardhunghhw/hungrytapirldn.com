@@ -5,7 +5,7 @@ const NAVBAR_LINKS = [
     { name: 'Signature', to: '/product/signature-kaya-jam-8oz' },
     { name: 'Vegan', to: '/product/vegan-kaya-jam-8oz' },
     { name: 'Blog', to: '/blog' },
-    { name: 'About', to: '/about' },
+    { name: 'About', to: '/about-us' },
 ];
 
 function NavLink({

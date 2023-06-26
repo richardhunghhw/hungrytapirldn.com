@@ -3,11 +3,11 @@ import { Instagram } from 'lucide-react';
 import { IconTikTok, IconXiaoHungShu } from '~/utils/icons';
 
 const FOOTER_LINKS = [
-    { name: 'About', to: '/about' },
+    { name: 'About', to: '/abou-us' },
     { name: 'FAQ', to: '/faq' },
     { name: 'Blogs & Recipes', to: '/blog' },
     { name: 'Contact', to: '/contact-us' },
-    { name: 'Deliveries & Returns', to: '/deliveries-and-return' },
+    { name: 'Deliveries & Returns', to: '/deliveries-and-returns' },
     { name: 'Terms & Conditions', to: '/terms-and-conditions' },
 ];
 

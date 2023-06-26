@@ -1,8 +1,74 @@
-export type { ContentStoreEntry } from './store';
+import type { BlockObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 
-export { validateRequest, listAllContent, purgeAndRebuildAll } from './store';
-export { makeUrlFromContentTypeSlug, makeUrlFromContent } from './utils';
+export type ContentType = 'general' | 'blog' | 'faq' | 'product';
 
-export { getProduct, listProducts } from './product';
-export { getBlog, listBlogs } from './blog';
-export { getFaq, listFaqs } from './faq';
+export type EntryMetadata = {
+    slug: string;
+    title: string;
+    tags: Array<string>;
+};
+
+export type BaseEntry = {
+    type: ContentType;
+    slug: string;
+    metadata: EntryMetadata;
+};
+
+export type ContentStoreGeneralEntry = BaseEntry & {
+    data: {
+        general: Array<string>;
+    };
+};
+
+export type ContentStoreBlogEntry = BaseEntry & {
+    data: {
+        blog: Array<string>;
+    };
+};
+
+export type ContentStoreFaqEntry = BaseEntry & {
+    data: {
+        faq: Array<string>;
+    };
+};
+
+export type ContentStoreProductEntry = BaseEntry & {
+    data: {
+        stripeId: string;
+        id: string;
+        unit: string;
+        price: number;
+        primaryImage: string;
+        primaryImageAlt: string;
+        Ingredients: string[];
+        product: Array<string>;
+        productCart: Array<string>;
+        productSection: Array<string>;
+    };
+};
+
+export type ContentStoreEntry =
+    | ContentStoreGeneralEntry
+    | ContentStoreBlogEntry
+    | ContentStoreFaqEntry
+    | ContentStoreProductEntry;
+
+export {
+    getGeneral,
+    listGenerals,
+    getBlog,
+    listBlogs,
+    getProduct,
+    listProducts,
+    getFaq,
+    listFaqs,
+    listAll,
+} from './get-content';
+
+export { refreshEntries, refreshAllEntries } from './refresh-content';
+
+export {
+    validateRequest,
+    makeUrlFromContentTypeSlug,
+    makeUrlFromContent,
+} from './utils';

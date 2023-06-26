@@ -6,7 +6,7 @@ import { redirect } from '@remix-run/cloudflare';
 import { Link, useLoaderData, useMatches } from '@remix-run/react';
 import { isProd } from '~/utils/misc';
 import type { HTActionArgs } from '~/utils/types';
-import type { ContentStoreEntry } from '~/services/content-store';
+import type { ContentStoreBlogEntry } from '~/services/content-store';
 import { getBlog, validateRequest } from '~/services/content-store';
 import { ArrowLeft } from 'lucide-react';
 
@@ -19,8 +19,8 @@ export async function loader({
     try {
         const urlPath = validateRequest(new URL(url));
         const result = await getBlog(context, urlPath.slug);
-        console.log(`result ${JSON.stringify(context)}`);
-        if (!result || !result.entryExists) {
+        if (!result) {
+            // todo sentry error
             throw new Error('Entry not found');
         }
         return result;
@@ -38,9 +38,9 @@ export default function Blog() {
         [];
     const hostUrl = loaderData.host as string;
 
-    const blogData = useLoaderData<ContentStoreEntry>();
+    const blogData = useLoaderData<ContentStoreBlogEntry>();
     if (!blogData || !blogData.data) return null;
-    const blog = blogData.data.blog;
+    const blogContent = blogData.data.blog;
 
     return (
         <div className="flex flex-col">
@@ -51,20 +51,24 @@ export default function Blog() {
                             <ArrowLeft className="inline" /> Back to Blogs
                         </Link>
                         <h1 className="title text-center">
-                            {blog.Post.title[0].text.content}
+                            {blogData.metadata.title}
                         </h1>
                     </div>
                 </div>
             </div>
             <div className="content-wrapper">
                 <div className="content-container mt-4">
-                    <div className="prose prose-lg">
-                        {blog.Content.rich_text.map((line) => {
+                    <div className="prose prose-lg max-w-none">
+                        {/* {blog.Content.rich_text.map((line) => {
                             <div
                                 dangerouslySetInnerHTML={{
                                     __html: line.text.content,
                                 }}
                             />;
+                        })} */}
+                        {blogContent.map((blog, index) => {
+                            console.log(blog);
+                            return <div key={index}>{blog}</div>;
                         })}
                     </div>
                 </div>
