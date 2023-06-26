@@ -44,7 +44,7 @@ export default function Blog() {
 
     return (
         <div className="flex flex-col">
-            <div className="content-wrapper bg-ht-peach">
+            <div className="content-wrapper bg-ht-turquoise">
                 <div className="content-container">
                     <div className="title-section flex flex-col">
                         <Link to={`${hostUrl}/blog`} className="text-base">

@@ -47,7 +47,7 @@ export default function GeneralLayout() {
 
     return (
         <div className="flex min-h-screen flex-col">
-            <div className="content-wrapper bg-ht-yellow">
+            <div className="content-wrapper bg-ht-orange">
                 <div className="content-container">
                     <div className="title-section flex flex-col">
                         <h1 className="title text-center">

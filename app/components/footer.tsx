@@ -3,7 +3,7 @@ import { Instagram } from 'lucide-react';
 import { IconTikTok, IconXiaoHungShu } from '~/utils/icons';
 
 const FOOTER_LINKS = [
-    { name: 'About', to: '/abou-us' },
+    { name: 'About', to: '/about-us' },
     { name: 'FAQ', to: '/faq' },
     { name: 'Blogs & Recipes', to: '/blog' },
     { name: 'Contact', to: '/contact-us' },

@@ -50,7 +50,7 @@ export default function Index() {
         <div className="snap-y snap-normal">
             <section
                 id="landing"
-                className="flex h-[calc(100vh-200px)] snap-start flex-col items-center justify-center bg-ht-light-pink text-6xl font-bold text-ht-yellow md:h-[calc(100vh-100px)]"
+                className="flex h-[calc(100vh-200px)] snap-start flex-col items-center justify-center bg-ht-light-pink text-6xl font-bold text-ht-light-green md:h-[calc(100vh-100px)]"
             >
                 <div className="content-container flex flex-col items-center justify-center">
                     <img
@@ -116,7 +116,7 @@ export default function Index() {
 
             <section
                 id="what-is-kaya"
-                className="content-wrapper snap-start bg-ht-bright-pink py-4"
+                className="content-wrapper bg-ht-pink snap-start py-4"
             >
                 <div className="content-container flex flex-col-reverse items-center md:flex-row md:space-x-10">
                     <div className="flex flex-col items-center justify-center space-y-12 rounded-3xl border border-ht-black p-8 font-mono text-ht-black md:max-w-[65%]">

@@ -1,11 +1,11 @@
-import { HTAppLoadContext } from './types';
+import type { HTAppLoadContext } from './types';
 
-export function isProd(context: HTAppLoadContext): boolean {
-    return context.NODE_ENV === 'PROD';
+export function isProd({ NODE_ENV }: HTAppLoadContext): boolean {
+    return NODE_ENV === 'PROD';
 }
 
-export function isTest(context: HTAppLoadContext): boolean {
-    return context.NODE_ENV === 'TEST';
+export function isTest({ NODE_ENV }: HTAppLoadContext): boolean {
+    return NODE_ENV === 'TEST';
 }
 
 export function isDev(context: HTAppLoadContext) {

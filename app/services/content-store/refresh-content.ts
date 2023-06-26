@@ -5,6 +5,7 @@ import { getPageContent, queryDbByType } from './notion';
 import { allContentTypes } from './utils';
 import { listKeys, purgeEntries, putEntry } from './kv-cache';
 import { blockToMarkdown, blocksToMarkdown } from '../notion-block-to-markdown';
+import { isProd } from '~/utils/misc';
 
 // Extract metadata from notion entry TODO sentry capture errors
 function makeMetadata({ properties }: FullPageResponse): EntryMetadata {
@@ -27,6 +28,7 @@ function makeMetadata({ properties }: FullPageResponse): EntryMetadata {
 
 // Santize entry from notion, extract data fields
 function makeContentStoreEntry(
+    isProd: boolean,
     type: ContentType,
     entry: FullPageResponse
 ): ContentStoreEntry {
@@ -48,8 +50,10 @@ function makeContentStoreEntry(
         };
     } else if (type === 'product') {
         data = {
-            stripeId: entry.properties['Stripe ID']?.rich_text[0]
-                ?.plain_text as string,
+            stripeId: (isProd
+                ? entry.properties['Stripe ID TEST']?.rich_text[0]?.plain_text
+                : entry.properties['Stripe ID PROD']?.rich_text[0]
+                      ?.plain_text) as string,
             id: entry.properties.Id?.rich_text[0].plain_text as string,
             unit: entry.properties.Unit?.rich_text[0].plain_text as string,
             price: entry.properties.Price?.number,
@@ -107,7 +111,7 @@ async function refreshEntries(
     const csEntries: Array<ContentStoreEntry> = [];
     pageContents.forEach((entry) => {
         try {
-            csEntries.push(makeContentStoreEntry(type, entry));
+            csEntries.push(makeContentStoreEntry(isProd(context), type, entry));
         } catch (err) {
             console.error(
                 `Failed to create CS entry for ${type}, ${JSON.stringify(

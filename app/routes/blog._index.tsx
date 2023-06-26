@@ -45,7 +45,7 @@ export default function BlogIndex() {
 
     return (
         <div className="flex flex-col">
-            <div className="content-wrapper bg-ht-peach">
+            <div className="content-wrapper bg-ht-turquoise">
                 <div className="content-container">
                     <h1 className="title title-section text-center">Blog</h1>
                 </div>

@@ -9,7 +9,7 @@ import { listFaqs } from '~/services/content-store';
 import type { HTActionArgs } from '~/utils/types';
 
 // Fetch faq data content-store
-export async function loader({ request, context, params }: HTActionArgs) {
+export async function loader({ context }: HTActionArgs) {
     try {
         const result = await listFaqs(context);
         if (!result || !result.length) {

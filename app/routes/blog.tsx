@@ -6,10 +6,10 @@ import { redirect } from '@remix-run/cloudflare';
 import { Outlet } from '@remix-run/react';
 import { isProd } from '~/utils/misc';
 import { listBlogs } from '~/services/content-store';
-import { HTActionArgs } from '~/utils/types';
+import type { HTActionArgs } from '~/utils/types';
 
 // Fetch blog data content-store
-export async function loader({ request, context, params }: HTActionArgs) {
+export async function loader({ context }: HTActionArgs) {
     try {
         const result = await listBlogs(context);
         if (!result || !result.length) {
