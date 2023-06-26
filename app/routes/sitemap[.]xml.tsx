@@ -2,10 +2,7 @@
  * Sitemap page, generated from the content-store data
  */
 
-import {
-    getAllContentURLs,
-    purgeAndRebuildAll,
-} from '~/services/content-store';
+import { listAllContent, makeUrlFromContent } from '~/services/content-store';
 import type { HTLoaderArgs } from '~/utils/types';
 
 type SitemapData = {
@@ -35,7 +32,7 @@ const generateSitemapXml = (sitemapData: SitemapData) => {
     return xml;
 };
 
-// Fetch all content data from content-store
+// Generate sitemap manually
 export async function loader({ context }: HTLoaderArgs) {
     let sitemapData: SitemapData;
     if (context.NODE_ENV === 'PROD') {
@@ -51,12 +48,11 @@ export async function loader({ context }: HTLoaderArgs) {
             ],
         };
     } else {
-        await purgeAndRebuildAll(context);
-        const contentUrls = await getAllContentURLs(context);
+        const contentUrls = await listAllContent(context);
         sitemapData = {
             hostname: context.HOST_URL,
-            urls: contentUrls.map((url) => ({
-                url,
+            urls: contentUrls.map((content) => ({
+                url: makeUrlFromContent(context.HOST_URL, content),
                 lastMod: new Date().toISOString(),
                 changeFreq: 'daily',
                 priority: '1.0',

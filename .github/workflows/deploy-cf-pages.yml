@@ -28,6 +28,8 @@ jobs:
                   OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN_TEST }}
                   CLOUDFLARE_API_TOKEN: 'op://${{ vars.VAULT_NAME }}/Cloudflare API Token/credential'
                   CLOUDFLARE_ACCOUNT_ID: 'op://${{ vars.VAULT_NAME }}/Cloudflare API Token/username'
+                  BASIC_AUTH_USERNAME: 'op://${{ vars.VAULT_NAME }}/HT Basic/username'
+                  BASIC_AUTH_PASSWORD: 'op://${{ vars.VAULT_NAME }}/HT Basic/credential'
                   SENTRY_AUTH_TOKEN: 'op://${{ vars.VAULT_NAME }}/Sentry/credential'
                   SENTRY_DSN: 'op://${{ vars.VAULT_NAME }}/Sentry/dsn'
                   SENTRY_ORG: 'op://${{ vars.VAULT_NAME }}/Sentry/org-slug'
@@ -43,8 +45,12 @@ jobs:
 
             - name: Build
               env:
+                  BASIC_AUTH_USERNAME: ${{ env.BASIC_AUTH_USERNAME }}
+                  BASIC_AUTH_PASSWORD: ${{ env.BASIC_AUTH_PASSWORD }}
+                  SENTRY_DEBUG: true
                   SENTRY_DSN: ${{ env.SENTRY_DSN }}
                   SENTRY_ENV: ${{ env.SENTRY_ENV }}
+                  SENTRY_TRACES_SAMPLE_RATE: 1.0
               run: npm install && npm run build
 
             - name: Find sourcemaps

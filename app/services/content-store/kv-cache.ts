@@ -2,7 +2,10 @@
  * KV Cache client for content-store
  */
 
-import type { HTAppLoadContext, JSONValue } from '~/utils/types';
+import type { HTAppLoadContext, JSONObject, JSONValue } from '~/utils/types';
+import { ContentType } from './store';
+import * as Sentry from '@sentry/remix';
+import { makeCacheKey } from './utils';
 
 export type KVStoreEntry = {
     cacheKey: string;
@@ -10,22 +13,14 @@ export type KVStoreEntry = {
     cacheHit: boolean;
 };
 
-function getCacheKey(contentType: string, contentSlug: string): string {
-    return `${contentType}:${contentSlug}`;
-}
-
-function splitCacheKey(key: string) {
-    return key.split(':');
-}
-
 // Get cached entry from KV
 async function getEntry(
     context: HTAppLoadContext,
-    contentType: string,
+    contentType: ContentType,
     contentSlug: string
 ): Promise<KVStoreEntry> {
     const CONTENT_STORE = context.CONTENT_STORE;
-    const cacheKey = getCacheKey(contentType, contentSlug);
+    const cacheKey = makeCacheKey(contentType, contentSlug);
     const cacheValue = await CONTENT_STORE.get(cacheKey);
 
     return {
@@ -38,24 +33,35 @@ async function getEntry(
 // Cache entry in KV
 async function putEntry(
     { CONTENT_STORE }: HTAppLoadContext,
-    contentType: string,
+    contentType: ContentType,
     contentSlug: string,
-    cacheValue: JSONValue
+    cacheValue: JSONValue,
+    metadata?: JSONObject
 ) {
-    const cacheKey = getCacheKey(contentType, contentSlug);
-    await CONTENT_STORE.put(cacheKey, JSON.stringify(cacheValue));
+    const cacheKey = makeCacheKey(contentType, contentSlug);
+    await CONTENT_STORE.put(cacheKey, JSON.stringify(cacheValue), {
+        metadata: { ...metadata },
+    });
 }
 
 // Get all keys from KV by ContentType
-async function getAllKeysByType(
+async function listAllKeysByType<T extends JSONObject>(
     { CONTENT_STORE }: HTAppLoadContext,
     contentType: string
-): Promise<string[]> {
+): Promise<KVNamespaceListKey<T>[]> {
     const response = await CONTENT_STORE.list({
         prefix: contentType,
         limit: 1000, // Default limit, revisit if needed
     });
-    return response.keys.map((key) => splitCacheKey(key.name)[1]);
+    if (!response.list_complete) {
+        // Should never happen give the 1000 limit
+        Sentry.captureMessage(
+            `KV list incomplete for ${contentType}, exceeded limit`,
+            'error'
+        );
+    }
+
+    return response.keys as KVNamespaceListKey<T>[];
 }
 
 // Purge all entries in KV, given a ContentType
@@ -64,10 +70,11 @@ async function purgeEntriesByType(
     contentType: string
 ) {
     const CONTENT_STORE = context.CONTENT_STORE;
-    const keys = await getAllKeysByType(context, contentType);
+    const keys = await listAllKeysByType(context, contentType);
     for (const key of keys) {
-        await CONTENT_STORE.delete(key);
+        console.debug(`purgeEntriesByType: Deleting ${key.name}`);
+        await CONTENT_STORE.delete(key.name);
     }
 }
 
-export { getEntry, putEntry, getAllKeysByType, purgeEntriesByType };
+export { getEntry, putEntry, listAllKeysByType, purgeEntriesByType };

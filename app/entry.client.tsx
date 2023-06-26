@@ -10,7 +10,7 @@ import { hydrateRoot } from 'react-dom/client';
 import * as Sentry from '@sentry/remix';
 
 Sentry.init({
-    debug: true,
+    debug: __sentryDebug__,
     dsn: '__sentryDsn__',
     environment: '__sentryEnv__',
     integrations: [
@@ -24,7 +24,7 @@ Sentry.init({
         new Sentry.Replay(),
     ],
     // Performance Monitoring
-    tracesSampleRate: 1.0, // Capture 100% of the transactions, reduce in production!
+    tracesSampleRate: __sentryTracesSampleRate__,
     // Session Replay
     replaysSessionSampleRate: 1.0, // This sets the sample rate at 100%. You may want to change it to sample at a lower rate (<10%) in production.
     replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.

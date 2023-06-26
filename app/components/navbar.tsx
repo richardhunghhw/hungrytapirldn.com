@@ -1,8 +1,9 @@
 import { Link, useLocation } from '@remix-run/react';
+import { ShoppingBag } from 'lucide-react';
 
 const NAVBAR_LINKS = [
-    { name: 'Signature Kaya', to: '/product/signature-kaya-jam-8oz' },
-    { name: 'Vegan Kaya', to: '/product/vegan-kaya-jam-8oz' },
+    { name: 'Signature', to: '/product/signature-kaya-jam-8oz' },
+    { name: 'Vegan', to: '/product/vegan-kaya-jam-8oz' },
     { name: 'Blog', to: '/blog' },
     { name: 'About', to: '/about' },
 ];
@@ -16,37 +17,36 @@ function NavLink({
         to === location.pathname || location.pathname.startsWith(`${to}/`);
 
     return (
-        <li className="px-5 py-2">
-            <Link
-                prefetch="intent"
-                className="block whitespace-nowrap text-2xl	font-bold text-white hover:text-primary focus:text-primary focus:outline-none"
-                to={to}
-                {...rest}
-            />
-        </li>
+        <Link
+            prefetch="intent"
+            className="whitespace-nowrap text-2xl font-bold hover:text-primary focus:text-primary focus:outline-none"
+            to={to}
+            {...rest}
+        />
     );
 }
 
 export default function Navbar() {
     return (
-        <div className="bg-primary px-24 py-9">
-            <nav className="max-w-8xl mx-auto flex items-center justify-between font-extrabold">
-                <div className="flex justify-center gap-4 align-middle">
-                    <Link
-                        prefetch="intent"
-                        to="/"
-                        className="underlined block whitespace-nowrap text-2xl font-bold text-primary transition focus:outline-none"
-                    >
-                        <h1>Hungry Tapir</h1>
-                    </Link>
+        <div className="content-wrapper fixed z-50 w-[calc(100vw-1.2rem)] bg-transparent py-4 md:w-[calc(100vw-1rem)]">
+            <nav className="content-container flex items-center justify-between rounded-full bg-ht-peach px-6 py-1 font-mono uppercase">
+                <div className="flex justify-center gap-4 py-2 align-middle">
+                    <NavLink key="root" to="/">
+                        Hungry Tapir
+                    </NavLink>
                 </div>
                 <ul className="hidden lg:flex">
                     {NAVBAR_LINKS.map((link) => (
-                        <NavLink key={link.to} to={link.to}>
-                            {link.name}
-                        </NavLink>
+                        <li className="px-5 py-2" key={link.to}>
+                            <NavLink key={link.to} to={link.to}>
+                                {link.name}
+                            </NavLink>
+                        </li>
                     ))}
                 </ul>
+                <div>
+                    <ShoppingBag />
+                </div>
             </nav>
         </div>
     );

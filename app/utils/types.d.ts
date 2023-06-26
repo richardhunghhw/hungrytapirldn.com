@@ -1,7 +1,9 @@
 import type { AppLoadContext } from '@remix-run/cloudflare';
 
+export type JSONObject = { [key: string]: JSONValue };
+
 export type JSONValue =
-    | { [key: string]: JSONValue }
+    | JSONObject
     | Array<JSONValue>
     | string
     | number
@@ -44,3 +46,20 @@ interface HTDataFunctionArgs {
 
 export type HTLoaderArgs = HTDataFunctionArgs;
 export type HTActionArgs = HTDataFunctionArgs;
+
+export type Product = {
+    id: string;
+    stripe_id: string;
+    slug: string;
+
+    name: string;
+    sectionDescription: string;
+    description: string;
+    ingredients: string[];
+
+    imageSrc: string;
+    imageAlt: string;
+
+    price: number;
+    unit: string;
+};

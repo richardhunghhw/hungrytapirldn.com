@@ -7,7 +7,7 @@
 
 import { Client } from '@notionhq/client';
 import { HTAppLoadContext, JSONValue } from '~/utils/types';
-import { ContentType } from './content-store';
+import { ContentType } from './content-store/store';
 
 // Setup Notion client
 async function getClient({

@@ -2,21 +2,13 @@
  * See https://tailwindcss.com/docs/functions-and-directives 
  */
 
-/* Tailwind */
+/** Tailwind */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 @tailwind screens;
 
-/* Site Fonts */
-@font-face {
-    font-display: swap;
-    font-family: 'Source Sans Pro';
-    font-style: normal;
-    font-weight: 400;
-    src: url('/fonts/source-sans-pro-v21-latin-regular.woff2') format('woff2');
-}
-
+/** Site Fonts */
 @font-face {
     font-display: swap;
     font-family: 'Dela Gothic One';
@@ -25,37 +17,92 @@
     src: url('/fonts/dela-gothic-one-v10-latin-regular.woff2') format('woff2');
 }
 
+/** space-mono-regular - latin */
 @font-face {
     font-display: swap;
-    font-family: 'Nunito Sans';
+    font-family: '"Space Mono"';
     font-style: normal;
     font-weight: 400;
-    src: url('/fonts/nunito-sans-v15-latin-regular.woff2') format('woff2');
+    src: url('/fonts/space-mono-v12-latin-regular.woff2') format('woff2');
 }
 
+/** space-mono-700 - latin */
 @font-face {
     font-display: swap;
-    font-family: 'Roboto';
-    font-style: normal;
-    font-weight: 400;
-    src: url('/fonts/roboto-v30-latin-regular.woff2') format('woff2');
+    font-family: '"Space Mono"';
+    font-style: bold;
+    font-weight: 700;
+    src: url('/fonts/space-mono-v12-latin-700.woff2') format('woff2');
 }
 
-/* Custom Styles */
+/** Shadcn styles */
+@layer base {
+    :root {
+        --background: 0 0% 100%;
+        --foreground: 222.2 47.4% 11.2%;
+
+        --muted: 210 40% 96.1%;
+        --muted-foreground: 215.4 16.3% 46.9%;
+
+        --popover: 0 0% 100%;
+        --popover-foreground: 222.2 47.4% 11.2%;
+
+        --card: 0 0% 100%;
+        --card-foreground: 222.2 47.4% 11.2%;
+
+        --border: 214.3 31.8% 91.4%;
+        --input: 214.3 31.8% 91.4%;
+
+        --primary: 222.2 47.4% 11.2%;
+        --primary-foreground: 210 40% 98%;
+
+        --secondary: 0 0% 11%; /* ht-black */
+        --secondary-foreground: 21 63% 94%; /* ht-Peach */
+
+        --accent: 210 40% 96.1%;
+        --accent-foreground: 222.2 47.4% 11.2%;
+
+        --destructive: 0 100% 50%;
+        --destructive-foreground: 210 40% 98%;
+
+        --ring: 215 20.2% 65.1%;
+
+        --radius: 0.5rem;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+        font-feature-settings: 'rlig' 1, 'calt' 1;
+    }
+}
+
+/** Custom Styles */
 @layer utilities {
-    .bg-primary {
-        @apply bg-ht-green;
+    .content-wrapper {
+        @apply px-4;
+        @apply md:px-16;
+        @apply w-full;
     }
 
-    .bg-secondary {
-        @apply bg-ht-gold-light;
+    .content-container {
+        @apply max-w-screen-xl;
+        @apply mx-auto;
     }
 
-    .text-primary {
-        @apply text-ht-gold;
+    .title {
+        @apply font-serif;
+        @apply font-bold;
+        @apply uppercase;
     }
 
-    .text-secondary {
-        @apply text-ht-green-dark;
+    .title-section {
+        @apply my-56;
+        @apply text-4xl;
+        @apply sm:text-6xl;
     }
 }

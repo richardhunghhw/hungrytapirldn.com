@@ -6,9 +6,8 @@ import { redirect } from '@remix-run/cloudflare';
 import { useLoaderData } from '@remix-run/react';
 import { isProd } from '~/utils/misc';
 import type { HTActionArgs } from '~/utils/types';
-import { AspectRatio } from '~/components/ui/aspect-ratio';
 import type { ContentStoreEntry } from '~/services/content-store';
-import { getContentByUrl } from '~/services/content-store';
+import { getProduct, validateRequest } from '~/services/content-store';
 
 // Fetch product data content-store
 export async function loader({
@@ -17,7 +16,8 @@ export async function loader({
     params,
 }: HTActionArgs) {
     try {
-        const result = await getContentByUrl(context, new URL(url));
+        const urlPath = validateRequest(new URL(url));
+        const result = await getProduct(context, urlPath.slug);
         if (!result || !result.entryExists) {
             throw new Error('Entry not found');
         }
@@ -36,27 +36,22 @@ export default function Product() {
     console.log(`product ${JSON.stringify(product)}`);
     return (
         <div className="flex min-h-screen flex-col items-center justify-center py-2">
-            <div className="flex flex-row items-center">
-                <div className="w-1/2">
+            <div className="flex flex-col items-center md:flex-row">
+                <div className="basis-1/2">
                     <div className="mt-5">
-                        <AspectRatio ratio={16 / 9}>
-                            <img
-                                src="https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?w=800&dpr=2&q=80"
-                                alt="Photo by Drew Beamer"
-                                className="rounded-md object-cover"
-                            />
-                        </AspectRatio>
+                        <img
+                            src="https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?w=800&dpr=2&q=80"
+                            alt="Photo by Drew Beamer"
+                            className="rounded-md object-cover"
+                        />
                     </div>
                 </div>
-                <div className="w-1/2">
+                <div className="basis-1/2">
                     <div className="flex flex-col md:w-1/2">
                         <div className="items-left mt-5 flex flex-col justify-center">
                             <h1 className="text-6xl font-extrabold uppercase text-primary">
                                 {product.Title.rich_text[0].text.content}
                             </h1>
-                            <h2 className="text-xl font-light text-primary">
-                                {product.Subtitle.rich_text[0].text.content}
-                            </h2>
                             <p>{product.Unit.rich_text[0].text.content}</p>
                             <p>
                                 {product.Description.rich_text[0].text.content}

@@ -11,11 +11,12 @@ import { renderToReadableStream } from 'react-dom/server';
 import * as Sentry from '@sentry/remix';
 
 Sentry.init({
-    debug: true,
+    debug: __sentryDebug__,
     dsn: '__sentryDsn__',
     environment: '__sentryEnv__',
     integrations: [],
-    tracesSampleRate: 1.0, // Capture 100% of the transactions, reduce in production!
+    tracePropagationTargets: ['/^.*.palmier.workers.dev/', 'localhost', /^\//],
+    tracesSampleRate: __sentryTracesSampleRate__,
 });
 
 export default async function handleRequest(
