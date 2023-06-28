@@ -57,8 +57,9 @@ function makeContentStoreEntry(
             id: entry.properties.Id?.rich_text[0].plain_text as string,
             unit: entry.properties.Unit?.rich_text[0].plain_text as string,
             price: entry.properties.Price?.number,
-            primaryImage: 'string' as string,
-            primaryImageAlt: 'string' as string,
+            primaryImage: entry.properties['Primary Image'].url as string,
+            primaryImageAlt: entry.properties['Primary Image Alt']?.rich_text[0]
+                .plain_text as string,
             Ingredients: entry.properties.Ingredients?.multi_select.map(
                 (x: { name: any }) => x.name
             ) as Array<string>,

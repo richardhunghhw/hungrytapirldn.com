@@ -43,7 +43,7 @@ export default function FaqIndex() {
 
     return (
         <div className="flex flex-col">
-            <div className="content-wrapper bg-ht-light-green">
+            <div className="content-wrapper bg-ht-green-highlight">
                 <div className="content-container">
                     <h1 className="title title-section text-center">
                         Frequently Asked Questions

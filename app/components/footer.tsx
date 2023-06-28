@@ -1,6 +1,6 @@
 import { Link } from '@remix-run/react';
 import { Instagram } from 'lucide-react';
-import { IconTikTok, IconXiaoHungShu } from '~/utils/icons';
+import { IconTikTok, IconXiaoHungShu } from '~/utils/svg/icons';
 
 const FOOTER_LINKS = [
     { name: 'About', to: '/about-us' },
@@ -21,7 +21,7 @@ function FooterIcon({
     return (
         <a
             href={link}
-            className="block rounded-full bg-ht-peach p-2"
+            className="block rounded-full bg-ht-off-white p-2"
             target="_blank"
             rel="noopener noreferrer"
         >
@@ -34,7 +34,7 @@ export default function Footer() {
     return (
         <div
             id="footer"
-            className="content-wrapper bg-ht-black pt-4 font-mono text-ht-peach md:pt-8"
+            className="content-wrapper bg-ht-black pt-4 font-mono text-ht-off-white md:pt-8"
         >
             <div className="content-container flex flex-col">
                 <div className="mb-24 flex flex-col justify-between space-y-5 p-4 md:mb-48 md:flex-row md:space-y-0">
@@ -64,7 +64,7 @@ export default function Footer() {
                                 <li key={link.to}>
                                     <Link
                                         prefetch="intent"
-                                        className="hover:text-ht-light-pink focus:text-ht-light-pink focus:outline-none"
+                                        className="hover:text-opacity-50 focus:text-opacity-50 focus:outline-none"
                                         to={link.to}
                                     >
                                         {link.name}
@@ -76,7 +76,7 @@ export default function Footer() {
                     </div>
                 </div>
 
-                <div className="border-t-1 flex flex-row justify-between border-t-2 border-t-ht-peach p-4">
+                <div className="border-t-1 flex flex-row justify-between border-t-2 border-t-ht-off-white p-4">
                     <p className="text-sm font-light">
                         Copyright Hungry Tapir LLP 2023
                     </p>

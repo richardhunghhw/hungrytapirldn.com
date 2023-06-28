@@ -64,13 +64,13 @@ async function listFaqs(context: HTAppLoadContext): Promise<BaseEntry[]> {
 // Get all entries, for sitemap generation
 async function listAll(context: HTAppLoadContext): Promise<BaseEntry[]> {
     const result: BaseEntry[] = [];
-    allContentTypes()
-        .filter((x) => x !== 'general')
-        .map(async (type) => {
+    await Promise.all(
+        allContentTypes().flatMap(async (type) => {
             await listKeys(context, type).then((entries) => {
                 result.push(...entries);
             });
-        });
+        })
+    );
     return result;
 }
 

@@ -1,5 +1,3 @@
-import type { BlockObjectResponse } from '@notionhq/client/build/src/api-endpoints';
-
 export type ContentType = 'general' | 'blog' | 'faq' | 'product';
 
 export type EntryMetadata = {
@@ -69,6 +67,7 @@ export { refreshEntries, refreshAllEntries } from './refresh-content';
 
 export {
     validateRequest,
+    makeUriFromContentTypeSlug,
     makeUrlFromContentTypeSlug,
     makeUrlFromContent,
 } from './utils';

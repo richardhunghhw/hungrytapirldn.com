@@ -45,7 +45,7 @@ export default function Faq() {
 
     return (
         <div className="flex flex-col">
-            <div className="content-wrapper bg-ht-light-green">
+            <div className="content-wrapper bg-ht-green-highlight">
                 <div className="content-container">
                     <div className="title-section flex flex-col">
                         <Link to={`${hostUrl}/faq`} className="text-base">

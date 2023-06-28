@@ -1,4 +1,4 @@
-import type { ContentStoreEntry, ContentType } from '.';
+import type { BaseEntry, ContentStoreEntry, ContentType } from '.';
 
 export type UrlPath = {
     type: ContentType;
@@ -50,15 +50,39 @@ function splitCacheKey(key: string) {
     return key.split(':');
 }
 
+function makeUriFromContentTypeSlug(
+    contentType: ContentType,
+    slug: string
+): string | undefined {
+    if (contentType === 'general') {
+        // Skip out types with 'section~' suffix
+        if (slug.startsWith('section~')) {
+            return undefined;
+        }
+        return `/${slug}`;
+    }
+    return `/${contentType}/${slug}`;
+}
+
 function makeUrlFromContentTypeSlug(
     hostName: string,
     contentType: ContentType,
     slug: string
-): URL {
-    return new URL(`/${contentType}/${slug}`, hostName);
+): URL | undefined {
+    const uri = makeUriFromContentTypeSlug(contentType, slug);
+    if (!uri) {
+        return undefined;
+    }
+    return new URL(uri, hostName);
 }
 
-function makeUrlFromContent(hostName: string, content: ContentStoreEntry): URL {
+function makeUrlFromContent(
+    hostName: string,
+    content: BaseEntry
+): URL | undefined {
+    console.log(
+        makeUrlFromContentTypeSlug(hostName, content.type, content.slug)
+    );
     return makeUrlFromContentTypeSlug(hostName, content.type, content.slug);
 }
 
@@ -69,6 +93,7 @@ export {
     isContentType,
     makeCacheKey,
     splitCacheKey,
+    makeUriFromContentTypeSlug,
     makeUrlFromContentTypeSlug,
     makeUrlFromContent,
 };

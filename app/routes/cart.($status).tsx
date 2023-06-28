@@ -4,8 +4,6 @@ import type { V2_MetaFunction } from '@remix-run/react';
 import { Form, Link, useLoaderData } from '@remix-run/react';
 import type { Stripe } from 'stripe';
 
-import kayaImage1 from '~/images/kaya.webp';
-import kayaImage2 from '~/images/kaya2.jpg';
 import { getStripe } from '~/services/stripe';
 import type { HTActionArgs } from '~/utils/types';
 
@@ -33,7 +31,7 @@ const db_products: Product[] = [
         shortDescription:
             'Coconut Milk, Gula Melaka, Rock Sugar, Pandan Leaves, Eggs, Salt.',
         price: '7.00',
-        imageSrc: kayaImage1,
+        imageSrc: 'kayaImage1',
         imageAlt: 'Signature Kaya Jar',
     },
     {
@@ -44,7 +42,7 @@ const db_products: Product[] = [
         shortDescription:
             'Coconut Milk, Gula Melaka, Rock Sugar, Pandan Leaves, Tofu, Salt.',
         price: '7.00',
-        imageSrc: kayaImage2,
+        imageSrc: 'kayaImage2',
         imageAlt: 'Vegan Kaya Jar',
     },
 ];

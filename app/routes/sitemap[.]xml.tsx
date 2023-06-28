@@ -51,12 +51,14 @@ export async function loader({ context }: HTLoaderArgs) {
         const allContent = await listAll(context);
         sitemapData = {
             hostname: context.HOST_URL,
-            urls: allContent.map((content) => ({
-                url: makeUrlFromContent(context.HOST_URL, content),
-                lastMod: new Date().toISOString(),
-                changeFreq: 'daily',
-                priority: '1.0',
-            })),
+            urls: allContent
+                .map((content) => ({
+                    url: makeUrlFromContent(context.HOST_URL, content)!,
+                    lastMod: new Date().toISOString(),
+                    changeFreq: 'daily',
+                    priority: '1.0',
+                }))
+                .filter((entry) => entry.url !== undefined),
         };
     }
 
