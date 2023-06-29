@@ -8,6 +8,7 @@ import { isProd } from '~/utils/misc';
 import type { HTActionArgs } from '~/utils/types';
 import type { ContentStoreProductEntry } from '~/services/content-store';
 import { getProduct, validateRequest } from '~/services/content-store';
+import { AspectRatio } from '@radix-ui/react-aspect-ratio';
 
 // Fetch product data content-store
 export async function loader({
@@ -33,22 +34,27 @@ export default function Product() {
     const productData = useLoaderData<ContentStoreProductEntry>();
     if (!productData || !productData.data) return null;
 
+    const aspectRatio = 8 / 9;
     console.log(`product ${JSON.stringify(productData)}`);
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center py-2">
-            <div className="flex flex-col items-center md:flex-row">
-                <div className="basis-1/2">
-                    <div className="mt-5">
-                        <img
-                            src="https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?w=800&dpr=2&q=80"
-                            alt="Photo by Drew Beamer"
-                            className="rounded-md object-cover"
-                        />
-                    </div>
-                </div>
-                <div className="basis-1/2">
-                    <div className="flex flex-col md:w-1/2">
-                        <div className="items-left mt-5 flex flex-col justify-center">
+        <div className="flex flex-col">
+            <div
+                className={
+                    'content-wrapper bg-' + productData.data.sectionColour
+                }
+            >
+                <div className="content-container my-24 flex flex-col items-center justify-center py-2">
+                    <div className="flex flex-col items-center space-x-8 md:flex-row">
+                        <div className="w-[350px] basis-1/2 overflow-hidden rounded-3xl">
+                            <AspectRatio ratio={aspectRatio}>
+                                <img
+                                    src={productData.data.primaryImage}
+                                    alt={productData.data.primaryImageAlt}
+                                    className="h-full w-full object-cover"
+                                />
+                            </AspectRatio>
+                        </div>
+                        <div className="items-left mt-5 flex basis-1/2 flex-col justify-center md:w-1/2">
                             <h1 className="text-6xl font-extrabold uppercase text-primary">
                                 {productData.metadata.title}
                             </h1>
@@ -60,13 +66,13 @@ export default function Product() {
                             <p>{productData.data.price}</p>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div className="flex flex-row items-center">
-                <div className="w-1/3">
-                    {productData.data.Ingredients.map((ingredient) => (
-                        <div key={ingredient}>{ingredient}</div>
-                    ))}
+                    <div className="flex flex-row items-center">
+                        <div className="w-1/3">
+                            {productData.data.Ingredients.map((ingredient) => (
+                                <div key={ingredient}>{ingredient}</div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

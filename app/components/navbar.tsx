@@ -65,7 +65,7 @@ export default function Navbar() {
                     })}
                 </ul>
                 <div>
-                    <ShoppingBag />
+                    <ShoppingBag className="text-3xl" />
                 </div>
             </nav>
         </div>

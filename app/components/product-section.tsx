@@ -2,6 +2,7 @@
  * Component for a product as a section of a page
  */
 
+import { AspectRatio } from '@radix-ui/react-aspect-ratio';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import type { ContentStoreProductEntry } from '~/services/content-store';
@@ -11,14 +12,18 @@ export default function ProductSection({
 }: {
     product: ContentStoreProductEntry;
 }): JSX.Element {
+    const aspectRatio = 8 / 9;
+
     return (
         <div className="flex flex-col items-center justify-center sm:flex-row sm:space-x-10">
-            <div className="max-w-md">
-                <img
-                    className="rounded-md"
-                    src="https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=300&dpr=2&q=80"
-                    alt=""
-                />
+            <div className="w-[350] overflow-hidden">
+                <AspectRatio ratio={aspectRatio}>
+                    <img
+                        src={product.data.primaryImage}
+                        alt={product.data.primaryImageAlt}
+                        className="h-full w-full object-cover"
+                    />
+                </AspectRatio>
             </div>
             <div className="mt-4 flex-1 sm:mt-0">
                 <div className="flex flex-col justify-center space-y-2 sm:space-y-8">
