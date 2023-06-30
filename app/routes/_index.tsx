@@ -15,7 +15,8 @@ import {
 } from '~/services/content-store';
 import { TapirTransparent } from '~/utils/svg/tapir';
 import { AspectRatio } from '~/components/ui/aspect-ratio';
-import { Input } from '~/components/ui/input';
+import { NumberInput } from '~/components/number-input';
+import { AddToBag } from '~/components/add-to-bag';
 
 const circle = () => <div className="h-4 w-4 rounded-full bg-ht-black" />;
 
@@ -49,12 +50,7 @@ function ProductCard({
     const aspectRatio = 8 / 9;
 
     return (
-        <div className="flex w-full flex-grow flex-col items-center justify-center rounded-3xl p-12 text-ht-black sm:space-y-8 md:w-fit md:space-y-4 md:border-2 md:border-ht-black">
-            <div className="title flex flex-col items-center text-center text-4xl">
-                {product.metadata.title.split(' ').map((word, i) => (
-                    <span key={i}>{word}</span>
-                ))}
-            </div>
+        <div className="flex w-full flex-grow flex-col items-center justify-center space-y-4 rounded-3xl text-ht-black md:w-fit md:border-2 md:border-ht-black md:p-12">
             <div className="order-first w-[260px] overflow-hidden md:order-none md:w-[300px]">
                 <AspectRatio ratio={aspectRatio}>
                     <img
@@ -64,7 +60,19 @@ function ProductCard({
                     />
                 </AspectRatio>
             </div>
-            <Button variant="link" asChild>
+            <Link className="title flex flex-col items-center text-center text-4xl"
+                to={
+                    makeUriFromContentTypeSlug(
+                        'product',
+                        product.metadata.slug
+                    ) as string
+                }
+                >
+                {product.metadata.title.split(' ').map((word, i) => (
+                    <span key={i}>{word}</span>
+                ))}
+            </Link>
+            <Button variant="link" asChild className='hidden md:block'>
                 <Link
                     to={
                         makeUriFromContentTypeSlug(
@@ -76,19 +84,11 @@ function ProductCard({
                     Learn more
                 </Link>
             </Button>
-            <Input
-                type="number"
-                id={product.data.id}
-                name={product.data.id}
-                className="appearance-none rounded-full border border-ht-black text-center text-lg"
-                min="0"
-                max="10"
-                defaultValue="0"
-            />
-            <Button variant="dark" size="lg" className="w-full text-ht-orange">
-                ADD TO CART -{' '}
-                <span className="ml-8">£{product.data.price}</span>
-            </Button>
+            <div className='text-2xl text-black font-extrabold'>
+                £{product.data.price}
+            </div>
+            <NumberInput id={product.data.id} className='hidden md:block' />
+            <AddToBag className='text-ht-orange' />
         </div>
     );
 }
@@ -106,34 +106,40 @@ export default function Index() {
         <div className="snap-y snap-normal">
             <section
                 id="landing"
-                className="flex h-[calc(100vh-200px)] snap-start flex-col items-center justify-center bg-ht-pink-highlight text-6xl font-bold text-ht-green-highlight md:h-[calc(100vh-100px)]"
+                className="flex h-[calc(100vh-200px)] snap-start flex-col items-center justify-center bg-ht-pink-highlight font-bold text-ht-green-highlight md:h-[calc(100vh-100px)]"
             >
                 <div className="content-container flex flex-col items-center justify-center">
-                    <img
-                        className="h-[calc(100vh-200px)] rounded-md"
-                        src="https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=300&dpr=2&q=80"
-                        alt="Landscape photograph by Tobias Tullius"
-                    />
+                    <div className="w-[calc(100vw-2rem)] md:w-[350px] overflow-hidden rounded-xl">
+                        <AspectRatio ratio={7 / 9}>
+                            <img
+                                src="/images/content/landing.png"
+                                alt="Malaysian store"
+                                className="h-full w-full object-cover"
+                            />
+                        </AspectRatio>
+                    </div>
                     <div className="absolute flex flex-col items-center">
-                        <TapirTransparent className="text-[6rem]" />
-                        <h1 className="title text-center">WE MAKE KAYA</h1>
+                        <TapirTransparent className="text-6xl md:text-8xl" />
+                        <h1 className="title text-center text-4xl md:text-6xl">
+                            WE MAKE KAYA
+                        </h1>
                     </div>
                 </div>
             </section>
 
             <section
-                className="content-wrapper h-[12rem] snap-start bg-ht-off-white py-4 md:h-[3.8rem]"
+                className="content-wrapper h-[3.8rem] snap-start bg-ht-off-white py-4"
                 id="banner"
             >
                 <div className="content-container">
-                    <ul className="title flex flex-col items-center justify-between text-xl text-ht-black md:flex-row">
+                    <ul className="title flex flex-row items-center justify-between space-x-4 overflow-hidden whitespace-nowrap text-xl text-ht-black">
                         <li>HOMEMADE</li>
                         <li>{circle()}</li>
                         <li>100% TASTY</li>
                         <li>{circle()}</li>
                         <li>SMALL-BATCH</li>
-                        <li className="block md:hidden lg:block">{circle()}</li>
-                        <li className="block md:hidden lg:block">DAIRY-FREE</li>
+                        <li className="hidden lg:block">{circle()}</li>
+                        <li className="hidden lg:block">DAIRY-FREE</li>
                     </ul>
                 </div>
             </section>
@@ -143,7 +149,7 @@ export default function Index() {
                 className="content-wrapper snap-start bg-ht-green py-4 md:py-16"
             >
                 <div className="content-container flex flex-col-reverse items-center space-y-4 space-y-reverse md:flex-row md:space-x-16 md:space-y-0">
-                    <div className="flex w-full flex-grow flex-col items-start justify-center space-y-4 rounded-3xl px-4 text-left font-mono text-ht-black md:w-auto md:items-center md:space-y-10 md:border-2 md:border-ht-black md:p-8 md:text-center">
+                    <div className="flex w-full flex-grow flex-col items-start justify-center space-y-4 rounded-3xl px-4 text-left font-mono text-ht-black md:w-auto md:items-center md:space-y-10 md:border-2 md:border-ht-black md:p-8 md:text-center mb-4">
                         <h1 className="title font-serif text-2xl md:text-4xl">
                             Pandan
                         </h1>
@@ -163,11 +169,11 @@ export default function Index() {
                             ORDER NOW
                         </Button>
                     </div>
-                    <div className="w-[350px] overflow-hidden rounded-3xl">
+                    <div className="w-[calc(100vw-4rem)] md:w-[350px] overflow-hidden rounded-3xl">
                         <AspectRatio ratio={8 / 11}>
                             <img
-                                src="https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=300&dpr=2&q=80"
-                                alt="Landscape photograph by Tobias Tullius"
+                                src="/images/content/coconut-tree.jpg"
+                                alt="Coconut tree"
                                 className="h-full w-full object-cover"
                             />
                         </AspectRatio>
@@ -179,8 +185,8 @@ export default function Index() {
                 id="what-is-kaya"
                 className="content-wrapper snap-start bg-ht-pink py-4 md:py-16"
             >
-                <div className="content-container flex flex-col items-center space-y-4 md:flex-row md:space-x-16 md:space-y-0">
-                    <div className="w-[350px] overflow-hidden rounded-3xl">
+                <div className="content-container flex flex-col items-center space-y-8 md:flex-row md:space-x-16 md:space-y-0">
+                    <div className="w-[calc(100vw-4rem)] md:w-[350px] overflow-hidden rounded-3xl">
                         <AspectRatio ratio={8 / 11}>
                             <img
                                 src="/images/content/what-is-kaya-kaya-toast.jpg"
@@ -204,11 +210,10 @@ export default function Index() {
 
             <section
                 id="product-cards"
-                className="content-wrapper snap-start bg-ht-orange py-4 md:py-16"
+                className="content-wrapper snap-start bg-ht-orange py-8 md:py-16"
             >
-                <div className="content-container flex flex-col items-center space-y-4 md:flex-row md:space-x-16 md:space-y-0">
+                <div className="content-container flex flex-col space-y-12 md:flex-row md:space-x-16 md:space-y-0">
                     <ProductCard product={data.kayaPandan} />
-                    <hr className="w-full border-2 border-ht-black md:hidden" />
                     <ProductCard product={data.kayaVegan} />
                 </div>
             </section>

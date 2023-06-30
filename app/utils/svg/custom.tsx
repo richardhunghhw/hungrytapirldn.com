@@ -26,3 +26,24 @@ export function ShoppingBag(props: SVGProps<SVGSVGElement>): JSX.Element {
         </svg>
     );
 }
+
+export function X(props: SVGProps<SVGSVGElement>): JSX.Element {
+    return (
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <path
+                d="M25 1L1 25"
+                stroke="#F9ECE5"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+            <path
+                d="M2.04327 1L26.0433 25"
+                stroke="#F9ECE5"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+        </svg>
+    );
+}

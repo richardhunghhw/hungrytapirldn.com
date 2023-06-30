@@ -1,6 +1,7 @@
 import { Link } from '@remix-run/react';
 import { Instagram } from 'lucide-react';
 import { IconTikTok, IconXiaoHungShu } from '~/utils/svg/icons';
+import { Button } from './ui/button';
 
 const FOOTER_LINKS = [
     { name: 'About', to: '/about-us' },
@@ -64,7 +65,7 @@ export default function Footer() {
                                 <li key={link.to}>
                                     <Link
                                         prefetch="intent"
-                                        className="hover:text-opacity-50 focus:text-opacity-50 focus:outline-none"
+                                        className="hover:text-opacity-50 focus:text-opacity-50"
                                         to={link.to}
                                     >
                                         {link.name}

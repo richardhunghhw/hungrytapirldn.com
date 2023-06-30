@@ -9,6 +9,9 @@ import type { HTActionArgs } from '~/utils/types';
 import type { ContentStoreProductEntry } from '~/services/content-store';
 import { getProduct, validateRequest } from '~/services/content-store';
 import { AspectRatio } from '@radix-ui/react-aspect-ratio';
+import { NumberInput } from '~/components/number-input';
+import { AddToBag } from '~/components/add-to-bag';
+import { Badge } from '~/components/ui/badge';
 
 // Fetch product data content-store
 export async function loader({
@@ -40,12 +43,12 @@ export default function Product() {
         <div className="flex flex-col">
             <div
                 className={
-                    'content-wrapper bg-' + productData.data.sectionColour
+                    'content-wrapper bg-' + productData.data.backgroundColour
                 }
             >
                 <div className="content-container my-24 flex flex-col items-center justify-center py-2">
-                    <div className="flex flex-col items-center space-x-8 md:flex-row">
-                        <div className="w-[350px] basis-1/2 overflow-hidden rounded-3xl">
+                    <div className="flex flex-col items-center md:flex-row md:space-x-8">
+                        <div className="w-[calc(100vw-4rem)] w-[350px] basis-1/2 overflow-hidden rounded-3xl">
                             <AspectRatio ratio={aspectRatio}>
                                 <img
                                     src={productData.data.primaryImage}
@@ -54,23 +57,30 @@ export default function Product() {
                                 />
                             </AspectRatio>
                         </div>
-                        <div className="items-left mt-5 flex basis-1/2 flex-col justify-center md:w-1/2">
-                            <h1 className="text-6xl font-extrabold uppercase text-primary">
-                                {productData.metadata.title}
-                            </h1>
-                            <p>{productData.data.unit}</p>
+                        <div className="items-left mt-5 flex basis-1/2 flex-col justify-center space-y-4 md:w-1/2">
+                            <div className="items-end justify-between flex flex-row text-4xl sm:text-5xl font-extrabold uppercase text-primary md:text-6xl">
+                                <h1>{productData.metadata.title}</h1>
+                                <p>£{productData.data.price}</p>
+                            </div>
+                            {/* <div className="grid auto-rows-auto gap-4">
+                                {productData.data.Ingredients.map(
+                                    (ingredient) => (
+                                        <Badge
+                                            key={ingredient}
+                                            className="my-2 whitespace-nowrap"
+                                        >
+                                            {ingredient}
+                                        </Badge>
+                                    )
+                                )}
+                            </div> */}
                             {productData.data.product.map((product, index) => {
                                 console.log(product);
                                 return <div key={index}>{product}</div>;
                             })}
-                            <p>{productData.data.price}</p>
-                        </div>
-                    </div>
-                    <div className="flex flex-row items-center">
-                        <div className="w-1/3">
-                            {productData.data.Ingredients.map((ingredient) => (
-                                <div key={ingredient}>{ingredient}</div>
-                            ))}
+                            <p className="font-bold">{productData.data.unit}</p>
+                            <NumberInput id={productData.data.id} className='hidden  md:block' />
+                            <AddToBag className='text-white' />
                         </div>
                     </div>
                 </div>

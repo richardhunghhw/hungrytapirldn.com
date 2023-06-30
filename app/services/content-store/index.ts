@@ -42,7 +42,8 @@ export type ContentStoreProductEntry = BaseEntry & {
         product: Array<string>;
         productCart: Array<string>;
         productSection: Array<string>;
-        sectionColour: string;
+        imageColour: string;
+        backgroundColour: string;
     };
 };
 

@@ -74,8 +74,10 @@ function makeContentStoreEntry(
                 type: 'text',
                 text: entry.properties['Section Description'],
             }),
-            sectionColour: entry.properties['Section Colour']?.rich_text[0]
+            imageColour: entry.properties['Image Colour']?.rich_text[0]
                 .plain_text as string,
+            backgroundColour: entry.properties['Background Colour']
+                ?.rich_text[0].plain_text as string,
         };
     } else {
         // TODO sentry
