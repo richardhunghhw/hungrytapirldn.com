@@ -58,7 +58,7 @@ export default function Product() {
                             </AspectRatio>
                         </div>
                         <div className="items-left mt-5 flex basis-1/2 flex-col justify-center space-y-4 md:w-1/2">
-                            <div className="items-end justify-between flex flex-row text-4xl sm:text-5xl font-extrabold uppercase text-primary md:text-6xl">
+                            <div className="flex flex-row items-end justify-between text-4xl font-extrabold uppercase text-primary sm:text-5xl md:text-6xl">
                                 <h1>{productData.metadata.title}</h1>
                                 <p>£{productData.data.price}</p>
                             </div>
@@ -79,8 +79,11 @@ export default function Product() {
                                 return <div key={index}>{product}</div>;
                             })}
                             <p className="font-bold">{productData.data.unit}</p>
-                            <NumberInput id={productData.data.id} className='hidden md:block' />
-                            <AddToBag className='text-white' />
+                            <NumberInput
+                                id={productData.data.id}
+                                className="hidden md:block"
+                            />
+                            <AddToBag className="text-white" />
                         </div>
                     </div>
                 </div>

@@ -60,19 +60,20 @@ function ProductCard({
                     />
                 </AspectRatio>
             </div>
-            <Link className="title flex flex-col items-center text-center text-4xl"
+            <Link
+                className="title flex flex-col items-center text-center text-4xl"
                 to={
                     makeUriFromContentTypeSlug(
                         'product',
                         product.metadata.slug
                     ) as string
                 }
-                >
+            >
                 {product.metadata.title.split(' ').map((word, i) => (
                     <span key={i}>{word}</span>
                 ))}
             </Link>
-            <Button variant="link" asChild className='hidden md:block'>
+            <Button variant="link" asChild className="hidden md:block">
                 <Link
                     to={
                         makeUriFromContentTypeSlug(
@@ -84,11 +85,11 @@ function ProductCard({
                     Learn more
                 </Link>
             </Button>
-            <div className='text-2xl text-black font-extrabold'>
+            <div className="text-2xl font-extrabold text-black">
                 £{product.data.price}
             </div>
-            <NumberInput id={product.data.id} className='hidden md:block' />
-            <AddToBag className='text-ht-orange' />
+            <NumberInput id={product.data.id} className="hidden md:block" />
+            <AddToBag className="text-ht-orange" />
         </div>
     );
 }
@@ -109,18 +110,16 @@ export default function Index() {
                 className="flex h-[calc(100vh-200px)] snap-start flex-col items-center justify-center bg-ht-pink-highlight font-bold text-ht-green-highlight md:h-[calc(100vh-100px)]"
             >
                 <div className="content-container flex flex-col items-center justify-center">
-                    <div className="w-[calc(100vw-2rem)] md:w-[350px] overflow-hidden rounded-xl">
-                        <AspectRatio ratio={7 / 9}>
-                            <img
-                                src="/images/content/landing.png"
-                                alt="Malaysian store"
-                                className="h-full w-full object-cover"
-                            />
-                        </AspectRatio>
+                    <div className="static mt-12">
+                        <img
+                            src="/images/content/landing.png"
+                            alt="Malaysian store"
+                            className="h-[calc(100vh-20rem)] w-[calc(100vw-3rem)] rounded-2xl object-cover md:w-[calc(100vw-9rem)]"
+                        />
                     </div>
                     <div className="absolute flex flex-col items-center">
-                        <TapirTransparent className="text-6xl md:text-8xl" />
-                        <h1 className="title text-center text-4xl md:text-6xl">
+                        <TapirTransparent className="text-5xl md:text-8xl" />
+                        <h1 className="title text-center text-3xl tracking-widest md:text-6xl">
                             WE MAKE KAYA
                         </h1>
                     </div>
@@ -149,7 +148,7 @@ export default function Index() {
                 className="content-wrapper snap-start bg-ht-green py-4 md:py-16"
             >
                 <div className="content-container flex flex-col-reverse items-center space-y-4 space-y-reverse md:flex-row md:space-x-16 md:space-y-0">
-                    <div className="flex w-full flex-grow flex-col items-start justify-center space-y-4 rounded-3xl px-4 text-left font-mono text-ht-black md:w-auto md:items-center md:space-y-10 md:border-2 md:border-ht-black md:p-8 md:text-center mb-4">
+                    <div className="mb-4 flex w-full flex-grow flex-col items-start justify-center space-y-4 rounded-3xl px-4 text-left font-mono text-ht-black md:w-auto md:items-center md:space-y-10 md:border-2 md:border-ht-black md:p-8 md:text-center">
                         <h1 className="title font-serif text-2xl md:text-4xl">
                             Pandan
                         </h1>
@@ -169,7 +168,7 @@ export default function Index() {
                             ORDER NOW
                         </Button>
                     </div>
-                    <div className="w-[calc(100vw-4rem)] md:w-[350px] overflow-hidden rounded-3xl">
+                    <div className="w-[calc(100vw-4rem)] overflow-hidden rounded-3xl md:w-[350px]">
                         <AspectRatio ratio={8 / 11}>
                             <img
                                 src="/images/content/coconut-tree.jpg"
@@ -186,7 +185,7 @@ export default function Index() {
                 className="content-wrapper snap-start bg-ht-pink py-4 md:py-16"
             >
                 <div className="content-container flex flex-col items-center space-y-8 md:flex-row md:space-x-16 md:space-y-0">
-                    <div className="w-[calc(100vw-4rem)] md:w-[350px] overflow-hidden rounded-3xl">
+                    <div className="w-[calc(100vw-4rem)] overflow-hidden rounded-3xl md:w-[350px]">
                         <AspectRatio ratio={8 / 11}>
                             <img
                                 src="/images/content/what-is-kaya-kaya-toast.jpg"
