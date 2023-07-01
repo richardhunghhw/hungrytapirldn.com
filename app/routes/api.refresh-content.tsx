@@ -14,6 +14,7 @@ export async function action({ request, context }: HTActionArgs) {
             AUTH_FAIL_RESPONSE
         );
     } else {
+        console.log('Recieved authenticated request for api/refresh-content');
         const { searchParams } = new URL(request.url);
         const purgeCache = searchParams.get('purgeCache') === 'true';
         return await refreshAllEntries(context, purgeCache)

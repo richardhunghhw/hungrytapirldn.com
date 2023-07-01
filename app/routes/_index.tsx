@@ -111,7 +111,7 @@ export default function Index() {
                         <img
                             src="/images/content/landing.png"
                             alt="Malaysian store"
-                            className="h-[calc(100vh-20rem)] w-[calc(100vw-3rem)] rounded-2xl object-cover md:w-[calc(100vw-5rem)] lg:w-[calc(100vw-9rem)]"
+                            className="h-[calc(100vh-20rem)] w-[calc(100vw-2.4rem)] rounded-2xl object-cover md:w-[calc(100vw-5rem)] lg:w-[calc(100vw-9rem)]"
                         />
                     </div>
                     <div className="absolute flex flex-col items-center">
@@ -165,7 +165,7 @@ export default function Index() {
                             ORDER NOW
                         </Button>
                     </div>
-                    <div className="w-[calc(100vw-4rem)] overflow-hidden rounded-3xl md:w-[350px]">
+                    <div className="w-[calc(100vw-2.4rem)] overflow-hidden rounded-3xl md:w-[350px]">
                         <AspectRatio ratio={8 / 11}>
                             <img
                                 src="/images/content/coconut-tree.jpg"
@@ -182,7 +182,7 @@ export default function Index() {
                 className="content-wrapper snap-start bg-ht-pink py-4 md:py-16"
             >
                 <div className="content-container flex flex-col items-center space-y-8 md:flex-row md:space-x-4 md:space-y-0 lg:space-x-16">
-                    <div className="w-[calc(100vw-4rem)] overflow-hidden rounded-3xl md:w-[350px]">
+                    <div className="w-[calc(100vw-2.4rem)] overflow-hidden rounded-3xl md:w-[350px]">
                         <AspectRatio ratio={8 / 11}>
                             <img
                                 src="/images/content/what-is-kaya-kaya-toast.jpg"

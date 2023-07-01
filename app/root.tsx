@@ -1,5 +1,4 @@
 import type { LinksFunction, LoaderArgs } from '@remix-run/cloudflare';
-import { redirect } from '@remix-run/cloudflare';
 import {
     Links,
     LiveReload,
