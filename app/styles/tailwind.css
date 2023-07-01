@@ -85,7 +85,8 @@
 @layer utilities {
     .content-wrapper {
         @apply px-4;
-        @apply md:px-16;
+        @apply md:px-8;
+        @apply lg:px-16;
         @apply w-full;
     }
 

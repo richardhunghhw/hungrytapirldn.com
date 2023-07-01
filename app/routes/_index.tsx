@@ -50,8 +50,8 @@ function ProductCard({
     const aspectRatio = 8 / 9;
 
     return (
-        <div className="flex w-full flex-grow flex-col items-center justify-center space-y-4 rounded-3xl text-ht-black md:w-fit md:border-2 md:border-ht-black md:p-12">
-            <div className="order-first w-[260px] overflow-hidden md:order-none md:w-[300px]">
+        <div className="flex w-full flex-grow flex-col items-center justify-center space-y-4 rounded-3xl text-ht-black md:w-fit md:border-2 md:border-ht-black md:p-6 lg:p-12">
+            <div className="order-first w-[260px] overflow-hidden md:order-none md:w-[280px] lg:w-[320px]">
                 <AspectRatio ratio={aspectRatio}>
                     <img
                         src={product.data.primaryImage}
@@ -114,7 +114,7 @@ export default function Index() {
                         <img
                             src="/images/content/landing.png"
                             alt="Malaysian store"
-                            className="h-[calc(100vh-20rem)] w-[calc(100vw-3rem)] rounded-2xl object-cover md:w-[calc(100vw-9rem)]"
+                            className="h-[calc(100vh-20rem)] w-[calc(100vw-3rem)] rounded-2xl object-cover md:w-[calc(100vw-5rem)] lg:w-[calc(100vw-9rem)]"
                         />
                     </div>
                     <div className="absolute flex flex-col items-center">
@@ -147,7 +147,7 @@ export default function Index() {
                 id="order-now"
                 className="content-wrapper snap-start bg-ht-green py-4 md:py-16"
             >
-                <div className="content-container flex flex-col-reverse items-center space-y-4 space-y-reverse md:flex-row md:space-x-16 md:space-y-0">
+                <div className="content-container flex flex-col-reverse items-center space-y-4 space-y-reverse md:flex-row md:space-x-4 md:space-y-0 lg:space-x-16">
                     <div className="mb-4 flex w-full flex-grow flex-col items-start justify-center space-y-4 rounded-3xl px-4 text-left font-mono text-ht-black md:w-auto md:items-center md:space-y-10 md:border-2 md:border-ht-black md:p-8 md:text-center">
                         <h1 className="title font-serif text-2xl md:text-4xl">
                             Pandan
@@ -184,7 +184,7 @@ export default function Index() {
                 id="what-is-kaya"
                 className="content-wrapper snap-start bg-ht-pink py-4 md:py-16"
             >
-                <div className="content-container flex flex-col items-center space-y-8 md:flex-row md:space-x-16 md:space-y-0">
+                <div className="content-container flex flex-col items-center space-y-8 md:flex-row md:space-x-4 md:space-y-0 lg:space-x-16">
                     <div className="w-[calc(100vw-4rem)] overflow-hidden rounded-3xl md:w-[350px]">
                         <AspectRatio ratio={8 / 11}>
                             <img
@@ -211,7 +211,7 @@ export default function Index() {
                 id="product-cards"
                 className="content-wrapper snap-start bg-ht-orange py-8 md:py-16"
             >
-                <div className="content-container flex flex-col space-y-12 md:flex-row md:space-x-16 md:space-y-0">
+                <div className="content-container flex flex-col space-y-12 md:flex-row md:space-x-4 md:space-y-0 lg:space-x-16">
                     <ProductCard product={data.kayaPandan} />
                     <ProductCard product={data.kayaVegan} />
                 </div>
