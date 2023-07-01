@@ -48,7 +48,7 @@ export default function Product() {
             >
                 <div className="content-container my-24 flex flex-col items-center justify-center py-2">
                     <div className="flex flex-col items-center md:flex-row md:space-x-8">
-                        <div className="w-[calc(100vw-4rem)] w-[350px] basis-1/2 overflow-hidden rounded-3xl">
+                        <div className="w-[350px] basis-1/2 overflow-hidden rounded-3xl">
                             <AspectRatio ratio={aspectRatio}>
                                 <img
                                     src={productData.data.primaryImage}
@@ -79,7 +79,7 @@ export default function Product() {
                                 return <div key={index}>{product}</div>;
                             })}
                             <p className="font-bold">{productData.data.unit}</p>
-                            <NumberInput id={productData.data.id} className='hidden  md:block' />
+                            <NumberInput id={productData.data.id} className='hidden md:block' />
                             <AddToBag className='text-white' />
                         </div>
                     </div>
