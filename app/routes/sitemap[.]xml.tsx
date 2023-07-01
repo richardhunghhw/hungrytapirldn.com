@@ -34,33 +34,18 @@ const generateSitemapXml = (sitemapData: SitemapData) => {
 
 // Generate sitemap manually
 export async function loader({ context }: HTLoaderArgs) {
-    let sitemapData: SitemapData;
-    if (context.NODE_ENV === 'PROD') {
-        sitemapData = {
-            hostname: context.HOST_URL,
-            urls: [
-                {
-                    url: new URL('/coming-soon', context.HOST_URL),
-                    lastMod: new Date().toISOString(),
-                    changeFreq: 'daily',
-                    priority: '1.0',
-                },
-            ],
-        };
-    } else {
-        const allContent = await listAll(context);
-        sitemapData = {
-            hostname: context.HOST_URL,
-            urls: allContent
-                .map((content) => ({
-                    url: makeUrlFromContent(context.HOST_URL, content)!,
-                    lastMod: new Date().toISOString(),
-                    changeFreq: 'daily',
-                    priority: '1.0',
-                }))
-                .filter((entry) => entry.url !== undefined),
-        };
-    }
+    const allContent = await listAll(context);
+    const sitemapData: SitemapData = {
+        hostname: context.HOST_URL,
+        urls: allContent
+            .map((content) => ({
+                url: makeUrlFromContent(context.HOST_URL, content)!,
+                lastMod: new Date().toISOString(),
+                changeFreq: 'daily',
+                priority: '1.0',
+            }))
+            .filter((entry) => entry.url !== undefined),
+    };
 
     return new Response(generateSitemapXml(sitemapData), {
         headers: {

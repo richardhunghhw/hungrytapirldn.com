@@ -25,9 +25,6 @@ export const meta: V2_MetaFunction = () => {
 };
 
 export async function loader({ context }: HTLoaderArgs) {
-    if (context.NODE_ENV === 'PROD') {
-        return redirect('/coming-soon');
-    }
     const orderNow = await getGeneral(context, 'section~order-now');
     const whatKaya = await getGeneral(context, 'section~what-is-kaya');
     const kayaPandan = await getProduct(context, 'the-pandan-kaya');

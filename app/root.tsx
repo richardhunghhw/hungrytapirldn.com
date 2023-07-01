@@ -16,16 +16,6 @@ import stylesheet from '~/styles/tailwind.css';
 import Navbar from './components/navbar';
 import Footer from './components/footer';
 
-export async function loader({ params, request }: LoaderArgs) {
-    if (
-        params?.NODE_ENV === 'PROD' &&
-        new URL(request.url).pathname !== '/coming-soon'
-    ) {
-        return redirect('/coming-soon');
-    }
-    return null;
-}
-
 function App() {
     return (
         <html lang="en">
