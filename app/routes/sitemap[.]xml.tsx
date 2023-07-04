@@ -42,7 +42,7 @@ export async function loader({ context }: HTLoaderArgs) {
                 url: makeUrlFromContent(context.HOST_URL, content)!,
                 lastMod: new Date().toISOString(),
                 changeFreq: 'daily',
-                priority: '1.0',
+                priority: '0.6',
             }))
             .filter((entry) => entry.url !== undefined),
     };

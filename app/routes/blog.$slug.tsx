@@ -56,7 +56,7 @@ export default function Blog() {
                     </div>
                 </div>
             </div>
-            <div className="content-wrapper">
+            <div className="content-wrapper body-text-wrapper">
                 <div className="content-container mt-4">
                     <div className="prose prose-lg max-w-none">
                         {/* {blog.Content.rich_text.map((line) => {

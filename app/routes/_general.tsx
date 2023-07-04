@@ -56,7 +56,7 @@ export default function GeneralLayout() {
                     </div>
                 </div>
             </div>
-            <div className="content-wrapper">
+            <div className="content-wrapper body-text-wrapper">
                 <div className="content-container mt-4">
                     <Outlet />
                 </div>

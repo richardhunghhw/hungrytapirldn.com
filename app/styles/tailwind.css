@@ -103,7 +103,13 @@
 
     .title-section {
         @apply my-56;
-        @apply text-4xl;
-        @apply sm:text-6xl;
+        @apply text-2xl;
+        @apply sm:text-4xl;
+        @apply md:text-6xl;
+    }
+
+    .body-text-wrapper {
+        @apply min-h-[65vh];
+        @apply my-8;
     }
 }

@@ -61,7 +61,7 @@ export default function Faq() {
                     </div>
                 </div>
             </div>
-            <div className="content-wrapper">
+            <div className="content-wrapper body-text-wrapper">
                 <div className="content-container mt-4">
                     <div className="prose prose-lg max-w-none">
                         {/* <div
