@@ -1,10 +1,10 @@
 # hungrytapirldn.com
 
-The magic behind hungrytapirldn.com. 
+The magic behind [hungrytapirldn.com](//www.hungrytapirldn.com)!. 
 
 ## Credits
 
-UI/UX Design @vida.oskooee, you can find her work at [vidaoskooee.com](//www.vidaoskooee.com)!
+UI/UX Design by @vida.oskooee, you can follow her work at [vidaoskooee.com](//www.vidaoskooee.com)!
 
 ## Contributing 
 
