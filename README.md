@@ -1,55 +1,13 @@
-# README #
+# hungrytapirldn.com
 
-This README would normally document whatever steps are necessary to get your application up and running.
+The magic behind hungrytapirldn.com. 
 
-### What is this repository for? ###
+## Credits
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+UI/UX Design @vida.oskooee, you can find her work at [vidaoskooee.com](//www.vidaoskooee.com)!
 
-### How do I get set up? ###
+## Contributing 
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+Contributions always welcome. If you raise an issue, I may review it. If you open a pull request, I may merge it. 
 
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
-
-
----
-
-# Welcome to Remix!
-
-- [Remix Docs](https://remix.run/docs)
-
-## Development
-
-You will be utilizing Wrangler for local development to emulate the Cloudflare runtime. This is already wired up in your package.json as the `dev` script:
-
-```sh
-# start the remix dev server and wrangler
-npm run dev
-```
-
-Open up [http://127.0.0.1:8788](http://127.0.0.1:8788) and you should be ready to go!
-
-## Deployment
-
-Cloudflare Pages are currently only deployable through their Git provider integrations.
-
-If you don't already have an account, then [create a Cloudflare account here](https://dash.cloudflare.com/sign-up/pages) and after verifying your email address with Cloudflare, go to your dashboard and follow the [Cloudflare Pages deployment guide](https://developers.cloudflare.com/pages/framework-guides/deploy-anything).
-
-Configure the "Build command" should be set to `npm run build`, and the "Build output directory" should be set to `public`.
+[Read more](https://media.giphy.com/media/Ju7l5y9osyymQ/giphy.gif)
