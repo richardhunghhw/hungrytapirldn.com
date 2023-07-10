@@ -19,6 +19,7 @@ export type HTAppLoadContext = AppLoadContext & {
 
     /** KV namespaces */
     readonly CONTENT_STORE: KVNamespace;
+    readonly SESSION_STORE: KVNamespace;
 
     /** Store Config Worker */
     readonly CONFIGSTORE_WORKER: ServiceWorkerGlobalScope;
