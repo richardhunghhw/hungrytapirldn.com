@@ -1,7 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
 {
-	"name": "Standard Issue Node Env",
+	"name": "Local Node Env",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	// "image": "mcr.microsoft.com/devcontainers/typescript-node:0-20",
 	"build": {
@@ -53,5 +53,16 @@
 		"8789": {
 			"label": "Config Store Worker"
 		}
-	}
+	},
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	"remoteUser": "root",
+	// See https://code.visualstudio.com/remote/advancedcontainers/environment-variables
+	"runArgs": [
+		"--env-file",
+		".devcontainer/devcontainer.env"
+	],
+	// See https://code.visualstudio.com/remote/advancedcontainers/add-local-file-mount
+	"mounts": [
+		"source=/boot/config/ssh/root,target=/root/.ssh,type=bind,consistency=cached"
+	]
 }

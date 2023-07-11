@@ -5,8 +5,10 @@ on:
             - develop
         paths-ignore:
             - '.devcontainer/**'
+            - '.vscode/**'
             - 'lambdas/**'
             - 'scripts/**'
+            - 'workers/**'
             - 'README.md'
 
 jobs:
