@@ -1,7 +1,5 @@
 import { Link } from '@remix-run/react';
-import { Instagram } from 'lucide-react';
-import { IconTikTok, IconXiaoHungShu } from '~/utils/svg/icons';
-import { Button } from './ui/button';
+import SocialIcons from './social-icons';
 
 const FOOTER_LINKS = [
     { name: 'About', to: '/about-us' },
@@ -11,25 +9,6 @@ const FOOTER_LINKS = [
     { name: 'Deliveries & Returns', to: '/deliveries-and-returns' },
     { name: 'Terms & Conditions', to: '/terms-and-conditions' },
 ];
-
-function FooterIcon({
-    link,
-    children,
-}: {
-    link: string;
-    children: React.ReactNode;
-}) {
-    return (
-        <a
-            href={link}
-            className="block rounded-full bg-ht-off-white p-2"
-            target="_blank"
-            rel="noopener noreferrer"
-        >
-            <div className="text-2xl text-ht-black">{children}</div>
-        </a>
-    );
-}
 
 export default function Footer() {
     return (
@@ -41,23 +20,7 @@ export default function Footer() {
                 <div className="mb-24 flex flex-col justify-between space-y-5 p-4 md:mb-48 md:flex-row md:space-y-0">
                     <div className="basis-1/3 lg:basis-1/2">
                         <h1 className="font-bold">HUNGRY TAPIR | LONDON</h1>
-                        <ul className="mt-4 flex flex-row space-x-4">
-                            <li>
-                                <FooterIcon link="//www.instagram.com/hungrytapirldn/">
-                                    <Instagram />
-                                </FooterIcon>
-                            </li>
-                            <li>
-                                <FooterIcon link="//www.tiktok.com/@hungrytapirldn/">
-                                    <IconTikTok />
-                                </FooterIcon>
-                            </li>
-                            <li>
-                                <FooterIcon link="//www.xiaohongshu.com/user/profile/63b77a78000000002702a7d7/">
-                                    <IconXiaoHungShu />
-                                </FooterIcon>
-                            </li>
-                        </ul>
+                        <SocialIcons />
                     </div>
                     <div className="basis-2/3 lg:basis-1/2">
                         <ul className="flex flex-col flex-wrap uppercase md:h-[5rem]">

@@ -1,6 +1,7 @@
 {
     "private": true,
-    "sideEffects": false,
+    "name": "hungrytapirldn.com",
+    "license": "MIT",
     "scripts": {
         "postinstall": "remix-esbuild-override",
         "build": "concurrently \"npm run build:*\"",
@@ -64,5 +65,6 @@
     },
     "engines": {
         "node": ">=16.13"
-    }
+    },
+    "sideEffects": false
 }

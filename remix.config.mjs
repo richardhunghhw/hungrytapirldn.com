@@ -1,6 +1,6 @@
-const { withEsbuildOverride } = require('remix-esbuild-override');
-const { replace } = require('esbuild-plugin-replace');
-const { config } = require('dotenv');
+import { withEsbuildOverride } from 'remix-esbuild-override';
+import { replace } from 'esbuild-plugin-replace';
+import { config } from 'dotenv';
 
 config();
 
@@ -27,8 +27,8 @@ withEsbuildOverride((option) => {
 /**
  * @type {import('@remix-run/dev').AppConfig}
  */
-module.exports = {
-    devServerBroadcastDelay: 1000,
+export default {
+    devServerBroadcastDelay: 2000,
     ignoredRouteFiles: ['**/.*'],
     server: './server.ts',
     serverBuildPath: 'functions/[[path]].js',
@@ -38,6 +38,7 @@ module.exports = {
     serverMinify: true,
     serverModuleFormat: 'esm',
     serverPlatform: 'neutral',
+
     tailwind: true,
     future: {
         v2_errorBoundary: true,

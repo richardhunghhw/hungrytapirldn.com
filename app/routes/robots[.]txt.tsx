@@ -2,10 +2,11 @@
  * Sitemap page, generated from the content-store data
  */
 
+import { isProd } from '~/utils/misc';
 import type { HTAppLoadContext, HTLoaderArgs } from '~/utils/types';
 
-const generateRobotText = ({ NODE_ENV, HOST_URL }: HTAppLoadContext) => {
-    if (NODE_ENV === 'PROD') {
+const generateRobotText = (context: HTAppLoadContext) => {
+    if (isProd(context)) {
         return `
         User-agent: Googlebot
         Disallow: /nogooglebot/
@@ -13,7 +14,7 @@ const generateRobotText = ({ NODE_ENV, HOST_URL }: HTAppLoadContext) => {
         User-agent: *
         Allow: /
     
-        Sitemap: ${HOST_URL}/sitemap.xml
+        Sitemap: ${context.HOST_URL}/sitemap.xml
         `;
     } else {
         return `
