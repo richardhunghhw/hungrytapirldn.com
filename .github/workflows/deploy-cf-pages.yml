@@ -5,6 +5,7 @@ on:
             - develop
         paths-ignore:
             - '.devcontainer/**'
+            - '.github/workflows/deploy-cf-worker-store-config.yml'
             - '.vscode/**'
             - 'lambdas/**'
             - 'scripts/**'
