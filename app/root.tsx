@@ -1,4 +1,4 @@
-import type { LinksFunction, LoaderArgs } from '@remix-run/cloudflare';
+import type { LinksFunction } from '@remix-run/cloudflare';
 import {
     Links,
     LiveReload,
@@ -7,6 +7,8 @@ import {
     Scripts,
     ScrollRestoration,
     isRouteErrorResponse,
+    useLoaderData,
+    useMatches,
     useRouteError,
 } from '@remix-run/react';
 import { withSentry } from '@sentry/remix';
@@ -14,12 +16,59 @@ import { withSentry } from '@sentry/remix';
 import stylesheet from '~/styles/tailwind.css';
 import Navbar from './components/navbar';
 import Footer from './components/footer';
+import type { HTLoaderArgs } from './utils/types';
+import { isDev } from './utils/misc';
+
+export const links: LinksFunction = () => {
+    return [
+        { rel: 'stylesheet', href: stylesheet },
+        {
+            rel: 'preload',
+            as: 'font',
+            type: 'font/woff2',
+            crossOrigin: 'anonymous',
+            href: '/fonts/dela-gothic-one-v10-latin-regular.woff2',
+        },
+        {
+            rel: 'preload',
+            as: 'font',
+            type: 'font/woff2',
+            crossOrigin: 'anonymous',
+            href: '/fonts/space-mono-v12-latin-regular.woff2',
+        },
+        {
+            rel: 'preload',
+            as: 'font',
+            type: 'font/woff2',
+            crossOrigin: 'anonymous',
+            href: '/fonts/space-mono-v12-latin-700.woff2',
+        },
+    ];
+};
+
+const BYPASS_HEADERFOOTER_PATHS = ['/linkinbio'];
+
+async function loader({ context }: HTLoaderArgs) {
+    return {
+        hostUrl: context.HOST_URL,
+        isDev: isDev(context),
+    };
+}
 
 function App() {
+    const loaderData = useLoaderData<typeof loader>();
+    const isDev = loaderData?.isDev ?? false;
+
+    const matches = useMatches();
+    const pathname = matches.pop()?.pathname as string;
+
     return (
         <html lang="en">
             <head>
-                <meta charSet="utf-8" />
+                <meta
+                    httpEquiv="Content-Type"
+                    content="text/html; charset=utf-8"
+                />
                 <meta
                     name="viewport"
                     content="width=device-width,initial-scale=1"
@@ -28,20 +77,16 @@ function App() {
                 <Links />
             </head>
             <body>
-                <Navbar />
+                {!BYPASS_HEADERFOOTER_PATHS.includes(pathname) && <Navbar />}
                 <Outlet />
-                <Footer />
+                {!BYPASS_HEADERFOOTER_PATHS.includes(pathname) && <Footer />}
                 <ScrollRestoration />
                 <Scripts />
-                <LiveReload />
+                {isDev && <LiveReload />}
             </body>
         </html>
     );
 }
-
-export const links: LinksFunction = () => {
-    return [{ rel: 'stylesheet', href: stylesheet }];
-};
 
 export function ErrorBoundary() {
     const error = useRouteError();

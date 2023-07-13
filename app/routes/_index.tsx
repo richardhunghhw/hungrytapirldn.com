@@ -1,6 +1,5 @@
 import type { V2_MetaFunction } from '@remix-run/react';
 import { Link, useLoaderData } from '@remix-run/react';
-import { redirect } from '@remix-run/cloudflare';
 import type { HTLoaderArgs } from '~/utils/types';
 
 import { Button } from '~/components/ui/button';

@@ -10,6 +10,7 @@ import type { ContentStoreFaqEntry } from '~/services/content-store';
 import { validateRequest, getFaq } from '~/services/content-store';
 import DOMPurify from 'dompurify';
 import { ArrowLeft } from 'lucide-react';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 // Fetch faq data content-store
 export async function loader({
@@ -64,17 +65,9 @@ export default function Faq() {
             <div className="content-wrapper body-text-wrapper">
                 <div className="content-container mt-4">
                     <div className="prose prose-lg max-w-none">
-                        {/* <div
-                            dangerouslySetInnerHTML={{
-                                __html: DOMPurify.sanitize(
-                                    faq.Answer.rich_text[0].text.content
-                                ),
-                            }}
-                        /> */}
-                        {faqContent.map((faq, index) => {
-                            console.log(faq);
-                            return <div key={index}>{faq}</div>;
-                        })}
+                        {faqContent.map((faqRow, index) => (
+                            <ReactMarkdown key={index}>{faqRow}</ReactMarkdown>
+                        ))}
                     </div>
                 </div>
             </div>

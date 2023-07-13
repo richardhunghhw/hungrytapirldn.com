@@ -19,7 +19,9 @@ export default function Footer() {
             <div className="content-container flex flex-col">
                 <div className="mb-24 flex flex-col justify-between space-y-5 p-4 md:mb-48 md:flex-row md:space-y-0">
                     <div className="basis-1/3 lg:basis-1/2">
-                        <h1 className="font-bold">HUNGRY TAPIR | LONDON</h1>
+                        <h1 className="mb-4 font-bold">
+                            HUNGRY TAPIR | LONDON
+                        </h1>
                         <SocialIcons />
                     </div>
                     <div className="basis-2/3 lg:basis-1/2">

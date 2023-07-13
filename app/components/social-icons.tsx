@@ -27,6 +27,12 @@ const SOCIAL_LINKS = [
         icon: <IconThreads />,
     },
     {
+        enabled: false,
+        link: '//twitter.com/hungrytapirldn',
+        label: 'Twitter',
+        icon: <IconThreads />,
+    },
+    {
         enabled: true,
         link: '//www.tiktok.com/@hungrytapirldn',
         label: 'TikTok',
@@ -64,7 +70,7 @@ function SocialIcon({
 
 export default function SocialIcons() {
     return (
-        <ul className="mt-4 flex flex-row flex-wrap space-x-4">
+        <ul className="flex flex-row flex-wrap space-x-4">
             {SOCIAL_LINKS.map((link) => {
                 if (!link.enabled) {
                     return null;
