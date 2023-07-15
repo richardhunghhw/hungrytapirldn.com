@@ -1,0 +1,39 @@
+name: Refresh trigger
+on:
+  schedule:
+    - cron: '0 5 * * *' # for prod
+    - cron: '0 23 * * *' # for test
+jobs:
+  update-kv-store:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set host based on env
+        run: |
+            if [ "${{ github.event.schedule }}" = "0 5 * * *" ]; then
+              echo "HOST=https://www.hungrytapirldn.com" >> $GITHUB_ENV
+            elif [ "${{ github.event.schedule }}" = "0 23 * * *" ]; then
+              echo "HOST=https://develop.hungrytapir-store.pages.dev" >> $GITHUB_ENV
+            fi
+      - name: Set purge variable
+        run: echo "PURGE=" >> $GITHUB_ENV # set as 'True' for purge
+      - name: Set URL
+        run: |
+            if [ "${{ env.PURGE }}" = "True" ]; then
+              echo "URL=${{ env.HOST }}/api/refresh-content?purge=true" >> $GITHUB_ENV
+            else
+              echo "URL=${{ env.HOST }}/api/refresh-content" >> $GITHUB_ENV
+            fi
+      - name: Load secrets from 1Password
+        uses: 1Password/load-secrets-action@v1
+        env:
+            OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN_TEST }}
+            BASIC_AUTH_USERNAME: 'op://${{ vars.VAULT_NAME }}/HT Basic/username'
+            BASIC_AUTH_PASSWORD: 'op://${{ vars.VAULT_NAME }}/HT Basic/credential'
+      - name: Post request on Refresh Content API
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: '${{ env.URL }}'
+          method: 'POST'
+          username: '${{ env.BASIC_AUTH_USERNAME }}'
+          password: '${{ env.BASIC_AUTH_PASSWORD }}'
+          timeout: 120000
