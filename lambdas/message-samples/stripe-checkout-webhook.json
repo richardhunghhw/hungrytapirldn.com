@@ -67,10 +67,7 @@
       "payment_link": null,
       "payment_method_collection": "always",
       "payment_method_options": {},
-      "payment_method_types": [
-        "card",
-        "link"
-      ],
+      "payment_method_types": ["card", "link"],
       "payment_status": "paid",
       "phone_number_collection": {
         "enabled": false

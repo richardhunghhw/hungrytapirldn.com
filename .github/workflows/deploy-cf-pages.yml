@@ -1,82 +1,82 @@
 on:
-    push:
-        branches:
-            - main
-            - develop
-        paths-ignore:
-            - '.devcontainer/**'
-            - '.github/workflows/deploy-cf-worker-store-config.yml'
-            - '.vscode/**'
-            - 'lambdas/**'
-            - 'scripts/**'
-            - 'workers/**'
-            - 'README.md'
+  push:
+    branches:
+      - main
+      - develop
+    paths-ignore:
+      - '.devcontainer/**'
+      - '.github/workflows/deploy-cf-worker-store-config.yml'
+      - '.vscode/**'
+      - 'lambdas/**'
+      - 'scripts/**'
+      - 'workers/**'
+      - 'README.md'
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        permissions:
-            contents: read
-            deployments: write
-        name: Deploy to Cloudflare Pages
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v3
-              with:
-                  fetch-depth: 0
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    name: Deploy to Cloudflare Pages
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-            - name: Load secrets from 1Password
-              uses: 1Password/load-secrets-action@v1
-              env:
-                  OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN_TEST }}
-                  CLOUDFLARE_API_TOKEN: 'op://${{ vars.VAULT_NAME }}/Cloudflare API Token/credential'
-                  CLOUDFLARE_ACCOUNT_ID: 'op://${{ vars.VAULT_NAME }}/Cloudflare API Token/username'
-                  BASIC_AUTH_USERNAME: 'op://${{ vars.VAULT_NAME }}/HT Basic/username'
-                  BASIC_AUTH_PASSWORD: 'op://${{ vars.VAULT_NAME }}/HT Basic/credential'
-                  SENTRY_AUTH_TOKEN: 'op://${{ vars.VAULT_NAME }}/Sentry/credential'
-                  SENTRY_DSN: 'op://${{ vars.VAULT_NAME }}/Sentry/dsn'
-                  SENTRY_ORG: 'op://${{ vars.VAULT_NAME }}/Sentry/org-slug'
-                  SENTRY_PROJECT: 'op://${{ vars.VAULT_NAME }}/Sentry/username'
+      - name: Load secrets from 1Password
+        uses: 1Password/load-secrets-action@v1
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN_TEST }}
+          CLOUDFLARE_API_TOKEN: 'op://${{ vars.VAULT_NAME }}/Cloudflare API Token/credential'
+          CLOUDFLARE_ACCOUNT_ID: 'op://${{ vars.VAULT_NAME }}/Cloudflare API Token/username'
+          BASIC_AUTH_USERNAME: 'op://${{ vars.VAULT_NAME }}/HT Basic/username'
+          BASIC_AUTH_PASSWORD: 'op://${{ vars.VAULT_NAME }}/HT Basic/credential'
+          SENTRY_AUTH_TOKEN: 'op://${{ vars.VAULT_NAME }}/Sentry/credential'
+          SENTRY_DSN: 'op://${{ vars.VAULT_NAME }}/Sentry/dsn'
+          SENTRY_ORG: 'op://${{ vars.VAULT_NAME }}/Sentry/org-slug'
+          SENTRY_PROJECT: 'op://${{ vars.VAULT_NAME }}/Sentry/username'
 
-            - name: Set SENTRY_ENV
-              run: |
-                  if [ "${{ github.ref }}" = "refs/heads/main" ]; then
-                    echo "SENTRY_ENV=PROD" >> $GITHUB_ENV
-                  elif [ "${{ github.ref }}" = "refs/heads/develop" ]; then
-                    echo "SENTRY_ENV=TEST" >> $GITHUB_ENV
-                  fi
+      - name: Set SENTRY_ENV
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "SENTRY_ENV=PROD" >> $GITHUB_ENV
+          elif [ "${{ github.ref }}" = "refs/heads/develop" ]; then
+            echo "SENTRY_ENV=TEST" >> $GITHUB_ENV
+          fi
 
-            - name: Build
-              env:
-                  BASIC_AUTH_USERNAME: ${{ env.BASIC_AUTH_USERNAME }}
-                  BASIC_AUTH_PASSWORD: ${{ env.BASIC_AUTH_PASSWORD }}
-                  SENTRY_DEBUG: true
-                  SENTRY_DSN: ${{ env.SENTRY_DSN }}
-                  SENTRY_ENV: ${{ env.SENTRY_ENV }}
-                  SENTRY_TRACES_SAMPLE_RATE: 1.0
-              run: npm install && npm run build
+      - name: Build
+        env:
+          BASIC_AUTH_USERNAME: ${{ env.BASIC_AUTH_USERNAME }}
+          BASIC_AUTH_PASSWORD: ${{ env.BASIC_AUTH_PASSWORD }}
+          SENTRY_DEBUG: true
+          SENTRY_DSN: ${{ env.SENTRY_DSN }}
+          SENTRY_ENV: ${{ env.SENTRY_ENV }}
+          SENTRY_TRACES_SAMPLE_RATE: 1.0
+        run: npm install && npm run build
 
-            - name: Find sourcemaps
-              id: sourcemaps
-              run: |
-                  echo "files=$(find functions public -name '*.map' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+      - name: Find sourcemaps
+        id: sourcemaps
+        run: |
+          echo "files=$(find functions public -name '*.map' | tr '\n' ' ')" >> $GITHUB_OUTPUT
 
-            - name: Create Sentry release
-              uses: getsentry/action-release@v1
-              env:
-                  SENTRY_AUTH_TOKEN: ${{ env.SENTRY_AUTH_TOKEN }}
-                  SENTRY_ORG: ${{ env.SENTRY_ORG }}
-                  SENTRY_PROJECT: ${{ env.SENTRY_PROJECT }}
-              with:
-                  environment: ${{ env.SENTRY_ENV }}
-                  sourcemaps: ${{ steps.sourcemaps.outputs.files }}
+      - name: Create Sentry release
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ env.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ env.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ env.SENTRY_PROJECT }}
+        with:
+          environment: ${{ env.SENTRY_ENV }}
+          sourcemaps: ${{ steps.sourcemaps.outputs.files }}
 
-            - name: Publish to Cloudflare Pages
-              uses: cloudflare/pages-action@v1
-              with:
-                  apiToken: '${{ env.CLOUDFLARE_API_TOKEN }}'
-                  accountId: '${{ env.CLOUDFLARE_ACCOUNT_ID }}'
-                  projectName: hungrytapir-store
-                  directory: public
-                  gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-                  wranglerVersion: '3'
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: '${{ env.CLOUDFLARE_API_TOKEN }}'
+          accountId: '${{ env.CLOUDFLARE_ACCOUNT_ID }}'
+          projectName: hungrytapir-store
+          directory: public
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          wranglerVersion: '3'

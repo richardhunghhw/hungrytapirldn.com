@@ -10,31 +10,27 @@ import { hydrateRoot } from 'react-dom/client';
 import * as Sentry from '@sentry/remix';
 
 Sentry.init({
-    debug: __sentryDebug__,
-    dsn: '__sentryDsn__',
-    environment: '__sentryEnv__',
-    integrations: [
-        new Sentry.BrowserTracing({
-            routingInstrumentation: Sentry.remixRouterInstrumentation(
-                useEffect,
-                useLocation,
-                useMatches
-            ),
-        }),
-        new Sentry.Replay(),
-    ],
-    // Performance Monitoring
-    tracesSampleRate: __sentryTracesSampleRate__,
-    // Session Replay
-    replaysSessionSampleRate: 1.0, // This sets the sample rate at 100%. You may want to change it to sample at a lower rate (<10%) in production.
-    replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
+  debug: __sentryDebug__,
+  dsn: '__sentryDsn__',
+  environment: '__sentryEnv__',
+  integrations: [
+    new Sentry.BrowserTracing({
+      routingInstrumentation: Sentry.remixRouterInstrumentation(useEffect, useLocation, useMatches),
+    }),
+    new Sentry.Replay(),
+  ],
+  // Performance Monitoring
+  tracesSampleRate: __sentryTracesSampleRate__,
+  // Session Replay
+  replaysSessionSampleRate: 1.0, // This sets the sample rate at 100%. You may want to change it to sample at a lower rate (<10%) in production.
+  replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
 });
 
 startTransition(() => {
-    hydrateRoot(
-        document,
-        <StrictMode>
-            <RemixBrowser />
-        </StrictMode>
-    );
+  hydrateRoot(
+    document,
+    <StrictMode>
+      <RemixBrowser />
+    </StrictMode>,
+  );
 });
