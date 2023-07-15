@@ -9,110 +9,96 @@ import { Client } from '@notionhq/client';
 import type { HTAppLoadContext } from '~/utils/types';
 import type { ContentType } from '.';
 import type {
-    BlockObjectResponse,
-    PageObjectResponse,
-    PartialBlockObjectResponse,
-    PartialPageObjectResponse,
+  BlockObjectResponse,
+  PageObjectResponse,
+  PartialBlockObjectResponse,
+  PartialPageObjectResponse,
 } from '@notionhq/client/build/src/api-endpoints';
 
 // Setup Notion client
-async function getClient({
-    NOTION_API_SECRET,
-}: HTAppLoadContext): Promise<Client> {
-    return new Client({ auth: NOTION_API_SECRET, notionVersion: '2022-06-28' });
+async function getClient({ NOTION_API_SECRET }: HTAppLoadContext): Promise<Client> {
+  return new Client({ auth: NOTION_API_SECRET, notionVersion: '2022-06-28' });
 }
 
 function isPageObjectResponse(
-    response: PartialPageObjectResponse | PageObjectResponse
+  response: PartialPageObjectResponse | PageObjectResponse,
 ): response is PageObjectResponse {
-    return (response as PageObjectResponse).object !== undefined;
+  return (response as PageObjectResponse).object !== undefined;
 }
 
 // Query Notion API for all entries in a Database entries given its ContentType
-async function queryDbByType(
-    context: HTAppLoadContext,
-    type: ContentType
-): Promise<Array<PageObjectResponse>> {
-    const notion = await getClient(context);
-    const databaseId = context[`NOTION_API_DB_${type.toUpperCase()}`] as string;
+async function queryDbByType(context: HTAppLoadContext, type: ContentType): Promise<Array<PageObjectResponse>> {
+  const notion = await getClient(context);
+  const databaseId = context[`NOTION_API_DB_${type.toUpperCase()}`] as string;
 
-    const filter = {
-        property: 'Environment',
-        multi_select: {
-            contains: context.NODE_ENV,
-        },
-    };
+  const filter = {
+    property: 'Environment',
+    multi_select: {
+      contains: context.NODE_ENV,
+    },
+  };
 
-    const results: Array<PageObjectResponse> = [];
-    let data: any = {};
-    do {
-        // Todo this is not async
-        data = await notion.databases.query({
-            database_id: databaseId,
-            filter: filter,
-            start_cursor: data?.next_cursor ?? undefined,
-        });
+  const results: Array<PageObjectResponse> = [];
+  let data: any = {};
+  do {
+    // Todo this is not async
+    data = await notion.databases.query({
+      database_id: databaseId,
+      filter: filter,
+      start_cursor: data?.next_cursor ?? undefined,
+    });
 
-        data.results
-            .filter(
-                (
-                    response: PartialPageObjectResponse | PageObjectResponse
-                ): response is PageObjectResponse =>
-                    isPageObjectResponse(response)
-            )
-            .forEach((row: PageObjectResponse) => results.push(row));
-    } while (data?.has_more);
+    data.results
+      .filter((response: PartialPageObjectResponse | PageObjectResponse): response is PageObjectResponse =>
+        isPageObjectResponse(response),
+      )
+      .forEach((row: PageObjectResponse) => results.push(row));
+  } while (data?.has_more);
 
-    return results;
+  return results;
 }
 
 export type FullPageResponse = PageObjectResponse & {
-    content: Array<BlockObjectResponse>;
+  content: Array<BlockObjectResponse>;
 };
 
 function isBlockObjectResponse(
-    response: PartialBlockObjectResponse | BlockObjectResponse
+  response: PartialBlockObjectResponse | BlockObjectResponse,
 ): response is BlockObjectResponse {
-    return (response as BlockObjectResponse).type !== undefined;
+  return (response as BlockObjectResponse).type !== undefined;
 }
 
 // Get a single Page's content from Notion API given its id
-async function getPageContent(
-    context: HTAppLoadContext,
-    entry: PageObjectResponse
-): Promise<FullPageResponse> {
-    const notion = await getClient(context);
+async function getPageContent(context: HTAppLoadContext, entry: PageObjectResponse): Promise<FullPageResponse> {
+  const notion = await getClient(context);
 
-    const results: Array<BlockObjectResponse> = [];
-    let block_id = entry.id;
-    let data: any = {};
-    do {
-        // Todo this is not async
-        data = await notion.blocks.children
-            .list({
-                block_id,
-                start_cursor: data?.next_cursor ?? undefined,
-            })
-            .catch((err) => {
-                //todo sentry errror
-                console.error(err);
-            });
+  const results: Array<BlockObjectResponse> = [];
+  let block_id = entry.id;
+  let data: any = {};
+  do {
+    // Todo this is not async
+    data = await notion.blocks.children
+      .list({
+        block_id,
+        start_cursor: data?.next_cursor ?? undefined,
+      })
+      .catch((err) => {
+        //todo sentry errror
+        console.error(err);
+      });
 
-        // filter out array elements with PartialBlockObjectResponse TODO find out what this is
-        data.results
-            .filter(
-                (
-                    response: PartialBlockObjectResponse | BlockObjectResponse
-                ): response is BlockObjectResponse =>
-                    isBlockObjectResponse(response)
-            )
-            .forEach((row: BlockObjectResponse) => results.push(row));
-    } while (data?.has_more);
+    // filter out array elements with PartialBlockObjectResponse TODO find out what this is
+    data.results
+      .filter((response: PartialBlockObjectResponse | BlockObjectResponse): response is BlockObjectResponse =>
+        isBlockObjectResponse(response),
+      )
+      .forEach((row: BlockObjectResponse) => results.push(row));
+  } while (data?.has_more);
 
-    return {
-        ...entry,
-        content: results,
-    };
+  return {
+    ...entry,
+    content: results,
+  };
 }
 
 export { getPageContent, queryDbByType };

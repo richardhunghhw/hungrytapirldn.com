@@ -1,19 +1,19 @@
 {
-    "name": "hungrytapir-store-config",
-    "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
-    "scripts": {
-        "dev": "wrangler dev src/index.ts",
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "publish:test": "wrangler publish --env test",
-        "publish:prod": "wrangler publish --env prod"
-    },
-    "author": "",
-    "license": "ISC",
-    "devDependencies": {
-        "@cloudflare/workers-types": "^4.20230518.0",
-        "typescript": "^5.1.3",
-        "vitest": "^0.32.0"
-    }
+  "name": "hungrytapir-store-config",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "wrangler dev src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "publish:test": "wrangler publish --env test",
+    "publish:prod": "wrangler publish --env prod"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20230518.0",
+    "typescript": "^5.1.3",
+    "vitest": "^0.32.0"
+  }
 }

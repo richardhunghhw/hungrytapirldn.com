@@ -1,0 +1,26 @@
+{
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "editor.formatOnSave": true,
+  "editor.tabSize": 4,
+  // enable per-language (here: Prettier as formatter)
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "workbench.editor.wrapTabs": true,
+  "editor.rulers": [120],
+  "editor.detectIndentation": true,
+  "editor.wordWrap": "on"
+}

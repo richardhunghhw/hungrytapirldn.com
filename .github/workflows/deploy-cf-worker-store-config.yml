@@ -1,45 +1,45 @@
 on:
-    push:
-        branches:
-            - main
-            - develop
-        paths:
-            - '.github/workflows/deploy-cf-worker-store-config.yml'
-            - 'workers/store-config/**'
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - '.github/workflows/deploy-cf-worker-store-config.yml'
+      - 'workers/store-config/**'
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        permissions:
-            contents: read
-            deployments: write
-        name: Deploy to Cloudflare Workers store-config
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v3
-              with:
-                  fetch-depth: 0
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    name: Deploy to Cloudflare Workers store-config
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-            - name: Load secrets from 1Password
-              uses: 1Password/load-secrets-action@v1
-              env:
-                  OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN_TEST }}
-                  CLOUDFLARE_API_TOKEN: 'op://${{ vars.VAULT_NAME }}/Cloudflare API Token/credential'
-                  CLOUDFLARE_ACCOUNT_ID: 'op://${{ vars.VAULT_NAME }}/Cloudflare API Token/username'
+      - name: Load secrets from 1Password
+        uses: 1Password/load-secrets-action@v1
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN_TEST }}
+          CLOUDFLARE_API_TOKEN: 'op://${{ vars.VAULT_NAME }}/Cloudflare API Token/credential'
+          CLOUDFLARE_ACCOUNT_ID: 'op://${{ vars.VAULT_NAME }}/Cloudflare API Token/username'
 
-            - name: Set WORKER_ENV
-              run: |
-                  if [ "${{ github.ref }}" = "refs/heads/main" ]; then
-                    echo "WORKER_ENV=prod" >> $GITHUB_ENV
-                  elif [ "${{ github.ref }}" = "refs/heads/develop" ]; then
-                    echo "WORKER_ENV=test" >> $GITHUB_ENV
-                  fi
+      - name: Set WORKER_ENV
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "WORKER_ENV=prod" >> $GITHUB_ENV
+          elif [ "${{ github.ref }}" = "refs/heads/develop" ]; then
+            echo "WORKER_ENV=test" >> $GITHUB_ENV
+          fi
 
-            - name: Publish to Cloudflare Workers
-              uses: cloudflare/wrangler-action@2.0.0
-              with:
-                  apiToken: '${{ env.CLOUDFLARE_API_TOKEN }}'
-                  accountId: '${{ env.CLOUDFLARE_ACCOUNT_ID }}'
-                  wranglerVersion: '3'
-                  workingDirectory: 'workers/store-config'
-                  environment: '${{ env.WORKER_ENV }}'
+      - name: Publish to Cloudflare Workers
+        uses: cloudflare/wrangler-action@2.0.0
+        with:
+          apiToken: '${{ env.CLOUDFLARE_API_TOKEN }}'
+          accountId: '${{ env.CLOUDFLARE_ACCOUNT_ID }}'
+          wranglerVersion: '3'
+          workingDirectory: 'workers/store-config'
+          environment: '${{ env.WORKER_ENV }}'

@@ -9,17 +9,17 @@ import { getGeneralEntry } from '~/services/get-general-entry';
 import type { HTActionArgs } from '~/utils/types';
 
 export async function loader({ context }: HTActionArgs) {
-    return getGeneralEntry(context, 'terms-and-conditions');
+  return getGeneralEntry(context, 'terms-and-conditions');
 }
 
 export default function TermsAndConditions() {
-    const pageData = useLoaderData<ContentStoreGeneralEntry>();
+  const pageData = useLoaderData<ContentStoreGeneralEntry>();
 
-    return (
-        <div className="prose prose-lg max-w-none">
-            {pageData.data.general.map((line, index) => (
-                <ReactMarkdown key={index}>{line}</ReactMarkdown>
-            ))}
-        </div>
-    );
+  return (
+    <div className='prose prose-lg max-w-none'>
+      {pageData.data.general.map((line, index) => (
+        <ReactMarkdown key={index}>{line}</ReactMarkdown>
+      ))}
+    </div>
+  );
 }

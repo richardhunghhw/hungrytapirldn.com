@@ -11,38 +11,35 @@ import { renderToReadableStream } from 'react-dom/server';
 import * as Sentry from '@sentry/remix';
 
 Sentry.init({
-    debug: __sentryDebug__,
-    dsn: '__sentryDsn__',
-    environment: '__sentryEnv__',
-    integrations: [],
-    tracePropagationTargets: ['/^.*.palmier.workers.dev/', 'localhost', /^\//],
-    tracesSampleRate: __sentryTracesSampleRate__,
+  debug: __sentryDebug__,
+  dsn: '__sentryDsn__',
+  environment: '__sentryEnv__',
+  integrations: [],
+  tracePropagationTargets: ['/^.*.palmier.workers.dev/', 'localhost', /^\//],
+  tracesSampleRate: __sentryTracesSampleRate__,
 });
 
 export default async function handleRequest(
-    request: Request,
-    responseStatusCode: number,
-    responseHeaders: Headers,
-    remixContext: EntryContext
+  request: Request,
+  responseStatusCode: number,
+  responseHeaders: Headers,
+  remixContext: EntryContext,
 ) {
-    const body = await renderToReadableStream(
-        <RemixServer context={remixContext} url={request.url} />,
-        {
-            signal: request.signal,
-            onError(error: unknown) {
-                console.error(error);
-                responseStatusCode = 500;
-            },
-        }
-    );
+  const body = await renderToReadableStream(<RemixServer context={remixContext} url={request.url} />, {
+    signal: request.signal,
+    onError(error: unknown) {
+      console.error(error);
+      responseStatusCode = 500;
+    },
+  });
 
-    if (isbot(request.headers.get('user-agent'))) {
-        await body.allReady;
-    }
+  if (isbot(request.headers.get('user-agent'))) {
+    await body.allReady;
+  }
 
-    responseHeaders.set('Content-Type', 'text/html');
-    return new Response(body, {
-        headers: responseHeaders,
-        status: responseStatusCode,
-    });
+  responseHeaders.set('Content-Type', 'text/html');
+  return new Response(body, {
+    headers: responseHeaders,
+    status: responseStatusCode,
+  });
 }
