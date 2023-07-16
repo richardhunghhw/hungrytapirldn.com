@@ -2,7 +2,7 @@
   "git.autofetch": true,
   "git.confirmSync": false,
   "editor.formatOnSave": true,
-  "editor.tabSize": 4,
+  "editor.tabSize": 2,
   // enable per-language (here: Prettier as formatter)
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"

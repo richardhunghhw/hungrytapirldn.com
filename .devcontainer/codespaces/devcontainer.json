@@ -9,7 +9,6 @@
   },
   // Features to add to the dev container. More info: https://containers.dev/features.
   "features": {
-    "ghcr.io/devcontainers/features/aws-cli:1": {},
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/flexwie/devcontainer-features/op:1": {}
   },
@@ -21,7 +20,6 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "AmazonWebServices.aws-toolkit-vscode",
         "bungcip.better-toml",
         "ms-azuretools.vscode-docker",
         "ms-vscode-remote.remote-containers",

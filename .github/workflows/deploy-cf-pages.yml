@@ -28,7 +28,7 @@ jobs:
       - name: Load secrets from 1Password
         uses: 1Password/load-secrets-action@v1
         env:
-          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN_TEST }}
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
           CLOUDFLARE_API_TOKEN: 'op://${{ vars.VAULT_NAME }}/Cloudflare API Token/credential'
           CLOUDFLARE_ACCOUNT_ID: 'op://${{ vars.VAULT_NAME }}/Cloudflare API Token/username'
           BASIC_AUTH_USERNAME: 'op://${{ vars.VAULT_NAME }}/HT Basic/username'
