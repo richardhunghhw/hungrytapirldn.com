@@ -270,13 +270,13 @@ export default function Navbar() {
   return (
     <div className='content-wrapper fixed z-50 w-[calc(100vw-1.2rem)] bg-transparent py-4 md:w-[calc(100vw-1rem)]'>
       <nav className='content-container flex items-center justify-between rounded-full bg-ht-off-white px-6 py-1 font-mono'>
-        <NavSidebar />
+        {/* <NavSidebar /> */}
         <div className='flex justify-center gap-4 py-2 align-middle font-serif text-xl font-bold uppercase md:text-3xl'>
           <NavLink key='root' to='/'>
             Hungry Tapir
           </NavLink>
         </div>
-        <ul className='hidden font-bold uppercase lg:flex'>
+        <ul className='hidden text-3xl font-bold uppercase lg:flex'>
           {NAVBAR_LINKS.map((link) => {
             if (Array.isArray(link)) {
               return link.map((subLink) => (
