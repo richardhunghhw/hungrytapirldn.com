@@ -21,17 +21,17 @@ jobs:
         run: echo "ENVIRONMENT=TEST" >> $GITHUB_ENV
 
       - name: Load secrets from 1Password TEST env
-        uses: 1Password/load-secrets-action@v1
         if: ${{ env.ENVIRONMENT }} == 'TEST'
+        uses: 1Password/load-secrets-action@v1
         env:
             OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN_TEST }}
             BASIC_AUTH_USERNAME: 'op://${{ vars.VAULT_NAME_TEST }}/HT Basic/username'
             BASIC_AUTH_PASSWORD: 'op://${{ vars.VAULT_NAME_TEST }}/HT Basic/credential'
             HOST: 'op://${{ vars.VAULT_NAME_TEST }}/HT Basic/hostname'
 
-      - name: Load secrets from 1Password TEST env
-        uses: 1Password/load-secrets-action@v1
+      - name: Load secrets from 1Password PROD env
         if: ${{ env.ENVIRONMENT }} == 'PROD'
+        uses: 1Password/load-secrets-action@v1
         env:
             OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN_PROD }}
             BASIC_AUTH_USERNAME: 'op://${{ vars.VAULT_NAME_PROD }}/HT Basic/username'
