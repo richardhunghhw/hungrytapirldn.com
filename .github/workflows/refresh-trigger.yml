@@ -18,7 +18,7 @@ jobs:
       #         echo "ENVIRONMENT=TEST" >> $GITHUB_ENV
       #       fi
       - name: Set env based on schedule time
-        run: echo "ENVIRONMENT=TEST" >> $GITHUB_ENV
+        run: echo "ENVIRONMENT=PROD" >> $GITHUB_ENV
 
       - name: Load secrets from 1Password TEST env
         if: ${{ env.ENVIRONMENT  == 'TEST' }}
