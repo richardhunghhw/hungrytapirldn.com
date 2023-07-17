@@ -33,7 +33,7 @@ jobs:
         if: ${{ env.ENVIRONMENT == 'PROD' }}
         uses: 1Password/load-secrets-action@v1
         env:
-            OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN_PROD }}
+            OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
             BASIC_AUTH_USERNAME: 'op://${{ vars.VAULT_NAME_PROD }}/HT Basic/username'
             BASIC_AUTH_PASSWORD: 'op://${{ vars.VAULT_NAME_PROD }}/HT Basic/credential'
             HOST: 'op://${{ vars.VAULT_NAME_PROD }}/HT Basic/hostname'
