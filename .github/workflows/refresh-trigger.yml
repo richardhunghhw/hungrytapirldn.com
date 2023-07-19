@@ -1,24 +1,20 @@
 name: Refresh trigger
 on:
-  push:
-    branches:
-      - feature/cf_worker_refresh_nightly
-  # schedule:
-  #   - cron: '0 5 * * *' # for prod
-  #   - cron: '0 23 * * *' # for test
+  schedule:
+    - cron: '0 5 * * *' # for prod
+    - cron: '0 23 * * *' # for test
+
 jobs:
   update-kv-store:
     runs-on: ubuntu-latest
     steps:
-      # - name: Set env based on schedule time
-      #   run: |
-      #       if [ "${{ github.event.schedule }}" = "0 5 * * *" ]; then
-      #         echo "ENVIRONMENT=PROD" >> $GITHUB_ENV
-      #       elif [ "${{ github.event.schedule }}" = "0 23 * * *" ]; then
-      #         echo "ENVIRONMENT=TEST" >> $GITHUB_ENV
-      #       fi
       - name: Set env based on schedule time
-        run: echo "ENVIRONMENT=PROD" >> $GITHUB_ENV
+        run: |
+            if [ "${{ github.event.schedule }}" = "0 5 * * *" ]; then
+              echo "ENVIRONMENT=PROD" >> $GITHUB_ENV
+            elif [ "${{ github.event.schedule }}" = "0 23 * * *" ]; then
+              echo "ENVIRONMENT=TEST" >> $GITHUB_ENV
+            fi
 
       - name: Load secrets from 1Password TEST env
         if: ${{ env.ENVIRONMENT  == 'TEST' }}
