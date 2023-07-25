@@ -4,8 +4,8 @@ import { refreshAllEntries } from '~/services/content-store';
 import * as Sentry from '@sentry/remix';
 
 // Fetch all content data from content-store
-export async function action({ request, context }: HTActionArgs) {
-  if (auth(request) === false) {
+export async function action({ context, request }: HTActionArgs) {
+  if (auth(context, request) === false) {
     console.debug('api/refresh-content auth failed');
     return new Response(
       JSON.stringify({

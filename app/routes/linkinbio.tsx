@@ -2,7 +2,7 @@
  * linkinbio page for Socials, QR code...
  */
 import { Link, useLoaderData } from '@remix-run/react';
-import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import Markdown from 'markdown-to-jsx';
 import SocialIcons from '~/components/social-icons';
 
 import { Button } from '~/components/ui/button';
@@ -47,7 +47,7 @@ export default function FaqLayout() {
               <h1 className='title mt-4 text-center text-4xl tracking-tight md:text-6xl'>Hungry Tapir LDN</h1>
               <div className='mt-4 text-center text-base'>
                 {pageData.data.general.map((line, index) => (
-                  <ReactMarkdown key={index}>{line}</ReactMarkdown>
+                  <Markdown key={index}>{line}</Markdown>
                 ))}
               </div>
             </div>

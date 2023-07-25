@@ -5,20 +5,22 @@ import { config } from 'dotenv';
 config();
 
 withEsbuildOverride((option) => {
-  option.plugins.unshift(
-    replace({
-      values: {
-        __basicCredentials__: Buffer.from(
-          `${process.env.BASIC_AUTH_USERNAME}:${process.env.BASIC_AUTH_PASSWORD}`,
-        ).toString('base64'),
-        __sentryDebug__: process.env.SENTRY_DEBUG,
-        __sentryDsn__: process.env.SENTRY_DSN,
-        __sentryEnv__: process.env.SENTRY_ENV,
-        __sentryTracesSampleRate__: process.env.SENTRY_TRACES_SAMPLE_RATE,
-      },
-      include: /(\.jsx?|\.tsx?)$/,
-    }),
-  );
+  if (option.plugins) {
+    option.plugins.unshift(
+      replace({
+        values: {
+          __basicCredentials__: Buffer.from(
+            `${process.env.BASIC_AUTH_USERNAME}:${process.env.BASIC_AUTH_PASSWORD}`,
+          ).toString('base64'),
+          __sentryDebug__: process.env.SENTRY_DEBUG,
+          __sentryDsn__: process.env.SENTRY_DSN,
+          __sentryEnv__: process.env.SENTRY_ENV,
+          __sentryTracesSampleRate__: process.env.SENTRY_TRACES_SAMPLE_RATE,
+        },
+        include: /(\.jsx?|\.tsx?)$/,
+      }),
+    );
+  }
 
   return option;
 });

@@ -34,6 +34,8 @@ export default function GeneralLayout() {
   if (!outletEntry?.data) throw new Error('Invalid route');
   const outletData: ContentStoreGeneralEntry = outletEntry?.data;
 
+  console.log(matches);
+
   return (
     <div className='flex min-h-screen flex-col'>
       <div className='content-wrapper bg-ht-orange'>

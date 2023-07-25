@@ -50,10 +50,18 @@ function splitCacheKey(key: string) {
   return key.split(':');
 }
 
+/**
+ * Given a content type and a slug, returns a URI string that represents the content's location.
+ * If the content type is 'general', the URI will only contain the slug.
+ * If the content type is 'general' and contains separator '~', the function will return undefined.
+ * @param contentType The type of the content.
+ * @param slug The slug of the content.
+ * @returns A URI string that represents the content's location, or undefined if the slug starts with 'section~'.
+ */
 function makeUriFromContentTypeSlug(contentType: ContentType, slug: string): string | undefined {
   if (contentType === 'general') {
     // Skip out types with 'section~' suffix
-    if (slug.startsWith('section~')) {
+    if (slug.includes('~')) {
       return undefined;
     }
     return `/${slug}`;
@@ -70,7 +78,6 @@ function makeUrlFromContentTypeSlug(hostName: string, contentType: ContentType, 
 }
 
 function makeUrlFromContent(hostName: string, content: BaseEntry): URL | undefined {
-  console.log(makeUrlFromContentTypeSlug(hostName, content.type, content.slug));
   return makeUrlFromContentTypeSlug(hostName, content.type, content.slug);
 }
 
