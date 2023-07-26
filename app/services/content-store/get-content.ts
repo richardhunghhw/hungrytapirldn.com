@@ -1,12 +1,13 @@
 import type { HTAppLoadContext } from '~/utils/types';
-import { getEntry, listKeys } from './kv-cache';
-import { allContentTypes } from './utils';
+import { getEntry, listKeys, putEntry } from './kv-cache';
+import { allContentTypes } from './';
 import type {
   BaseEntry,
   ContentStoreBlogEntry,
   ContentStoreFaqEntry,
   ContentStoreGeneralEntry,
   ContentStoreProductEntry,
+  ContentStoreStallDateEntry,
 } from '.';
 
 async function getGeneral(context: HTAppLoadContext, slug: string): Promise<ContentStoreGeneralEntry | undefined> {
@@ -49,6 +50,42 @@ async function listFaqs(context: HTAppLoadContext): Promise<BaseEntry[]> {
   return entries;
 }
 
+async function getStallDate(context: HTAppLoadContext, slug: string): Promise<ContentStoreStallDateEntry | undefined> {
+  const entry = await getEntry(context, 'stalldate', slug);
+  return entry as ContentStoreStallDateEntry | undefined;
+}
+
+async function listStallDates(context: HTAppLoadContext): Promise<BaseEntry[]> {
+  const entries = await listKeys(context, 'stalldate');
+  return entries;
+}
+
+async function getLatestStallDate(context: HTAppLoadContext): Promise<ContentStoreStallDateEntry> {
+  // Get existing latest entry
+  const latest = await getStallDate(context, 'latest');
+  const latestEndDate = latest ? new Date(latest?.data.endDT) : undefined;
+
+  const datetime = new Date();
+  const date = new Date(datetime.getFullYear(), datetime.getMonth(), datetime.getDate());
+
+  // If latest entry is not set or is expired, re-evaluate
+  const reeval = !latest || !latestEndDate || date > latestEndDate;
+  if (!reeval) {
+    return latest;
+  }
+
+  // Get all stall dates, find the next upcoming one
+  const stallDates = await listStallDates(context);
+  const newLatest = stallDates
+    .filter((e) => new Date(e.slug.split('~')[1]) >= date) // filter out past dates
+    .sort((a, b) => new Date(a.slug.split('~')[1]) - new Date(b.slug.split('~')[1]))[0]; // sort date asc
+  const newLatestEntry = (await getStallDate(context, newLatest.slug)) as ContentStoreStallDateEntry;
+
+  // Update latest entry
+  await putEntry(context, 'stalldate', 'latest', newLatestEntry?.metadata, newLatestEntry?.data);
+  return newLatestEntry;
+}
+
 // Get all entries, for sitemap generation
 async function listAll(context: HTAppLoadContext): Promise<BaseEntry[]> {
   const result: BaseEntry[] = [];
@@ -62,4 +99,17 @@ async function listAll(context: HTAppLoadContext): Promise<BaseEntry[]> {
   return result;
 }
 
-export { getGeneral, listGenerals, getBlog, listBlogs, getProduct, listProducts, getFaq, listFaqs, listAll };
+export {
+  getGeneral,
+  listGenerals,
+  getBlog,
+  listBlogs,
+  getProduct,
+  listProducts,
+  getFaq,
+  listFaqs,
+  getStallDate,
+  listStallDates,
+  getLatestStallDate,
+  listAll,
+};

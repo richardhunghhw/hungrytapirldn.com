@@ -16,8 +16,9 @@ export async function action({ context, request }: HTActionArgs) {
   } else {
     console.log('Recieved authenticated request for api/refresh-content');
     const { searchParams } = new URL(request.url);
-    const purgeCache = searchParams.get('purgeCache') === 'true';
-    return await refreshAllEntries(context, purgeCache)
+    const purgeCache = searchParams.get('purge') == 'true';
+    const purgeTypes = searchParams.get('types') ? searchParams.get('types')?.split(',') : [];
+    return await refreshAllEntries(context, purgeCache, purgeTypes)
       .then(() => {
         return {
           status: 200,

@@ -22,5 +22,6 @@ NOTION_API_DB_GENERAL="op://HT-TEST/Notion API Secret - Store/Databases/General"
 NOTION_API_DB_BLOG="op://HT-TEST/Notion API Secret - Store/Databases/Blog"
 NOTION_API_DB_FAQ="op://HT-TEST/Notion API Secret - Store/Databases/FAQ"
 NOTION_API_DB_PRODUCT="op://HT-TEST/Notion API Secret - Store/Databases/Product"
+NOTION_API_DB_STALLDATE="op://HT-TEST/Notion API Secret - Store/Databases/StallDate"
 
 CACHE_TTL_DAYS=14

@@ -1,13 +1,9 @@
-import type { BaseEntry, ContentStoreEntry, ContentType } from '.';
+import { allContentTypes, type BaseEntry, type ContentType } from '.';
 
 export type UrlPath = {
   type: ContentType;
   slug: string;
 };
-
-function allContentTypes(): ContentType[] {
-  return ['general', 'blog', 'product', 'faq'];
-}
 
 // Entry validator, given the type and slug
 function validateTypeSlug(type: string, slug: string): UrlPath {
@@ -82,7 +78,6 @@ function makeUrlFromContent(hostName: string, content: BaseEntry): URL | undefin
 }
 
 export {
-  allContentTypes,
   validateTypeSlug,
   validateRequest,
   isContentType,

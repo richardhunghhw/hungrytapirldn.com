@@ -35,6 +35,7 @@ export type HTAppLoadContext = AppLoadContext & {
   readonly NOTION_API_DB_BLOG: string;
   readonly NOTION_API_DB_FAQ: string;
   readonly NOTION_API_DB_PRODUCTS: string;
+  readonly NOTION_API_DB_STALLDATE: string;
 };
 
 interface HTDataFunctionArgs {
