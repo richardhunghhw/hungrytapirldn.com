@@ -74,6 +74,7 @@ jobs:
           # ignore_empty: true
 
       - name: Publish to Cloudflare Pages
+        if: '!cancelled()'
         uses: cloudflare/pages-action@v1
         with:
           apiToken: '${{ env.CLOUDFLARE_API_TOKEN }}'
