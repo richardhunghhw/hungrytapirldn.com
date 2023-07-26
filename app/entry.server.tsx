@@ -8,16 +8,16 @@ import type { EntryContext } from '@remix-run/cloudflare';
 import { RemixServer } from '@remix-run/react';
 import isbot from 'isbot';
 import { renderToReadableStream } from 'react-dom/server';
-import * as Sentry from '@sentry/remix';
+// import * as Sentry from '@sentry/remix';
 
-Sentry.init({
-  debug: __sentryDebug__,
-  dsn: '__sentryDsn__',
-  environment: '__sentryEnv__',
-  integrations: [],
-  tracePropagationTargets: ['/^.*.palmier.workers.dev/', 'localhost', /^\//],
-  tracesSampleRate: __sentryTracesSampleRate__,
-});
+// Sentry.init({
+//   debug: __sentryDebug__,
+//   dsn: '__sentryDsn__',
+//   environment: '__sentryEnv__',
+//   integrations: [],
+//   tracePropagationTargets: ['/^.*.palmier.workers.dev/', 'localhost', /^\//],
+//   tracesSampleRate: __sentryTracesSampleRate__,
+// });
 
 export default async function handleRequest(
   request: Request,
