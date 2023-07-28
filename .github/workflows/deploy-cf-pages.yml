@@ -71,7 +71,7 @@ jobs:
           environment: ${{ env.SENTRY_ENV }}
           sourcemaps: ${{ steps.sourcemaps.outputs.files }}
           # ignore_missing: true
-          # ignore_empty: true
+          ignore_empty: true
 
       - name: Publish to Cloudflare Pages
         if: '!cancelled()'
