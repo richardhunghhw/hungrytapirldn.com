@@ -38,7 +38,7 @@ type LinkInBioLoaderData = {
 
 export async function loader({ context }: HTLoaderArgs): Promise<LinkInBioLoaderData> {
   return {
-    entry: await getGeneralEntry(context, 'linkinbio'),
+    entry: await getGeneralEntry(context, 'linkinbio') as ContentStoreGeneralEntry,
     stalldate: await getLatestStallDate(context),
   };
 }
@@ -119,7 +119,7 @@ export default function LinkInBioLayout() {
     <div className='flex min-h-screen flex-col justify-center bg-ht-pink-highlight'>
       <div className='content-wrapper'>
         <div className='mx-auto max-w-screen-sm'>
-          <div className='my-16 flex flex-col items-center space-y-8 font-mono'>
+          <div className='mb-32 mt-16 flex flex-col items-center space-y-8 font-mono'>
             <div className='flex flex-col items-center font-bold'>
               <TapirTransparent className='text-8xl' color='#1C1C1C' />
               <p className='text-sm'>@hungrytapirldn</p>
