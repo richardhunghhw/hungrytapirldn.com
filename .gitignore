@@ -20,7 +20,7 @@ Thumbs.db
 # Environment files
 .dev.vars
 .env
-.devcontainer/devcontainer.env
+**/devcontainer.env
 
 # Wranlger frontend files
 functions/
