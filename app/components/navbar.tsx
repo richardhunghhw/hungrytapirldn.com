@@ -297,7 +297,7 @@ export default function Navbar() {
             }
           })}
         </ul>
-        <CartSidebar />
+        {/* <CartSidebar /> */}
       </nav>
     </div>
   );

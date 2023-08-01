@@ -1,4 +1,8 @@
-export type ContentType = 'general' | 'blog' | 'faq' | 'product';
+export type ContentType = 'general' | 'blog' | 'faq' | 'product' | 'stalldate';
+
+function allContentTypes(): ContentType[] {
+  return ['general', 'blog', 'product', 'faq', 'stalldate'];
+}
 
 export type EntryMetadata = {
   slug: string;
@@ -30,6 +34,15 @@ export type ContentStoreFaqEntry = BaseEntry & {
   };
 };
 
+export type ContentStoreStallDateEntry = BaseEntry & {
+  data: {
+    location: string;
+    startDT: string;
+    endDT: string;
+    collectionEnabled: boolean;
+  };
+};
+
 export type ContentStoreProductEntry = BaseEntry & {
   data: {
     stripeId: string;
@@ -51,7 +64,10 @@ export type ContentStoreEntry =
   | ContentStoreGeneralEntry
   | ContentStoreBlogEntry
   | ContentStoreFaqEntry
-  | ContentStoreProductEntry;
+  | ContentStoreProductEntry
+  | ContentStoreStallDateEntry;
+
+export { allContentTypes };
 
 export {
   getGeneral,

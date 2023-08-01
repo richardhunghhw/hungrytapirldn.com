@@ -1,13 +1,9 @@
-import type { BaseEntry, ContentStoreEntry, ContentType } from '.';
+import { allContentTypes, type BaseEntry, type ContentType } from '.';
 
 export type UrlPath = {
   type: ContentType;
   slug: string;
 };
-
-function allContentTypes(): ContentType[] {
-  return ['general', 'blog', 'product', 'faq'];
-}
 
 // Entry validator, given the type and slug
 function validateTypeSlug(type: string, slug: string): UrlPath {
@@ -50,12 +46,19 @@ function splitCacheKey(key: string) {
   return key.split(':');
 }
 
+/**
+ * Given a content type and a slug, returns a URI string that represents the content's location.
+ * If the content type is 'general', the URI will only contain the slug.
+ * If the content contains separator '~', the function will return undefined.
+ * @param contentType The type of the content.
+ * @param slug The slug of the content.
+ * @returns A URI string that represents the content's location, or undefined if the slug starts with 'section~'.
+ */
 function makeUriFromContentTypeSlug(contentType: ContentType, slug: string): string | undefined {
+  if (slug.includes('~')) {
+    return undefined;
+  }
   if (contentType === 'general') {
-    // Skip out types with 'section~' suffix
-    if (slug.startsWith('section~')) {
-      return undefined;
-    }
     return `/${slug}`;
   }
   return `/${contentType}/${slug}`;
@@ -70,12 +73,10 @@ function makeUrlFromContentTypeSlug(hostName: string, contentType: ContentType, 
 }
 
 function makeUrlFromContent(hostName: string, content: BaseEntry): URL | undefined {
-  console.log(makeUrlFromContentTypeSlug(hostName, content.type, content.slug));
   return makeUrlFromContentTypeSlug(hostName, content.type, content.slug);
 }
 
 export {
-  allContentTypes,
   validateTypeSlug,
   validateRequest,
   isContentType,

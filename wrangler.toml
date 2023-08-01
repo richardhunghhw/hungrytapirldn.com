@@ -1,7 +1,7 @@
 # See https://developers.cloudflare.com/workers/wrangler/configuration/
 name = "hungrytapir-store"
 compatibility_date = "2023-06-13"
-compatibility_flags = ["streams_enable_constructors"]
+compatibility_flags = ["streams_enable_constructors", "nodejs_compat"]
 
 services = [
   { binding = "CONFIGSTORE_WORKER", service = "hungrytapir-store-config-test" }

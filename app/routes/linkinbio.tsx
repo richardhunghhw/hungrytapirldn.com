@@ -2,11 +2,13 @@
  * linkinbio page for Socials, QR code...
  */
 import { Link, useLoaderData } from '@remix-run/react';
-import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import { useEffect, useState } from 'react';
+import Markdown from 'markdown-to-jsx';
 import SocialIcons from '~/components/social-icons';
 
 import { Button } from '~/components/ui/button';
-import type { ContentStoreGeneralEntry } from '~/services/content-store';
+import type { ContentStoreGeneralEntry, ContentStoreStallDateEntry } from '~/services/content-store';
+import { getLatestStallDate } from '~/services/content-store/get-content';
 import { getGeneralEntry } from '~/services/get-general-entry';
 import { TapirTransparent } from '~/utils/svg/tapir';
 import type { HTLoaderArgs } from '~/utils/types';
@@ -29,28 +31,106 @@ const LINKINBIO_LINKS = [
   },
 ];
 
-export async function loader({ context }: HTLoaderArgs) {
-  return getGeneralEntry(context, 'linkinbio');
+type LinkInBioLoaderData = {
+  entry: ContentStoreGeneralEntry;
+  stalldate: ContentStoreStallDateEntry;
+};
+
+export async function loader({ context }: HTLoaderArgs): Promise<LinkInBioLoaderData> {
+  return {
+    entry: await getGeneralEntry(context, 'linkinbio') as ContentStoreGeneralEntry,
+    stalldate: await getLatestStallDate(context),
+  };
 }
 
-export default function FaqLayout() {
-  const pageData = useLoaderData<ContentStoreGeneralEntry>();
+function AddDaySuffix(date: string) {
+  const day = parseInt(date.split(' ')[0]);
+  let suffix;
+  if (day > 3 && day < 21) {
+    suffix = 'th';
+  } else {
+    switch (day % 10) {
+      case 1:
+        suffix = 'st';
+      case 2:
+        suffix = 'nd';
+      case 3:
+        suffix = 'rd';
+      default:
+        suffix = 'th';
+    }
+  }
+  return day + suffix + date.substring(2);
+}
+
+function NextStallSection({ pageData: { stalldate } }: { pageData: LinkInBioLoaderData }) {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
+
+  // Stall date information
+  const stallStartDT = new Date(stalldate.data.startDT);
+  const stallEndDT = new Date(stalldate.data.endDT);
+
+  const stallStartDate = AddDaySuffix(
+    stallStartDT.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' }),
+  );
+  const stallStartTime = stallStartDT.toLocaleTimeString('en-GB', { hour: 'numeric', minute: 'numeric', hour12: true });
+
+  const stallEndDate = AddDaySuffix(
+    stallEndDT.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' }),
+  );
+  const stallEndTime = stallEndDT.toLocaleTimeString('en-GB', { hour: 'numeric', minute: 'numeric', hour12: true });
+
+  return (
+    <div className='mt-4 rounded-md border-2 border-solid border-ht-black bg-ht-orange p-6 text-left font-bold'>
+      <div className='flex flex-wrap justify-center'>
+        <span className='mr-2 underline'>Next Stall</span>
+        <span className='text-center'>
+          {stallStartDate == stallEndDate ? (
+            <>
+              {stallStartTime} - {stallEndTime}, {stallEndDate}
+            </>
+          ) : (
+            <>
+              {stallStartTime}, {stallStartDate} - {stallEndTime}, {stallEndDate}
+            </>
+          )}
+        </span>
+      </div>
+      <div className='mt-3 flex flex-wrap justify-center'>
+        <span className='mr-2 underline'>Location</span>
+        <span className='text-center'>Upmarket, 91 Brick Ln, London E1 6QL</span>
+      </div>
+    </div>
+  );
+}
+
+export default function LinkInBioLayout() {
+  const pageData = useLoaderData<LinkInBioLoaderData>();
 
   return (
     <div className='flex min-h-screen flex-col justify-center bg-ht-pink-highlight'>
       <div className='content-wrapper'>
         <div className='mx-auto max-w-screen-sm'>
-          <div className='my-16 flex flex-col items-center space-y-8 font-mono'>
+          <div className='mb-32 mt-16 flex flex-col items-center space-y-8 font-mono'>
             <div className='flex flex-col items-center font-bold'>
               <TapirTransparent className='text-8xl' color='#1C1C1C' />
               <p className='text-sm'>@hungrytapirldn</p>
               <h1 className='title mt-4 text-center text-4xl tracking-tight md:text-6xl'>Hungry Tapir LDN</h1>
               <div className='mt-4 text-center text-base'>
-                {pageData.data.general.map((line, index) => (
-                  <ReactMarkdown key={index}>{line}</ReactMarkdown>
+                {pageData.entry?.data.general.map((line, index) => (
+                  <Markdown key={index}>{line}</Markdown>
                 ))}
               </div>
             </div>
+            <NextStallSection pageData={pageData} />
             <div className='flex w-full flex-col space-y-4'>
               {LINKINBIO_LINKS.map((link) => (
                 <Button variant='dark' asChild key={link.to} className={link.cssOverride ? link.cssOverride : ''}>

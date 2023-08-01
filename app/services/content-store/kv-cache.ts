@@ -1,16 +1,15 @@
 /**
  * Interface to KV for content-store. For the following operations:
  * - Valdate and generate keys to access KV (type, slug)
- * - Fetch data from KV, given type [general|blog|faq|product], slug (optional)
+ * - Fetch data from KV, given ContentType, slug (optional)
  * - List all cache keys, metadata for a given type
  * - Purge all data from KV for a given type
  */
 
-import type { HTAppLoadContext, JSONObject, JSONValue } from '~/utils/types';
+import type { HTAppLoadContext } from '~/utils/types';
 import { makeCacheKey, splitCacheKey } from './utils';
 import type { BaseEntry, ContentStoreEntry, ContentType, EntryMetadata } from '.';
 import * as Sentry from '@sentry/remix';
-import type { BlockObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 
 // Get an Entry (row) from KV
 async function getEntry(

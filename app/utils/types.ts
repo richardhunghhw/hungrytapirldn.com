@@ -12,6 +12,10 @@ export type HTAppLoadContext = AppLoadContext & {
   readonly SESSION_SECRET: string;
   readonly ENCRYPTION_SECRET: string;
 
+  /** Basic Auth */
+  readonly BASIC_AUTH_USERNAME: string;
+  readonly BASIC_AUTH_PASSWORD: string;
+
   /** KV namespaces */
   readonly CONTENT_STORE: KVNamespace;
   readonly SESSION_STORE: KVNamespace;
@@ -31,6 +35,7 @@ export type HTAppLoadContext = AppLoadContext & {
   readonly NOTION_API_DB_BLOG: string;
   readonly NOTION_API_DB_FAQ: string;
   readonly NOTION_API_DB_PRODUCTS: string;
+  readonly NOTION_API_DB_STALLDATE: string;
 };
 
 interface HTDataFunctionArgs {

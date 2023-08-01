@@ -1,6 +1,6 @@
 /**
  * The client used to fetch data from Notion API
- * - Fetch data from content-store, given type (blog, faq, products) and slug
+ * - Fetch data from content-store, given ContentType and slug
  * - Use Notion API as a fallback if content-store does not have the data
  * - Rebuild content-store using Notion API on request from admin
  */

@@ -9,7 +9,7 @@ import type { HTActionArgs } from '~/utils/types';
 import type { ContentStoreBlogEntry } from '~/services/content-store';
 import { getBlog, validateRequest } from '~/services/content-store';
 import { ArrowLeft } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
+import Markdown from 'markdown-to-jsx';
 
 // Fetch blog data content-store
 export async function loader({ request: { url }, context, params }: HTActionArgs) {
@@ -53,7 +53,7 @@ export default function Blog() {
         <div className='content-container mt-4'>
           <div className='prose prose-lg max-w-none'>
             {blogContent.map((blogRow, index) => (
-              <ReactMarkdown key={index}>{blogRow}</ReactMarkdown>
+              <Markdown key={index}>{blogRow}</Markdown>
             ))}
           </div>
         </div>

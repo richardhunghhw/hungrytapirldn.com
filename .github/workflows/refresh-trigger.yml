@@ -1,0 +1,52 @@
+name: Refresh trigger
+on:
+  schedule:
+    - cron: '0 5 * * *' # for prod
+    - cron: '0 23 * * *' # for test
+
+jobs:
+  update-kv-store:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set env based on schedule time
+        run: |
+            if [ "${{ github.event.schedule }}" = "0 5 * * *" ]; then
+              echo "ENVIRONMENT=PROD" >> $GITHUB_ENV
+            elif [ "${{ github.event.schedule }}" = "0 23 * * *" ]; then
+              echo "ENVIRONMENT=TEST" >> $GITHUB_ENV
+            fi
+
+      - name: Load secrets from 1Password TEST env
+        if: ${{ env.ENVIRONMENT  == 'TEST' }}
+        uses: 1Password/load-secrets-action@v1
+        env:
+            OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN_TEST }}
+            BASIC_AUTH_USERNAME: 'op://${{ vars.VAULT_NAME_TEST }}/HT Basic/username'
+            BASIC_AUTH_PASSWORD: 'op://${{ vars.VAULT_NAME_TEST }}/HT Basic/credential'
+            HOST: 'op://${{ vars.VAULT_NAME_TEST }}/HT Basic/hostname'
+
+      - name: Load secrets from 1Password PROD env
+        if: ${{ env.ENVIRONMENT == 'PROD' }}
+        uses: 1Password/load-secrets-action@v1
+        env:
+            OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN_PROD }}
+            BASIC_AUTH_USERNAME: 'op://${{ vars.VAULT_NAME_PROD }}/HT Basic/username'
+            BASIC_AUTH_PASSWORD: 'op://${{ vars.VAULT_NAME_PROD }}/HT Basic/credential'
+            HOST: 'op://${{ vars.VAULT_NAME_PROD }}/HT Basic/hostname'
+
+      - name: Set URL
+        run: |
+            if [ "${{ vars.REFRESH_PURGE }}" = "True" ]; then
+              echo "URL=${{ env.HOST }}/api/refresh-content?purge=true" >> $GITHUB_ENV
+            else
+              echo "URL=${{ env.HOST }}/api/refresh-content" >> $GITHUB_ENV
+            fi
+
+      - name: Post request on Refresh Content API
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: '${{ env.URL }}'
+          method: 'POST'
+          username: '${{ env.BASIC_AUTH_USERNAME }}'
+          password: '${{ env.BASIC_AUTH_PASSWORD }}'
+          timeout: 120000
