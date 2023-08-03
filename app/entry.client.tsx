@@ -22,7 +22,7 @@ Sentry.init({
   // Performance Monitoring
   tracesSampleRate: __sentryTracesSampleRate__,
   // Session Replay
-  replaysSessionSampleRate: 1.0, // This sets the sample rate at 100%. You may want to change it to sample at a lower rate (<10%) in production.
+  replaysSessionSampleRate: 0.1, // You may want to change it to sample at a lower rate (<10%) in production.
   replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
 });
 

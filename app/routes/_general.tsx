@@ -5,6 +5,7 @@ import type { ContentStoreGeneralEntry } from '~/services/content-store';
 import { getGeneral } from '~/services/content-store';
 import { isProd } from '~/utils/misc';
 import type { HTActionArgs } from '~/utils/types';
+import * as Sentry from '@sentry/remix';
 
 export async function loader({ request: { url: requestUrl }, context }: HTActionArgs) {
   try {
@@ -18,8 +19,9 @@ export async function loader({ request: { url: requestUrl }, context }: HTAction
     }
     const result = await getGeneral(context, urlPath[0]);
     if (!result) {
-      // todo sentry error
-      throw new Error('Entry not found');
+      const err = new Error('Entry not found');
+      Sentry.captureException(err);
+      throw err;
     }
     return result;
   } catch (error) {
