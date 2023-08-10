@@ -3,7 +3,7 @@ import { IconFacebook, IconInstagram, IconThreads, IconTikTok, IconXiaoHungShu }
 
 const SOCIAL_LINKS = [
   {
-    enabled: true,
+    enabled: false,
     link: '//www.facebook.com/HungryTapirLdn',
     label: 'Facebook',
     icon: <IconFacebook />,
@@ -15,7 +15,7 @@ const SOCIAL_LINKS = [
     icon: <IconInstagram />,
   },
   {
-    enabled: true,
+    enabled: false,
     link: '//www.www.threads.net/@hungrytapirldn',
     label: 'Threads',
     icon: <IconThreads />,
@@ -27,7 +27,7 @@ const SOCIAL_LINKS = [
     icon: <IconThreads />,
   },
   {
-    enabled: true,
+    enabled: false,
     link: '//www.tiktok.com/@hungrytapirldn',
     label: 'TikTok',
     icon: <IconTikTok />,

@@ -8,9 +8,8 @@ import { isProd } from '~/utils/misc';
 import type { HTActionArgs } from '~/utils/types';
 import type { ContentStoreFaqEntry } from '~/services/content-store';
 import { validateRequest, getFaq } from '~/services/content-store';
-import DOMPurify from 'dompurify';
 import { ArrowLeft } from 'lucide-react';
-import Markdown from 'markdown-to-jsx';
+import { MarkdownContent } from '~/components/markdown-content';
 
 // Fetch faq data content-store
 export async function loader({ request: { url }, context, params }: HTActionArgs) {
@@ -55,9 +54,7 @@ export default function Faq() {
       <div className='content-wrapper body-text-wrapper'>
         <div className='content-container mt-4'>
           <div className='prose prose-lg max-w-none'>
-            {faqContent.map((faqRow, index) => (
-              <Markdown key={index}>{faqRow}</Markdown>
-            ))}
+            <MarkdownContent data={faqContent} />
           </div>
         </div>
       </div>

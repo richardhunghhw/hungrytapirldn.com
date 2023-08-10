@@ -9,7 +9,6 @@ import { TapirTransparent } from '~/utils/svg/tapir';
 import { AspectRatio } from '~/components/ui/aspect-ratio';
 import { NumberInput } from '~/components/number-input';
 import { AddToBag } from '~/components/add-to-bag';
-import { getSeoMetas } from '~/utils/seo';
 
 const circle = () => <div className='h-4 w-4 rounded-full bg-ht-black' />;
 

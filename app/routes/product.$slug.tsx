@@ -11,14 +11,12 @@ import { getProduct, validateRequest } from '~/services/content-store';
 import { AspectRatio } from '@radix-ui/react-aspect-ratio';
 import { NumberInput } from '~/components/number-input';
 import { AddToBag } from '~/components/add-to-bag';
-import { Badge } from '~/components/ui/badge';
 
 // Fetch product data content-store
 export async function loader({ request: { url }, context, params }: HTActionArgs) {
   try {
     const urlPath = validateRequest(new URL(url));
     const result = await getProduct(context, urlPath.slug);
-    console.log(urlPath.slug);
     if (!result) {
       throw new Error('Entry not found');
     }

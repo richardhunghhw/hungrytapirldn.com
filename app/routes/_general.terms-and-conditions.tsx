@@ -4,7 +4,7 @@
 
 import { redirect } from '@remix-run/cloudflare';
 import { useLoaderData } from '@remix-run/react';
-import Markdown from 'markdown-to-jsx';
+import { MarkdownContent } from '~/components/markdown-content';
 import type { ContentStoreGeneralEntry } from '~/services/content-store';
 import { getGeneralEntry } from '~/services/content-store/get-content';
 import { isProd } from '~/utils/misc';
@@ -25,9 +25,7 @@ export default function TermsAndConditions() {
 
   return (
     <div className='prose prose-lg max-w-none'>
-      {pageData.data.general.map((line, index) => (
-        <Markdown key={index}>{line}</Markdown>
-      ))}
+      <MarkdownContent data={pageData.data.general} />
     </div>
   );
 }

@@ -83,4 +83,10 @@ export {
 
 export { refreshEntries, refreshAllEntries } from './refresh-content';
 
-export { validateRequest, makeUriFromContentTypeSlug, makeUrlFromContentTypeSlug, makeUrlFromContent } from './utils';
+export {
+  validateRequest,
+  validateTypeSlug,
+  makeUriFromContentTypeSlug,
+  makeUrlFromContentTypeSlug,
+  makeUrlFromContent,
+} from './utils';
