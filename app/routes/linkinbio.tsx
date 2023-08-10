@@ -8,8 +8,7 @@ import SocialIcons from '~/components/social-icons';
 
 import { Button } from '~/components/ui/button';
 import type { ContentStoreGeneralEntry, ContentStoreStallDateEntry } from '~/services/content-store';
-import { getLatestStallDate } from '~/services/content-store/get-content';
-import { getGeneralEntry } from '~/services/get-general-entry';
+import { getGeneralEntry, getLatestStallDate } from '~/services/content-store/get-content';
 import { TapirTransparent } from '~/utils/svg/tapir';
 import type { HTLoaderArgs } from '~/utils/types';
 
@@ -38,7 +37,7 @@ type LinkInBioLoaderData = {
 
 export async function loader({ context }: HTLoaderArgs): Promise<LinkInBioLoaderData> {
   return {
-    entry: await getGeneralEntry(context, 'linkinbio') as ContentStoreGeneralEntry,
+    entry: (await getGeneralEntry(context, 'linkinbio')) as ContentStoreGeneralEntry,
     stalldate: await getLatestStallDate(context),
   };
 }

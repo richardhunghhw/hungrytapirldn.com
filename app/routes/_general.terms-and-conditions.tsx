@@ -2,14 +2,22 @@
  * Terms and Conditions Page
  */
 
+import { redirect } from '@remix-run/cloudflare';
 import { useLoaderData } from '@remix-run/react';
 import Markdown from 'markdown-to-jsx';
 import type { ContentStoreGeneralEntry } from '~/services/content-store';
-import { getGeneralEntry } from '~/services/get-general-entry';
+import { getGeneralEntry } from '~/services/content-store/get-content';
+import { isProd } from '~/utils/misc';
 import type { HTActionArgs } from '~/utils/types';
 
 export async function loader({ context }: HTActionArgs) {
-  return getGeneralEntry(context, 'terms-and-conditions');
+  try {
+    return getGeneralEntry(context, 'terms-and-conditions');
+  } catch (error) {
+    console.error(error); // TODO Sentry badlink
+    if (isProd(context)) return redirect('/404');
+    else return {};
+  }
 }
 
 export default function TermsAndConditions() {

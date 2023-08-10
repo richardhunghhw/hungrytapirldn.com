@@ -15,6 +15,15 @@ async function getGeneral(context: HTAppLoadContext, slug: string): Promise<Cont
   return entry as ContentStoreGeneralEntry | undefined;
 }
 
+async function getGeneralEntry(context: HTAppLoadContext, slug: string) {
+  const result = await getGeneral(context, slug);
+  if (!result) {
+    // todo sentry error
+    throw new Error('Entry not found');
+  }
+  return result;
+}
+
 async function listGenerals(context: HTAppLoadContext): Promise<BaseEntry[]> {
   const entries = await listKeys(context, 'general');
   return entries;
@@ -101,6 +110,7 @@ async function listAll(context: HTAppLoadContext): Promise<BaseEntry[]> {
 
 export {
   getGeneral,
+  getGeneralEntry,
   listGenerals,
   getBlog,
   listBlogs,
