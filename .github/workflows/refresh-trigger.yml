@@ -1,6 +1,6 @@
 name: Refresh trigger
 on:
-  schedule:
+  schedule: # Remeber to update the "Set env based on schedule time" Step
     - cron: '0 5 * * 0' # for prod, every Sunday
     - cron: '0 7 */2 * *' # for test, every 2 days
 
@@ -10,9 +10,9 @@ jobs:
     steps:
       - name: Set env based on schedule time
         run: |
-          if [ "${{ github.event.schedule }}" = "0 5 * * *" ]; then
+          if [ "${{ github.event.schedule }}" = "0 5 * * 0" ]; then
             echo "ENVIRONMENT=PROD" >> $GITHUB_ENV
-          elif [ "${{ github.event.schedule }}" = "0 23 * * *" ]; then
+          elif [ "${{ github.event.schedule }}" = "0 7 */2 * *" ]; then
             echo "ENVIRONMENT=TEST" >> $GITHUB_ENV
           fi
 
@@ -33,6 +33,10 @@ jobs:
           BASIC_AUTH_USERNAME: 'op://${{ vars.VAULT_NAME_PROD }}/HT Basic/username'
           BASIC_AUTH_PASSWORD: 'op://${{ vars.VAULT_NAME_PROD }}/HT Basic/credential'
           HOST: 'op://${{ vars.VAULT_NAME_PROD }}/HT Basic/hostname'
+
+      - name: Check HOST
+        if: ${{ !env.HOST }}
+        run: exit 1
 
       - name: Set URL
         run: |
