@@ -1,5 +1,5 @@
 import type { HTAppLoadContext } from '~/utils/types';
-import { getEntry, listKeys, putEntry } from './kv-cache';
+import { getEntry, listKeys, listNestedKeys, putEntry } from './kv-cache';
 import { allContentTypes } from './';
 import type {
   BaseEntry,
@@ -26,6 +26,11 @@ async function getGeneralEntry(context: HTAppLoadContext, slug: string) {
 
 async function listGenerals(context: HTAppLoadContext): Promise<BaseEntry[]> {
   const entries = await listKeys(context, 'general');
+  return entries;
+}
+
+async function listGeneralLocations(context: HTAppLoadContext): Promise<BaseEntry[]> {
+  const entries = await listNestedKeys(context, 'general', 'location');
   return entries;
 }
 
@@ -111,6 +116,7 @@ export {
   getGeneral,
   getGeneralEntry,
   listGenerals,
+  listGeneralLocations,
   getBlog,
   listBlogs,
   getProduct,

@@ -45,6 +45,7 @@ function makeContentStoreEntry(isProd: boolean, type: ContentType, entry: FullPa
   if (type === 'general') {
     data = {
       general: blocksToMarkdown(entry.content),
+      url: entry.properties.URL?.url as string,
     };
   } else if (type === 'blog') {
     data = {
@@ -111,6 +112,7 @@ async function refreshEntries(
   purge: boolean = false,
 ): Promise<undefined> {
   // Fetch a list of entries (keys, metadata only) from Notion
+  console.debug(`Querying notion db for type [${type}]`);
   const databaseEntries = await queryDbByType(context, type);
   if (!databaseEntries) {
     // TODO catch error to sentry
@@ -119,6 +121,7 @@ async function refreshEntries(
 
   // Fetch the content for each entry
   const pageContents: Array<FullPageResponse> = [];
+  console.debug(`Querying notion for page blocks for [${type}]`);
   for (const dbEntry of databaseEntries) {
     // Cannot run this concurrently as this will break notion API limits
     pageContents.push(await getPageContent(context, dbEntry));
@@ -130,9 +133,9 @@ async function refreshEntries(
     try {
       csEntries.push(makeContentStoreEntry(isProd(context), type, entry));
     } catch (err) {
-      console.error(`Failed to create CS entry for ${type}, ${JSON.stringify(entry)}`, err);
+      console.error(`Failed to create CS entry for [${type}], ${JSON.stringify(entry)}`, err);
       // TODO sentry error
-      // TODO should probably throw here instead of continuing?
+      throw new Error(`Failed to create CS entry for [${type}], ${JSON.stringify(entry)}`);
     }
   });
 
@@ -140,19 +143,21 @@ async function refreshEntries(
   if (purge) {
     console.debug(`Purging cache of type [${type}]`);
     await listKeys(context, type).then(async (keys) => {
-      await purgeEntries(context, type, keys);
+      await purgeEntries(context, type, keys).catch((err) => {
+        console.error(`Failed to purge cache for type [${type}]`, err);
+        // TODO sentry error
+        throw new Error(`Failed to purge cache for type [${type}]`);
+      });
     });
   }
 
   // Write to KV
   for (const entry of csEntries) {
     console.debug(`Writing entry type [${entry.type}] slug [${entry.slug}]`);
-    try {
-      await putEntry(context, type, entry.metadata.slug, entry.metadata, entry.data);
-    } catch (error) {
-      // TODO sentry - log error
-      console.error(JSON.stringify(entry), error);
-    }
+    await putEntry(context, type, entry.metadata.slug, entry.metadata, entry.data).catch((err) => {
+      console.error(`Failed to write entries for [${type}]`, err);
+      // TODO sentry error
+    });
   }
 }
 

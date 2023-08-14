@@ -48,29 +48,57 @@ async function putEntry(
   });
 }
 
-// Get all content keys and metadata for a given type
-async function listKeys({ CONTENT_STORE }: HTAppLoadContext, type: ContentType): Promise<BaseEntry[]> {
+// Process list results from KV
+function processListResults(response: KVNamespaceListResult<EntryMetadata>): BaseEntry[] {
   const data: BaseEntry[] = [];
-
-  const response = await CONTENT_STORE.list({
-    prefix: type,
-    limit: 1000, // Default limit, revisit if needed
-  });
-  if (!response.list_complete) {
-    // Should never happen give the 1000 limit
-    Sentry.captureMessage(`KV list operation incomplete for type [${type}], exceeded limit`, 'error');
-  }
 
   if (response && response.keys && response.keys.length > 0) {
     response.keys.forEach((entry) => {
       data.push({
-        type: type,
+        type: splitCacheKey(entry.name)[0] as ContentType,
         slug: splitCacheKey(entry.name)[1],
         metadata: entry.metadata as EntryMetadata,
       });
     });
   }
+
   return data;
+}
+
+// Get all content keys and metadata for a given type
+async function listKeys({ CONTENT_STORE }: HTAppLoadContext, type: ContentType): Promise<BaseEntry[]> {
+  const response = await CONTENT_STORE.list<EntryMetadata>({
+    prefix: type,
+    limit: 1000, // Default limit, revisit if needed
+  });
+
+  if (!response.list_complete) {
+    // Should never happen give the 1000 limit, silently fail
+    Sentry.captureMessage(`KV list operation incomplete for type [${type}], exceeded limit`, 'error');
+  }
+
+  return processListResults(response);
+}
+
+async function listNestedKeys(
+  { CONTENT_STORE }: HTAppLoadContext,
+  type: ContentType,
+  nested: string,
+): Promise<BaseEntry[]> {
+  const response = await CONTENT_STORE.list<EntryMetadata>({
+    prefix: makeCacheKey(type, nested),
+    limit: 1000, // Default limit, revisit if needed
+  });
+
+  if (!response.list_complete) {
+    // Should never happen give the 1000 limit, silently fail
+    Sentry.captureMessage(
+      `KV list operation incomplete for type [${type}], nested [${nested}], exceeded limit`,
+      'error',
+    );
+  }
+
+  return processListResults(response);
 }
 
 // Purge entries for a given type
@@ -84,4 +112,4 @@ async function purgeEntries(
   }
 }
 
-export { getEntry, putEntry, listKeys, purgeEntries };
+export { getEntry, putEntry, listKeys, listNestedKeys, purgeEntries };

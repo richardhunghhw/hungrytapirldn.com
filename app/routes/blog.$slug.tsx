@@ -19,7 +19,7 @@ export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { r
   return getSeoMetas({
     url: hostUrl + location.pathname,
     title: data?.metadata?.title ? data.metadata.title + ' | Hungry Tapir' : undefined,
-    // description: data?.metadata?.description,
+    // description: data?.metadata?.description, TODO SEO Description
   });
 }
 

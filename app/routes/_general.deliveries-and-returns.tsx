@@ -18,7 +18,7 @@ export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { r
   return getSeoMetas({
     url: hostUrl + location.pathname,
     title: 'Deliveries and Returns | Hungry Tapir',
-    // description: data?.metadata?.description,
+    // description: data?.metadata?.description, TODO SEO Description
   });
 }
 

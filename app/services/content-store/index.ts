@@ -20,6 +20,7 @@ export type BaseEntry = {
 export type ContentStoreGeneralEntry = BaseEntry & {
   data: {
     general: Array<string>;
+    url: string;
   };
 };
 
