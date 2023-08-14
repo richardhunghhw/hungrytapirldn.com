@@ -75,10 +75,9 @@ async function getLatestStallDate(context: HTAppLoadContext): Promise<ContentSto
   const latestEndDate = latest ? new Date(latest?.data.endDT) : undefined;
 
   const datetime = new Date();
-  const date = new Date(datetime.getFullYear(), datetime.getMonth(), datetime.getDate());
 
   // If latest entry is not set or is expired, re-evaluate
-  const reeval = !latest || !latestEndDate || date > latestEndDate;
+  const reeval = !latest || !latestEndDate || datetime > latestEndDate;
   if (!reeval) {
     return latest;
   }
@@ -86,7 +85,7 @@ async function getLatestStallDate(context: HTAppLoadContext): Promise<ContentSto
   // Get all stall dates, find the next upcoming one
   const stallDates = await listStallDates(context);
   const newLatest = stallDates
-    .filter((e) => new Date(e.slug.split('~')[1]) >= date) // filter out past dates
+    .filter((e) => new Date(e.slug.split('~')[1]) >= datetime) // filter out past dates
     .sort((a, b) => new Date(a.slug.split('~')[1]) - new Date(b.slug.split('~')[1]))[0]; // sort date asc
   const newLatestEntry = (await getStallDate(context, newLatest.slug)) as ContentStoreStallDateEntry;
 

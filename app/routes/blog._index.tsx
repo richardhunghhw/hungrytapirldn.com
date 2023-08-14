@@ -30,14 +30,10 @@ export function meta({ matches, location, data }: V2_MetaArgs<unknown, { root: t
 }
 
 export default function BlogIndex() {
+  // Load additional data from parent loaders
   const matches = useMatches();
-  if (!matches) {
-    return null;
-  }
-  const loaderData = matches.find((element: any) => element.id === 'routes/blog')?.data ?? [];
-
-  const hostUrl = loaderData.host as string;
-  const data = loaderData.data as ContentStoreEntry[];
+  const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;
+  const data = matches.find((element: any) => element.id === 'routes/blog')?.data as ContentStoreEntry[];
 
   return (
     <div className='flex flex-col'>

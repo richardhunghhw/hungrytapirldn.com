@@ -30,15 +30,12 @@ export function meta({ matches, location, data }: V2_MetaArgs<unknown, { root: t
 }
 
 export default function FaqIndex() {
+  // Load additional data from parent loaders
   const matches = useMatches();
-  if (!matches) {
-    return null;
-  }
-  const loaderData = matches.find((element: any) => element.id === 'routes/faq')?.data ?? [];
+  const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;
+  const data = matches.find((element: any) => element.id === 'routes/faq')?.data as ContentStoreFaqEntry[];
 
-  const hostUrl = loaderData.host as string;
-  const data = loaderData.data as ContentStoreFaqEntry[];
-
+  // Get unique faq headings
   const faqHeadings = Array.from(new Set(data.map((faq) => faq.metadata.category))).sort();
 
   return (

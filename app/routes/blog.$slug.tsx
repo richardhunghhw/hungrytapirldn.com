@@ -42,8 +42,7 @@ export async function loader({ request: { url }, context, params }: HTActionArgs
 
 export default function Blog() {
   const matches = useMatches();
-  const loaderData = matches.find((element: any) => element.id === 'routes/blog')?.data ?? [];
-  const hostUrl = loaderData.host as string;
+  const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;
 
   const blogData = useLoaderData<ContentStoreBlogEntry>();
   if (!blogData || !blogData.data) return null;

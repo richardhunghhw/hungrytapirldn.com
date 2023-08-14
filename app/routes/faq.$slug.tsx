@@ -42,8 +42,7 @@ export async function loader({ request: { url }, context, params }: HTActionArgs
 
 export default function Faq() {
   const matches = useMatches();
-  const parentData = matches.find((element: any) => element.id === 'routes/faq')?.data;
-  const hostUrl = parentData.host as string;
+  const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;
 
   const faqEntry = useLoaderData<ContentStoreFaqEntry>();
   if (!faqEntry || !faqEntry.data) return null;

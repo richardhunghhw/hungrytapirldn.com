@@ -15,7 +15,7 @@ export async function loader({ context }: HTActionArgs) {
     if (!result || !result.length) {
       throw new Error('FAQ Entries not found');
     }
-    return { host: context.HOST_URL, data: result };
+    return result;
   } catch (error) {
     console.error(error); // TODO badlink
     if (isProd(context)) return redirect('/404');
