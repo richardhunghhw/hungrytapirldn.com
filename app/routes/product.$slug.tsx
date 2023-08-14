@@ -10,10 +10,10 @@ import type { HTActionArgs } from '~/utils/types';
 import type { ContentStoreProductEntry } from '~/services/content-store';
 import { getProduct, validateRequest } from '~/services/content-store';
 import { AspectRatio } from '@radix-ui/react-aspect-ratio';
-import { NumberInput } from '~/components/number-input';
 import { AddToBag } from '~/components/add-to-bag';
 import { getSeoMetas } from '~/utils/seo';
 import type { loader as rootLoader } from '~/root';
+import { MarkdownContent } from '~/components/markdown-content';
 
 export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { root: typeof rootLoader }>) {
   const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;
@@ -42,6 +42,7 @@ export async function loader({ request: { url }, context, params }: HTActionArgs
 export default function Product() {
   const productData = useLoaderData<ContentStoreProductEntry>();
   if (!productData || !productData.data) return null;
+  const productContent = productData.data.product;
 
   const aspectRatio = 8 / 9;
   console.log(`product ${JSON.stringify(productData)}`);
@@ -64,25 +65,11 @@ export default function Product() {
                 <h1>{productData.metadata.title}</h1>
                 <p>£{productData.data.price}</p>
               </div>
-              {/* <div className="grid auto-rows-auto gap-4">
-                                {productData.data.Ingredients.map(
-                                    (ingredient) => (
-                                        <Badge
-                                            key={ingredient}
-                                            className="my-2 whitespace-nowrap"
-                                        >
-                                            {ingredient}
-                                        </Badge>
-                                    )
-                                )}
-                            </div> */}
-              {productData.data.product.map((product, index) => {
-                console.log(product);
-                return <div key={index}>{product}</div>;
-              })}
+              <div className='prose prose-lg max-w-none'>
+                <MarkdownContent data={productContent} />
+              </div>
               <p className='font-bold'>{productData.data.unit}</p>
-              <NumberInput id={productData.data.id} className='hidden md:block' />
-              <AddToBag className='text-white' />
+              <AddToBag id={productData.data.id} className='text-white' />
             </div>
           </div>
         </div>

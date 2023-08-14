@@ -23,10 +23,12 @@ function makeMetadata(type: ContentType, { properties }: FullPageResponse): Entr
     properties.Event?.title?.[0]?.plain_text ??
     undefined;
   const tags = properties.Tags?.multi_select?.map((x: { name: any }) => x.name);
+  const category = properties.Category?.select.name as string;
   return {
-    slug: slug,
-    title: title,
+    slug,
+    title,
     tags: tags ?? [],
+    category,
   };
 }
 
@@ -47,10 +49,13 @@ function makeContentStoreEntry(isProd: boolean, type: ContentType, entry: FullPa
   } else if (type === 'blog') {
     data = {
       blog: blocksToMarkdown(entry.content),
+      seoDescription: entry.properties['SEO Description']?.rich_text[0]?.plain_text as string,
     };
   } else if (type === 'faq') {
     data = {
       faq: blocksToMarkdown(entry.content),
+      productSectionRef: entry.properties['Product Section Ref']?.rich_text[0]?.plain_text as string,
+      seoDescription: entry.properties['SEO Description']?.rich_text[0]?.plain_text as string,
     };
   } else if (type === 'product') {
     data = {
@@ -62,7 +67,7 @@ function makeContentStoreEntry(isProd: boolean, type: ContentType, entry: FullPa
       price: entry.properties.Price?.number,
       primaryImage: entry.properties['Primary Image'].url as string,
       primaryImageAlt: entry.properties['Primary Image Alt']?.rich_text[0].plain_text as string,
-      Ingredients: entry.properties.Ingredients?.multi_select.map((x: { name: any }) => x.name) as Array<string>,
+      ingredients: entry.properties.Ingredients?.multi_select.map((x: { name: any }) => x.name) as Array<string>,
       product: blocksToMarkdown(entry.content),
       productCart: blockToMarkdown({
         // Todo revisit hack
@@ -76,6 +81,7 @@ function makeContentStoreEntry(isProd: boolean, type: ContentType, entry: FullPa
       }),
       imageColour: entry.properties['Image Colour']?.rich_text[0].plain_text as string,
       backgroundColour: entry.properties['Background Colour']?.rich_text[0].plain_text as string,
+      seoDescription: entry.properties['SEO Description']?.rich_text[0]?.plain_text as string,
     };
   } else if (type === 'stalldate') {
     // Store date in UTC fomrat
@@ -107,7 +113,7 @@ async function refreshEntries(
   // Fetch a list of entries (keys, metadata only) from Notion
   const databaseEntries = await queryDbByType(context, type);
   if (!databaseEntries) {
-    // todo catch error to sentry
+    // TODO catch error to sentry
     throw new Error(`Failed to fetch data from Notion for ${type}`);
   }
 
@@ -125,7 +131,8 @@ async function refreshEntries(
       csEntries.push(makeContentStoreEntry(isProd(context), type, entry));
     } catch (err) {
       console.error(`Failed to create CS entry for ${type}, ${JSON.stringify(entry)}`, err);
-      //todo sentry error
+      // TODO sentry error
+      // TODO should probably throw here instead of continuing?
     }
   });
 

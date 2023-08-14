@@ -8,6 +8,7 @@ export type EntryMetadata = {
   slug: string;
   title: string;
   tags: Array<string>;
+  category: string;
 };
 
 export type BaseEntry = {
@@ -25,21 +26,15 @@ export type ContentStoreGeneralEntry = BaseEntry & {
 export type ContentStoreBlogEntry = BaseEntry & {
   data: {
     blog: Array<string>;
+    seoDescription: string;
   };
 };
 
 export type ContentStoreFaqEntry = BaseEntry & {
   data: {
     faq: Array<string>;
-  };
-};
-
-export type ContentStoreStallDateEntry = BaseEntry & {
-  data: {
-    location: string;
-    startDT: string;
-    endDT: string;
-    collectionEnabled: boolean;
+    productSectionRef: string;
+    seoDescription: string;
   };
 };
 
@@ -51,12 +46,22 @@ export type ContentStoreProductEntry = BaseEntry & {
     price: number;
     primaryImage: string;
     primaryImageAlt: string;
-    Ingredients: string[];
+    ingredients: Array<string>;
     product: Array<string>;
     productCart: Array<string>;
     productSection: Array<string>;
     imageColour: string;
     backgroundColour: string;
+    seoDescription: string;
+  };
+};
+
+export type ContentStoreStallDateEntry = BaseEntry & {
+  data: {
+    location: string;
+    startDT: string;
+    endDT: string;
+    collectionEnabled: boolean;
   };
 };
 
