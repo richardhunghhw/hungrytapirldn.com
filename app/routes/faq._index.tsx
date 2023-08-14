@@ -2,23 +2,31 @@
  * FAQ list page
  */
 
-import { ContentStoreEntry } from '~/services/content-store';
-import { Link as RemixLink, useMatches } from '@remix-run/react';
+import type { ContentStoreEntry } from '~/services/content-store';
+import type { V2_MetaArgs } from '@remix-run/react';
+import { Link, useMatches } from '@remix-run/react';
 import { ChevronRight } from 'lucide-react';
-
-type Metadata = {
-  title: string;
-  tags: string[];
-};
+import type { loader as rootLoader } from '~/root';
+import { getSeoMetas } from '~/utils/seo';
 
 function FaqRow({ hostUrl, entry }: { hostUrl: string; entry: ContentStoreEntry }) {
   const metadata = entry.metadata;
   return (
-    <RemixLink to={`${hostUrl}/faq/${entry.slug}`} className='flex flex-row justify-between'>
+    <Link to={`${hostUrl}/faq/${entry.slug}`} className='flex flex-row justify-between'>
       <span className='text-xl'>{metadata?.title as string}</span>
       <ChevronRight />
-    </RemixLink>
+    </Link>
   );
+}
+
+export function meta({ matches, location, data }: V2_MetaArgs<unknown, { root: typeof rootLoader }>) {
+  const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;
+  return getSeoMetas({
+    url: hostUrl + location.pathname,
+    title: 'Frequently Asked Questions | Hungry Tapir',
+    description:
+      "Explore Hungry Tapir LDN's comprehensive FAQ page for all your questions about our delicious Kaya. From ingredients, shelf life, and vegan options to delivery, payment, and ordering details, we have answers to all your inquiries. Learn more about our commitment to quality, taste, and customer satisfaction.",
+  });
 }
 
 export default function FaqIndex() {

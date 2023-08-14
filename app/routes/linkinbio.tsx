@@ -105,8 +105,7 @@ function NextStallSection({ pageData: { stalldate } }: { pageData: LinkInBioLoad
       </div>
       <div className='mt-3 flex flex-wrap justify-center'>
         <span className='mr-2 underline'>Location</span>
-        <span className='text-center'>BRADY ARTS & COMMUNITY CENTRE
-192-196, Hanbury St, Whitechapel, E1 5HU</span>
+        <span className='text-center'>Upmarket, 91 Brick Ln, London E1 6QL</span>
       </div>
     </div>
   );

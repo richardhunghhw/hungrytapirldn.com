@@ -2,24 +2,31 @@
  * Blog list page
  */
 
-import { ContentStoreEntry } from '~/services/content-store';
-import { Link as RemixLink, useMatches } from '@remix-run/react';
+import type { ContentStoreEntry } from '~/services/content-store';
+import type { V2_MetaArgs } from '@remix-run/react';
+import { Link, useMatches } from '@remix-run/react';
 import { ChevronRight } from 'lucide-react';
-import { Badge } from '~/components/ui/badge';
-
-type Metadata = {
-  title: string;
-  tags: string[];
-};
+import type { loader as rootLoader } from '~/root';
+import { getSeoMetas } from '~/utils/seo';
 
 function BlogRow({ hostUrl, entry }: { hostUrl: string; entry: ContentStoreEntry }) {
   const metadata = entry.metadata;
   return (
-    <RemixLink to={`${hostUrl}/Blog/${entry.slug}`} className='flex flex-row justify-between'>
+    <Link to={`${hostUrl}/Blog/${entry.slug}`} className='flex flex-row justify-between'>
       <span className='text-xl'>{metadata?.title as string}</span>
       <ChevronRight />
-    </RemixLink>
+    </Link>
   );
+}
+
+export function meta({ matches, location, data }: V2_MetaArgs<unknown, { root: typeof rootLoader }>) {
+  const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;
+  return getSeoMetas({
+    url: hostUrl + location.pathname,
+    title: 'Blog | Hungry Tapir',
+    description:
+      "Dive into Hungry Tapir LDN's blog and explore a world of flavors, traditions, and culinary insights. From delicious recipes featuring our signature Kaya to behind-the-scenes stories, cooking tips, and more, our blog offers a rich and engaging experience for food enthusiasts and Kaya lovers alike.",
+  });
 }
 
 export default function BlogIndex() {

@@ -1,7 +1,6 @@
-import type { V2_MetaFunction } from '@remix-run/react';
+import type { V2_MetaArgs } from '@remix-run/react';
 import { Link, useLoaderData } from '@remix-run/react';
 import type { HTLoaderArgs } from '~/utils/types';
-
 import { Button } from '~/components/ui/button';
 import type { ContentStoreGeneralEntry, ContentStoreProductEntry } from '~/services/content-store';
 import { getGeneral, getProduct, makeUriFromContentTypeSlug } from '~/services/content-store';
@@ -9,12 +8,20 @@ import { TapirTransparent } from '~/utils/svg/tapir';
 import { AspectRatio } from '~/components/ui/aspect-ratio';
 import { NumberInput } from '~/components/number-input';
 import { AddToBag } from '~/components/add-to-bag';
+import { getSeoMetas } from '~/utils/seo';
+import type { loader as rootLoader } from '~/root';
 
 const circle = () => <div className='h-4 w-4 rounded-full bg-ht-black' />;
 
-export const meta: V2_MetaFunction = () => {
-  return [{ title: 'Hungry Tapir | Best Kaya in London' }];
-};
+export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { root: typeof rootLoader }>) {
+  const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;
+  return getSeoMetas({
+    url: hostUrl + location.pathname,
+    title: 'Hungry Tapir | Best Kaya in London',
+    description:
+      "Handmade, cult-favourite South-East Asian foods in London. Taste the city's best Kaya, crafted in small batches. Order online here.",
+  });
+}
 
 export async function loader({ context }: HTLoaderArgs) {
   const orderNow = await getGeneral(context, 'section~order-now');

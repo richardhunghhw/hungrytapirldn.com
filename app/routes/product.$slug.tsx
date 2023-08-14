@@ -3,6 +3,7 @@
  */
 
 import { redirect } from '@remix-run/cloudflare';
+import type { V2_MetaArgs } from '@remix-run/react';
 import { useLoaderData } from '@remix-run/react';
 import { isProd } from '~/utils/misc';
 import type { HTActionArgs } from '~/utils/types';
@@ -11,9 +12,20 @@ import { getProduct, validateRequest } from '~/services/content-store';
 import { AspectRatio } from '@radix-ui/react-aspect-ratio';
 import { NumberInput } from '~/components/number-input';
 import { AddToBag } from '~/components/add-to-bag';
+import { getSeoMetas } from '~/utils/seo';
+import type { loader as rootLoader } from '~/root';
 
-// Fetch product data content-store
+export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { root: typeof rootLoader }>) {
+  const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;
+  return getSeoMetas({
+    url: hostUrl + location.pathname,
+    title: data?.metadata?.title ? data.metadata.title + ' | Hungry Tapir' : undefined,
+    // description: data?.metadata?.description,
+  });
+}
+
 export async function loader({ request: { url }, context, params }: HTActionArgs) {
+  // Fetch product data content-store
   try {
     const urlPath = validateRequest(new URL(url));
     const result = await getProduct(context, urlPath.slug);

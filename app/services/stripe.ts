@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import { HTAppLoadContext } from '~/utils/types';
+import type { HTAppLoadContext } from '~/utils/types';
 
 export function getStripe({ STRIPE_SECRET_KEY }: HTAppLoadContext) {
   return new Stripe(STRIPE_SECRET_KEY, {

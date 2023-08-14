@@ -3,6 +3,7 @@
  */
 
 import { redirect } from '@remix-run/cloudflare';
+import type { V2_MetaArgs } from '@remix-run/react';
 import { Link, useLoaderData, useMatches } from '@remix-run/react';
 import { isProd } from '~/utils/misc';
 import type { HTActionArgs } from '~/utils/types';
@@ -10,9 +11,20 @@ import type { ContentStoreFaqEntry } from '~/services/content-store';
 import { validateRequest, getFaq } from '~/services/content-store';
 import { ArrowLeft } from 'lucide-react';
 import { MarkdownContent } from '~/components/markdown-content';
+import { getSeoMetas } from '~/utils/seo';
+import type { loader as rootLoader } from '~/root';
 
-// Fetch faq data content-store
+export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { root: typeof rootLoader }>) {
+  const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;
+  return getSeoMetas({
+    url: hostUrl + location.pathname,
+    title: data?.metadata?.title ? data.metadata.title + ' | Hungry Tapir' : undefined,
+    // description: data?.metadata?.description,
+  });
+}
+
 export async function loader({ request: { url }, context, params }: HTActionArgs) {
+  // Fetch faq data from content-store
   try {
     const urlPath = validateRequest(new URL(url));
     const result = await getFaq(context, urlPath.slug);

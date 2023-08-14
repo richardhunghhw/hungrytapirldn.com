@@ -52,7 +52,7 @@ export const links: LinksFunction = () => {
 
 const BYPASS_HEADERFOOTER_PATHS = ['/linkinbio'];
 
-async function loader({ context }: HTLoaderArgs) {
+export async function loader({ context }: HTLoaderArgs) {
   return {
     hostUrl: context.HOST_URL,
     isDev: isDev(context),
