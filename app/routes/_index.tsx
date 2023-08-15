@@ -6,10 +6,10 @@ import type { ContentStoreGeneralEntry, ContentStoreProductEntry } from '~/servi
 import { getGeneral, getProduct, makeUriFromContentTypeSlug } from '~/services/content-store';
 import { TapirTransparent } from '~/utils/svg/tapir';
 import { AspectRatio } from '~/components/ui/aspect-ratio';
-import { NumberInput } from '~/components/number-input';
 import { AddToBag } from '~/components/add-to-bag';
 import { getSeoMetas } from '~/utils/seo';
 import type { loader as rootLoader } from '~/root';
+import { CDNImage } from '~/components/cdn-image';
 
 const circle = () => <div className='h-4 w-4 rounded-full bg-ht-black' />;
 
@@ -85,12 +85,8 @@ export default function Index() {
         className='flex h-[calc(100vh-200px)] snap-start flex-col items-center justify-center bg-ht-pink-highlight font-bold text-ht-green-highlight md:h-[calc(100vh-100px)]'
       >
         <div className='content-container flex flex-col items-center justify-center'>
-          <div className='static mt-12'>
-            <img
-              src='/images/content/landing.png'
-              alt='Malaysian store'
-              className='h-[calc(100vh-20rem)] w-[calc(100vw-2.4rem)] rounded-2xl object-cover md:w-[calc(100vw-5rem)] lg:w-[calc(100vw-9rem)]'
-            />
+          <div className='absolute'>
+            <CDNImage name='landing' className='h-[calc(100vh-200px)] w-screen object-cover md:h-[calc(100vh-100px)]' />
           </div>
           <div className='absolute flex flex-col items-center'>
             <TapirTransparent className='text-5xl md:text-8xl' />
@@ -131,7 +127,7 @@ export default function Index() {
           </div>
           <div className='w-[calc(100vw-2.4rem)] overflow-hidden rounded-3xl md:w-[350px]'>
             <AspectRatio ratio={8 / 11}>
-              <img src='/images/content/coconut-tree.jpg' alt='Coconut tree' className='h-full w-full object-cover' />
+              <CDNImage name='coconutTree' className='h-full w-full object-cover' />
             </AspectRatio>
           </div>
         </div>
@@ -141,11 +137,7 @@ export default function Index() {
         <div className='content-container flex flex-col items-center space-y-8 md:flex-row md:space-x-4 md:space-y-0 lg:space-x-16'>
           <div className='w-[calc(100vw-2.4rem)] overflow-hidden rounded-3xl md:w-[350px]'>
             <AspectRatio ratio={8 / 11}>
-              <img
-                src='/images/content/what-is-kaya-kaya-toast.jpg'
-                alt='Kaya Toast'
-                className='h-full w-full object-cover'
-              />
+              <CDNImage name='kayaToast' className='h-full w-full object-cover' />
             </AspectRatio>
           </div>
           <div className='flex w-full flex-grow flex-col items-start justify-center space-y-4 rounded-3xl px-4 text-left font-mono text-ht-black md:w-auto md:items-center md:space-y-10 md:border-2 md:border-ht-black md:p-8'>

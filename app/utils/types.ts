@@ -36,6 +36,11 @@ export type HTAppLoadContext = AppLoadContext & {
   readonly NOTION_API_DB_FAQ: string;
   readonly NOTION_API_DB_PRODUCTS: string;
   readonly NOTION_API_DB_STALLDATE: string;
+
+  /** ImageKit */
+  readonly IMAGEKIT_URL_ENDPOINT: string;
+  readonly IMAGEKIT_PUBLIC_KEY: string;
+  readonly IMAGEKIT_PRIVATE_KEY: string;
 };
 
 interface HTDataFunctionArgs {
