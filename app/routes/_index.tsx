@@ -109,7 +109,25 @@ export default function Index() {
         </div>
       </section>
 
-      <section id='order-now' className='content-wrapper snap-start bg-ht-green py-4 md:py-16'>
+      <section id='what-is-kaya' className='content-wrapper snap-start bg-ht-green py-4 md:py-16'>
+        <div className='content-container flex flex-col items-center space-y-8 md:flex-row md:space-x-4 md:space-y-0 lg:space-x-16'>
+          <div className='w-[calc(100vw-2.4rem)] overflow-hidden rounded-3xl md:w-[350px]'>
+            <AspectRatio ratio={8 / 11}>
+              <CDNImage name='kayaToast' className='h-full w-full object-cover' />
+            </AspectRatio>
+          </div>
+          <div className='flex w-full flex-grow flex-col items-start justify-center space-y-4 rounded-3xl px-4 text-left font-mono text-ht-black md:w-auto md:items-center md:space-y-10 md:border-2 md:border-ht-black md:p-8'>
+            <h1 className='title font-serif text-2xl md:text-4xl'>What is kaya?</h1>
+            <div className='prose'>
+              {data.whatKaya.data.general.map((item, index) => (
+                <p key={index}>{item}</p>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id='order-now' className='content-wrapper snap-start bg-ht-pink py-4 md:py-16'>
         <div className='content-container flex flex-col-reverse items-center space-y-4 space-y-reverse md:flex-row md:space-x-4 md:space-y-0 lg:space-x-16'>
           <div className='mb-4 flex w-full flex-grow flex-col items-start justify-center space-y-4 rounded-3xl px-4 text-left font-mono text-ht-black md:w-auto md:items-center md:space-y-10 md:border-2 md:border-ht-black md:p-8 md:text-center'>
             <h1 className='title font-serif text-2xl md:text-4xl'>Pandan</h1>
@@ -129,24 +147,6 @@ export default function Index() {
             <AspectRatio ratio={8 / 11}>
               <CDNImage name='coconutTree' className='h-full w-full object-cover' />
             </AspectRatio>
-          </div>
-        </div>
-      </section>
-
-      <section id='what-is-kaya' className='content-wrapper snap-start bg-ht-pink py-4 md:py-16'>
-        <div className='content-container flex flex-col items-center space-y-8 md:flex-row md:space-x-4 md:space-y-0 lg:space-x-16'>
-          <div className='w-[calc(100vw-2.4rem)] overflow-hidden rounded-3xl md:w-[350px]'>
-            <AspectRatio ratio={8 / 11}>
-              <CDNImage name='kayaToast' className='h-full w-full object-cover' />
-            </AspectRatio>
-          </div>
-          <div className='flex w-full flex-grow flex-col items-start justify-center space-y-4 rounded-3xl px-4 text-left font-mono text-ht-black md:w-auto md:items-center md:space-y-10 md:border-2 md:border-ht-black md:p-8'>
-            <h1 className='title font-serif text-2xl md:text-4xl'>What is kaya?</h1>
-            <div className='prose'>
-              {data.whatKaya.data.general.map((item, index) => (
-                <p key={index}>{item}</p>
-              ))}
-            </div>
           </div>
         </div>
       </section>
