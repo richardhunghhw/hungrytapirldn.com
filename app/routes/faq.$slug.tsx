@@ -49,8 +49,8 @@ export default function Faq() {
   const faqContent = faqEntry.data.faq;
 
   return (
-    <div className='flex flex-col'>
-      <div className='content-wrapper bg-ht-green-highlight'>
+    <>
+      <header className='content-wrapper bg-ht-green-highlight'>
         <div className='content-container'>
           <div className='title-section flex flex-col'>
             <Link to={`${hostUrl}/faq`} className='text-base'>
@@ -61,14 +61,14 @@ export default function Faq() {
             </h1>
           </div>
         </div>
-      </div>
-      <div className='content-wrapper body-text-wrapper'>
+      </header>
+      <article className='content-wrapper body-text-wrapper'>
         <div className='content-container mt-4'>
           <div className='prose prose-lg max-w-none'>
             <MarkdownContent data={faqContent} />
           </div>
         </div>
-      </div>
-    </div>
+      </article>
+    </>
   );
 }

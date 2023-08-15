@@ -47,7 +47,7 @@ export default function Product() {
   const aspectRatio = 8 / 9;
   console.log(`product ${JSON.stringify(productData)}`);
   return (
-    <div className='flex flex-col'>
+    <>
       <div className={'content-wrapper bg-' + productData.data.backgroundColour}>
         <div className='content-container my-24 flex flex-col items-center justify-center py-2'>
           <div className='flex flex-col items-center md:flex-row md:space-x-8'>
@@ -61,10 +61,10 @@ export default function Product() {
               </AspectRatio>
             </div>
             <div className='items-left mt-5 flex basis-1/2 flex-col justify-center space-y-4 md:w-1/2'>
-              <div className='flex flex-row items-end justify-between text-4xl font-extrabold uppercase text-primary sm:text-5xl md:text-6xl'>
+              <header className='flex flex-row items-end justify-between text-4xl font-extrabold uppercase text-primary sm:text-5xl md:text-6xl'>
                 <h1>{productData.metadata.title}</h1>
                 <p>£{productData.data.price}</p>
-              </div>
+              </header>
               <div className='prose prose-lg max-w-none'>
                 <MarkdownContent data={productContent} />
               </div>
@@ -74,6 +74,6 @@ export default function Product() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

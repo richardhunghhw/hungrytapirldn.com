@@ -39,7 +39,7 @@ export default function FaqIndex() {
   const faqHeadings = Array.from(new Set(data.map((faq) => faq.metadata.category))).sort();
 
   return (
-    <div className='flex flex-col'>
+    <>
       <div className='content-wrapper bg-ht-green-highlight'>
         <div className='content-container'>
           <h1 className='title title-section text-center'>Frequently Asked Questions</h1>
@@ -68,6 +68,6 @@ export default function FaqIndex() {
           </ul>
         </div>
       </div>
-    </div>
+    </>
   );
 }

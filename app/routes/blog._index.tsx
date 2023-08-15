@@ -36,7 +36,7 @@ export default function BlogIndex() {
   const data = matches.find((element: any) => element.id === 'routes/blog')?.data as ContentStoreEntry[];
 
   return (
-    <div className='flex flex-col'>
+    <>
       <div className='content-wrapper bg-ht-turquoise'>
         <div className='content-container'>
           <h1 className='title title-section text-center'>Blog</h1>
@@ -53,6 +53,6 @@ export default function BlogIndex() {
           </ul>
         </div>
       </div>
-    </div>
+    </>
   );
 }

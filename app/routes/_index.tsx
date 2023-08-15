@@ -64,8 +64,7 @@ function ProductCard({ product }: { product: ContentStoreProductEntry }): JSX.El
         <Link to={makeUriFromContentTypeSlug('product', product.metadata.slug) as string}>Learn more</Link>
       </Button>
       <div className='text-2xl font-extrabold text-black'>£{product.data.price}</div>
-      <NumberInput id={product.data.id} className='hidden md:block' />
-      <AddToBag className='text-ht-orange' />
+      <AddToBag id={product.data.id} className='text-ht-orange' />
     </div>
   );
 }
@@ -80,8 +79,8 @@ export default function Index() {
   if (!data) return null; // todo
 
   return (
-    <div className='snap-y snap-normal'>
-      <section
+    <main className='snap-y snap-normal'>
+      <header
         id='landing'
         className='flex h-[calc(100vh-200px)] snap-start flex-col items-center justify-center bg-ht-pink-highlight font-bold text-ht-green-highlight md:h-[calc(100vh-100px)]'
       >
@@ -98,7 +97,7 @@ export default function Index() {
             <h1 className='title text-center text-3xl tracking-widest md:text-6xl'>WE MAKE KAYA</h1>
           </div>
         </div>
-      </section>
+      </header>
 
       <section className='content-wrapper h-[3.8rem] snap-start bg-ht-off-white py-4' id='banner'>
         <div className='content-container'>
@@ -166,6 +165,6 @@ export default function Index() {
           <ProductCard product={data.kayaVegan} />
         </div>
       </section>
-    </div>
+    </main>
   );
 }

@@ -25,8 +25,8 @@ export async function loader({ context }: HTActionArgs) {
 
 export default function BlogLayout() {
   return (
-    <div className='min-h-screen'>
+    <main className='flex min-h-screen flex-col'>
       <Outlet />
-    </div>
+    </main>
   );
 }

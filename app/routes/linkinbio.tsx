@@ -56,15 +56,15 @@ export async function loader({ context }: HTLoaderArgs) {
   };
 }
 
-export default function LinkInBioLayout() {
+export default function LinkInBio() {
   const pageData = useLoaderData<typeof loader>();
 
   return (
-    <div className='flex min-h-screen flex-col justify-center bg-ht-pink-highlight'>
+    <main className='flex min-h-screen flex-col justify-center bg-ht-pink-highlight'>
       <div className='content-wrapper'>
         <div className='mx-auto max-w-screen-sm'>
           <div className='mb-32 mt-16 flex flex-col items-center space-y-8 font-mono'>
-            <div className='flex flex-col items-center font-bold'>
+            <header className='flex flex-col items-center font-bold'>
               <TapirTransparent className='text-8xl' color='#1C1C1C' />
               <p className='text-sm'>@hungrytapirldn</p>
               <h1 className='title mt-4 text-center text-4xl tracking-tight md:text-6xl'>Hungry Tapir LDN</h1>
@@ -73,7 +73,7 @@ export default function LinkInBioLayout() {
                   <Markdown key={index}>{line}</Markdown>
                 ))}
               </div>
-            </div>
+            </header>
             <NextStall
               startDT={pageData.stalldate.data.startDT}
               endDT={pageData.stalldate.data.endDT}
@@ -95,6 +95,6 @@ export default function LinkInBioLayout() {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

@@ -268,8 +268,8 @@ function CartSidebar() {
 
 export default function Navbar() {
   return (
-    <div className='content-wrapper fixed z-50 w-[calc(100vw-1.2rem)] bg-transparent py-4 md:w-[calc(100vw-1rem)]'>
-      <nav className='content-container flex items-center justify-between rounded-full bg-ht-off-white px-6 py-1 font-mono'>
+    <nav className='content-wrapper fixed z-50 w-[calc(100vw-1.2rem)] bg-transparent py-4 md:w-[calc(100vw-1rem)]'>
+      <div className='content-container flex items-center justify-between rounded-full bg-ht-off-white px-6 py-1 font-mono'>
         {/* <NavSidebar /> */}
         <div className='flex justify-center gap-4 py-2 align-middle font-serif text-xl font-bold uppercase md:text-3xl'>
           <NavLink key='root' to='/'>
@@ -298,7 +298,7 @@ export default function Navbar() {
           })}
         </ul>
         {/* <CartSidebar /> */}
-      </nav>
-    </div>
+      </div>
+    </nav>
   );
 }

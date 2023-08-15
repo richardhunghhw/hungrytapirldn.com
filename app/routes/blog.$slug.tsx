@@ -49,8 +49,8 @@ export default function Blog() {
   const blogContent = blogData.data.blog;
 
   return (
-    <div className='flex flex-col'>
-      <div className='content-wrapper bg-ht-turquoise'>
+    <>
+      <header className='content-wrapper bg-ht-turquoise'>
         <div className='content-container'>
           <div className='title-section flex flex-col'>
             <Link to={`${hostUrl}/blog`} className='text-base'>
@@ -59,14 +59,14 @@ export default function Blog() {
             <h1 className='title text-center'>{blogData.metadata.title}</h1>
           </div>
         </div>
-      </div>
-      <div className='content-wrapper body-text-wrapper'>
+      </header>
+      <article className='content-wrapper body-text-wrapper'>
         <div className='content-container mt-4'>
           <div className='prose prose-lg max-w-none'>
             <MarkdownContent data={blogContent} />
           </div>
         </div>
-      </div>
-    </div>
+      </article>
+    </>
   );
 }

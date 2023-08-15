@@ -36,19 +36,19 @@ export default function GeneralLayout() {
   const outletData: ContentStoreGeneralEntry = outletEntry?.data;
 
   return (
-    <div className='flex min-h-screen flex-col'>
-      <div className='content-wrapper bg-ht-orange'>
+    <main className='flex min-h-screen flex-col'>
+      <header className='content-wrapper bg-ht-orange'>
         <div className='content-container'>
           <div className='title-section flex flex-col'>
             <h1 className='title text-center'>{outletData.metadata.title}</h1>
           </div>
         </div>
-      </div>
-      <div className='content-wrapper body-text-wrapper'>
+      </header>
+      <article className='content-wrapper body-text-wrapper'>
         <div className='content-container mt-4'>
           <Outlet />
         </div>
-      </div>
-    </div>
+      </article>
+    </main>
   );
 }

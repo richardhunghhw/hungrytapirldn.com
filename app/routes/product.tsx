@@ -1,19 +1,19 @@
 /**
- * FAQ Layout
+ * Product Layout
  */
 
 import { redirect } from '@remix-run/cloudflare';
 import { Outlet } from '@remix-run/react';
 import { isProd } from '~/utils/misc';
-import { listFaqs } from '~/services/content-store';
+import { listProducts } from '~/services/content-store';
 import type { HTActionArgs } from '~/utils/types';
 
 // Fetch faq data content-store
 export async function loader({ context }: HTActionArgs) {
   try {
-    const result = await listFaqs(context);
+    const result = await listProducts(context);
     if (!result || !result.length) {
-      throw new Error('FAQ Entries not found');
+      throw new Error('Product Entries not found');
     }
     return result;
   } catch (error) {
@@ -23,7 +23,7 @@ export async function loader({ context }: HTActionArgs) {
   return null;
 }
 
-export default function FaqLayout() {
+export default function ProductLayout() {
   return (
     <main className='flex min-h-screen flex-col'>
       <Outlet />
