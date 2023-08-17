@@ -73,34 +73,25 @@ function blockToMarkdown(block: BlockObjectResponse): string {
   switch (type) {
     case 'image': {
       let blockContent = block.image;
-      let image_title = 'image';
+
+      const imageType = blockContent.type;
+      const url =
+        imageType === 'external' ? blockContent.external.url : imageType === 'file' ? blockContent.file.url : '';
+
+      // image caption as alt with filename
+      const filename = block.parent.page_id + '_' + block.id;
+      // const;
 
       const image_caption_plain = blockContent.caption.map((item: any) => item.plain_text).join('');
-
-      const image_type = blockContent.type;
-      let link = '';
-
-      if (image_type === 'external') {
-        link = blockContent.external.url;
-      }
-
-      if (image_type === 'file') {
-        link = blockContent.file.url;
-      }
-
-      // image caption with high priority
+      let image_title = 'image';
       if (image_caption_plain.trim().length > 0) {
         image_title = image_caption_plain;
-      } else if (image_type === 'file' || image_type === 'external') {
-        const matches = link.match(/[^\/\\&\?]+\.\w{3,4}(?=([\?&].*$|$))/);
-        image_title = matches ? matches[0] : image_title;
+      } else {
+        image_title = 'Hungry Tapir Image'; // TODO: find a better default alt text, or dont allow it
       }
+      image_title = image_title + '~' + filename; // TODO: find a better way to do this
 
-      // return await md.image(
-      //     image_title,
-      //     link,
-      //     this.config.convertImagesToBase64
-      // );
+      return md.image(image_title, url);
     }
 
     case 'divider': {

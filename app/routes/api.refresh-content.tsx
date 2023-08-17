@@ -18,7 +18,8 @@ export async function action({ context, request }: HTActionArgs) {
     const { searchParams } = new URL(request.url);
     const purgeCache = searchParams.get('purge') == 'true';
     const purgeTypes = searchParams.get('types') ? searchParams.get('types')?.split(',') : [];
-    return await refreshAllEntries(context, purgeCache, purgeTypes)
+    const replaceImages = searchParams.get('images') == 'true';
+    return await refreshAllEntries(context, purgeCache, purgeTypes, replaceImages)
       .then(() => {
         return {
           status: 200,

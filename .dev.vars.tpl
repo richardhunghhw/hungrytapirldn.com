@@ -28,6 +28,5 @@ CACHE_TTL_DAYS=14
 
 # ImageKit
 
-IMAGEKIT_URL_ENDPOINT="op://HT-TEST/ImageKit API/hostname"
 IMAGEKIT_PUBLIC_KEY="op://HT-TEST/ImageKit API/username"
 IMAGEKIT_PRIVATE_KEY="op://HT-TEST/ImageKit API/credential"

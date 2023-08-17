@@ -6,6 +6,7 @@ import { allContentTypes } from './';
 import { listKeys, purgeEntries, putEntry } from './kv-cache';
 import { blockToMarkdown, blocksToMarkdown } from '~/utils/notion-block-to-markdown';
 import { isProd } from '~/utils/misc';
+import { upload } from '../image-store';
 
 // Extract metadata from notion entry TODO sentry capture errors
 function makeMetadata(type: ContentType, { properties }: FullPageResponse): EntryMetadata {
@@ -66,6 +67,13 @@ function makeContentStoreEntry(isProd: boolean, type: ContentType, entry: FullPa
       id: entry.properties.Id?.rich_text[0].plain_text as string,
       unit: entry.properties.Unit?.rich_text[0].plain_text as string,
       price: entry.properties.Price?.number,
+      images: entry.properties.Images?.files.map(
+        (x: { name: string; type: string; file: { url: string; expiry_time: string } }) => ({
+          name: x.name,
+          url: x.file.url,
+          alt: x.name,
+        }),
+      ) as Array<{ name: string; url: string; alt: string }>,
       primaryImage: entry.properties['Primary Image'].url as string,
       primaryImageAlt: entry.properties['Primary Image Alt']?.rich_text[0].plain_text as string,
       ingredients: entry.properties.Ingredients?.multi_select.map((x: { name: any }) => x.name) as Array<string>,
@@ -99,6 +107,65 @@ function makeContentStoreEntry(isProd: boolean, type: ContentType, entry: FullPa
   return { type, slug, metadata, data: data };
 }
 
+// Search a block of strings for Notion Image URLs, upload to image-store, and replace URLs
+async function replaceNotionImageUrlByBlocks(
+  context: HTAppLoadContext,
+  replaceImages: boolean,
+  type: ContentType,
+  blocks: Array<string>,
+): Promise<Array<string>> {
+  // eslint-disable-next-line no-useless-escape
+  // prettier-ignore
+  const mdLinkRegex = /^\!\[(.+)\]\(((https?:\/\/)[\w\d./?=#%\-&]+)\)$/
+
+  const newBlocks = [];
+  for (const line of blocks) {
+    if (mdLinkRegex.test(line)) {
+      const x = line.split('](');
+      const altText = x[0].split('~')[0].replace('![', '');
+      const fileName = x[0].split('~')[1];
+      const notionImageUrl = x[1].replace(')', '');
+
+      const imageUrl = await upload(context, replaceImages, notionImageUrl, fileName, type);
+      newBlocks.push(`![${altText}](${imageUrl})`);
+    } else {
+      newBlocks.push(line);
+    }
+  }
+  return newBlocks;
+}
+
+// Search ContentStoreEntry for Notion Image URLs, upload to image-store, and replace URLs
+async function replaceNotionImageUrls(
+  context: HTAppLoadContext,
+  replaceImages: boolean,
+  entry: ContentStoreEntry,
+): Promise<void> {
+  const { type } = entry;
+
+  if (type === 'general') {
+    const faq = entry.data?.general;
+    entry.data.general = await replaceNotionImageUrlByBlocks(context, replaceImages, entry.type, faq);
+  } else if (type === 'blog') {
+    const blog = entry.data?.blog;
+    entry.data.blog = await replaceNotionImageUrlByBlocks(context, replaceImages, entry.type, blog);
+  } else if (type === 'faq') {
+    const faq = entry.data?.faq;
+    entry.data.faq = await replaceNotionImageUrlByBlocks(context, replaceImages, entry.type, faq);
+    console.log(entry.data.faq);
+  } else if (type === 'product') {
+    for (const image of entry.data?.images ?? []) {
+      const imageUrl = await upload(context, replaceImages, image.url, image.name, entry.type);
+      image.url = imageUrl;
+    }
+  } else if (type === 'stalldate') {
+    // empty
+  } else {
+    // TODO sentry
+    throw new Error(`Invalid type ${type}`);
+  }
+}
+
 /**
  * Replace entries in content-store for a given type using Notion API
  * @param context
@@ -110,6 +177,7 @@ async function refreshEntries(
   context: HTAppLoadContext,
   type: ContentType,
   purge: boolean = false,
+  replaceImages: boolean = false,
 ): Promise<undefined> {
   // Fetch a list of entries (keys, metadata only) from Notion
   console.debug(`Querying notion db for type [${type}]`);
@@ -139,6 +207,12 @@ async function refreshEntries(
     }
   });
 
+  // Upload images to image-store
+  console.debug(`Uploading images for [${type}]`);
+  for (const entry of csEntries) {
+    await replaceNotionImageUrls(context, replaceImages, entry);
+  }
+
   // If purge KV
   if (purge) {
     console.debug(`Purging cache of type [${type}]`);
@@ -161,9 +235,14 @@ async function refreshEntries(
   }
 }
 
-async function refreshAllEntries(context: HTAppLoadContext, purge: boolean = false, typesFilter: string[] = []) {
+async function refreshAllEntries(
+  context: HTAppLoadContext,
+  purge: boolean = false,
+  typesFilter: string[] = [],
+  replaceImages: boolean = false,
+) {
   for (const type of allContentTypes().filter((x) => typesFilter.length === 0 || typesFilter.includes(x))) {
-    await refreshEntries(context, type as ContentType, purge);
+    await refreshEntries(context, type as ContentType, purge, replaceImages);
   }
 }
 

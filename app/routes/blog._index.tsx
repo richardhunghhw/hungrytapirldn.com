@@ -12,7 +12,7 @@ import { getSeoMetas } from '~/utils/seo';
 function BlogRow({ hostUrl, entry }: { hostUrl: string; entry: ContentStoreEntry }) {
   const metadata = entry.metadata;
   return (
-    <Link to={`${hostUrl}/Blog/${entry.slug}`} className='flex flex-row justify-between'>
+    <Link to={`${hostUrl}/blog/${entry.slug}`} className='flex flex-row justify-between'>
       <span className='text-xl'>{metadata?.title as string}</span>
       <ChevronRight />
     </Link>

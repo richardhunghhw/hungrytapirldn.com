@@ -51,7 +51,7 @@ export default function FaqIndex() {
             {faqHeadings.map((faqHeading) => {
               const heading = faqHeading.split('~')[1] as string;
               return (
-                <li key={heading} className='pt-4'>
+                <li key={heading} className='pb-2 pt-4'>
                   <h2 className='title text-2xl'>{heading}</h2>
                   <ul className='divide-y divide-gray-100'>
                     {data
