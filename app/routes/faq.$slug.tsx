@@ -4,7 +4,7 @@
 
 import { redirect } from '@remix-run/cloudflare';
 import type { V2_MetaArgs } from '@remix-run/react';
-import { Link, useLoaderData, useMatches } from '@remix-run/react';
+import { Link, useLoaderData } from '@remix-run/react';
 import { isProd } from '~/utils/misc';
 import type { HTActionArgs } from '~/utils/types';
 import type { ContentStoreFaqEntry } from '~/services/content-store';
@@ -41,9 +41,6 @@ export async function loader({ request: { url }, context, params }: HTActionArgs
 }
 
 export default function Faq() {
-  const matches = useMatches();
-  const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;
-
   const faqEntry = useLoaderData<ContentStoreFaqEntry>();
   if (!faqEntry || !faqEntry.data) return null;
   const faqContent = faqEntry.data.faq;
@@ -53,7 +50,7 @@ export default function Faq() {
       <header className='content-wrapper bg-ht-green-highlight'>
         <div className='content-container'>
           <div className='title-section flex flex-col'>
-            <Link to={`${hostUrl}/faq`} className='text-base'>
+            <Link to='/faq' className='text-base'>
               <ArrowLeft className='inline text-base' /> Back to FAQs
             </Link>
             <h1 className='title text-center' id={faqEntry.metadata.slug}>

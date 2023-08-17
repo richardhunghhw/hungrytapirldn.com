@@ -69,13 +69,10 @@ function makeContentStoreEntry(isProd: boolean, type: ContentType, entry: FullPa
       price: entry.properties.Price?.number,
       images: entry.properties.Images?.files.map(
         (x: { name: string; type: string; file: { url: string; expiry_time: string } }) => ({
-          name: x.name,
           url: x.file.url,
           alt: x.name,
         }),
       ) as Array<{ name: string; url: string; alt: string }>,
-      primaryImage: entry.properties['Primary Image'].url as string,
-      primaryImageAlt: entry.properties['Primary Image Alt']?.rich_text[0].plain_text as string,
       ingredients: entry.properties.Ingredients?.multi_select.map((x: { name: any }) => x.name) as Array<string>,
       product: blocksToMarkdown(entry.content),
       productCart: blockToMarkdown({

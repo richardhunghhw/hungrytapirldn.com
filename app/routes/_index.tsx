@@ -45,10 +45,11 @@ function ProductCard({ product }: { product: ContentStoreProductEntry }): JSX.El
     <div className='flex w-full flex-grow flex-col items-center justify-center space-y-4 rounded-3xl text-ht-black md:w-fit md:border-2 md:border-ht-black md:p-6 lg:p-12'>
       <div className='order-first w-[260px] overflow-hidden md:order-none md:w-[280px] lg:w-[320px]'>
         <AspectRatio ratio={aspectRatio}>
-          <img
-            src={product.data.primaryImage}
-            alt={product.data.primaryImageAlt}
+          <CDNImage
+            alt={product.data.images[0].alt}
+            src={product.data.images[0].url}
             className='h-full w-full object-cover'
+            transformation={[]}
           />
         </AspectRatio>
       </div>
@@ -86,7 +87,11 @@ export default function Index() {
       >
         <div className='content-container flex flex-col items-center justify-center'>
           <div className='absolute inset-0'>
-            <CDNImage name='landing' className='h-[calc(100vh-200px)] w-screen object-cover md:h-[calc(100vh-100px)]' />
+            <CDNImage
+              name='landing'
+              className='h-[calc(100vh-200px)] w-screen object-cover md:h-[calc(100vh-100px)]'
+              lazy={false}
+            />
           </div>
           <div className='absolute flex flex-col items-center'>
             <TapirTransparent className='text-5xl md:text-8xl' />

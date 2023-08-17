@@ -9,10 +9,10 @@ import { ChevronRight } from 'lucide-react';
 import type { loader as rootLoader } from '~/root';
 import { getSeoMetas } from '~/utils/seo';
 
-function BlogRow({ hostUrl, entry }: { hostUrl: string; entry: ContentStoreEntry }) {
+function BlogRow({ entry }: { entry: ContentStoreEntry }) {
   const metadata = entry.metadata;
   return (
-    <Link to={`${hostUrl}/blog/${entry.slug}`} className='flex flex-row justify-between'>
+    <Link to={`/blog/${entry.slug}`} className='flex flex-row justify-between'>
       <span className='text-xl'>{metadata?.title as string}</span>
       <ChevronRight />
     </Link>
@@ -32,7 +32,6 @@ export function meta({ matches, location, data }: V2_MetaArgs<unknown, { root: t
 export default function BlogIndex() {
   // Load additional data from parent loaders
   const matches = useMatches();
-  const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;
   const data = matches.find((element: any) => element.id === 'routes/blog')?.data as ContentStoreEntry[];
 
   return (
@@ -47,7 +46,7 @@ export default function BlogIndex() {
           <ul className='divide-y divide-gray-100'>
             {data?.map((entry: ContentStoreEntry) => (
               <li key={entry.slug} className='m-4 py-4'>
-                <BlogRow hostUrl={hostUrl} entry={entry} />
+                <BlogRow entry={entry} />
               </li>
             ))}
           </ul>

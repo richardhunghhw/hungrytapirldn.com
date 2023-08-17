@@ -46,12 +46,9 @@ export type ContentStoreProductEntry = BaseEntry & {
     unit: string;
     price: number;
     images: {
-      name: string;
       url: string;
       alt: string;
     }[];
-    primaryImage: string;
-    primaryImageAlt: string;
     ingredients: Array<string>;
     product: Array<string>;
     productCart: Array<string>;

@@ -14,11 +14,13 @@ jobs:
     steps:
       - name: Set env based on schedule time
         run: |
+          echo "REFRESH_PURGE=${{ vars.REFRESH_PURGE }}" >> $GITHUB_ENV
           if [ "${{ github.event.schedule }}" = "0 5 * * 0" ]; then
             echo "ENVIRONMENT=PROD" >> $GITHUB_ENV
           elif [ "${{ github.event.schedule }}" = "0 7 */2 * *" ]; then
             echo "ENVIRONMENT=TEST" >> $GITHUB_ENV
           elif [ "${{ github.event.workflow_run.conclusion == 'success' }}" ]; then
+            echo "REFRESH_PURGE=True" >> $GITHUB_ENV
             if [ "${{ github.ref }}" = "refs/heads/main" ]; then
               echo "ENVIRONMENT=PROD" >> $GITHUB_ENV
             elif [ "${{ github.ref }}" = "refs/heads/develop" ]; then
@@ -50,7 +52,7 @@ jobs:
 
       - name: Set URL
         run: |
-          if [ "${{ vars.REFRESH_PURGE }}" = "True" ]; then
+          if [ "${{ env.REFRESH_PURGE }}" = "True" ]; then
             echo "URL=${{ env.HOST }}/api/refresh-content?purge=true" >> $GITHUB_ENV
           else
             echo "URL=${{ env.HOST }}/api/refresh-content" >> $GITHUB_ENV

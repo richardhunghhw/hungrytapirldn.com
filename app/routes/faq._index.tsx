@@ -9,10 +9,10 @@ import { ChevronRight } from 'lucide-react';
 import type { loader as rootLoader } from '~/root';
 import { getSeoMetas } from '~/utils/seo';
 
-function FaqRow({ hostUrl, entry }: { hostUrl: string; entry: ContentStoreFaqEntry }) {
+function FaqRow({ entry }: { entry: ContentStoreFaqEntry }) {
   const metadata = entry.metadata;
   return (
-    <Link to={`${hostUrl}/faq/${entry.slug}`} className='flex flex-row justify-between py-6'>
+    <Link to={`/faq/${entry.slug}`} className='flex flex-row justify-between py-6'>
       <span className='grow basis-0 text-xl'>{metadata?.title as string}</span>
       <ChevronRight />
     </Link>
@@ -32,7 +32,6 @@ export function meta({ matches, location, data }: V2_MetaArgs<unknown, { root: t
 export default function FaqIndex() {
   // Load additional data from parent loaders
   const matches = useMatches();
-  const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;
   const data = matches.find((element: any) => element.id === 'routes/faq')?.data as ContentStoreFaqEntry[];
 
   // Get unique faq headings
@@ -58,7 +57,7 @@ export default function FaqIndex() {
                       ?.filter((faq) => faq.metadata.category === faqHeading)
                       .map((entry) => (
                         <li key={entry.slug}>
-                          <FaqRow hostUrl={hostUrl} entry={entry} />
+                          <FaqRow entry={entry} />
                         </li>
                       ))}
                   </ul>

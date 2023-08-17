@@ -4,7 +4,7 @@
 
 import { redirect } from '@remix-run/cloudflare';
 import type { V2_MetaArgs } from '@remix-run/react';
-import { Link, useLoaderData, useMatches } from '@remix-run/react';
+import { Link, useLoaderData } from '@remix-run/react';
 import { isProd } from '~/utils/misc';
 import type { HTActionArgs } from '~/utils/types';
 import type { ContentStoreBlogEntry } from '~/services/content-store';
@@ -41,9 +41,6 @@ export async function loader({ request: { url }, context, params }: HTActionArgs
 }
 
 export default function Blog() {
-  const matches = useMatches();
-  const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;
-
   const blogData = useLoaderData<ContentStoreBlogEntry>();
   if (!blogData || !blogData.data) return null;
   const blogContent = blogData.data.blog;
@@ -53,7 +50,7 @@ export default function Blog() {
       <header className='content-wrapper bg-ht-turquoise'>
         <div className='content-container'>
           <div className='title-section flex flex-col'>
-            <Link to={`${hostUrl}/blog`} className='text-base'>
+            <Link to='/blog' className='text-base'>
               <ArrowLeft className='inline' /> Back to Blogs
             </Link>
             <h1 className='title text-center'>{blogData.metadata.title}</h1>

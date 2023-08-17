@@ -25,15 +25,21 @@ const images: {
 
 type CDNImageProps = {
   name?: string;
-  id?: string;
+  alt?: string;
+  src?: string;
+  lazy?: boolean;
+  transformation?: Array<{ [key: string]: any }>;
   [key: string]: any;
 };
 
-function CDNImage(props: CDNImageProps) {
-  const { name, alt, src, ...rest } = props;
-
-  console.log('CDNImage', name, alt, src, rest);
-
+function CDNImage({
+  name,
+  alt,
+  src,
+  lazy = true,
+  transformation = [{ height: '600', width: '800', mode: 'fo-auto' }],
+  ...rest
+}: CDNImageProps) {
   if (!name && !(alt && src)) {
     return null;
   }
@@ -46,8 +52,8 @@ function CDNImage(props: CDNImageProps) {
         urlEndpoint={IMAGEKIT_URL_ENDPOINT}
         path={image.id}
         alt={image.alt}
-        lqip={{ active: true, quality: 20 }}
-        loading='lazy'
+        lqip={{ active: true, quality: 10 }}
+        loading={lazy ? 'lazy' : 'eager'}
         {...rest}
       />
     );
@@ -58,15 +64,9 @@ function CDNImage(props: CDNImageProps) {
         urlEndpoint={IMAGEKIT_URL_ENDPOINT}
         src={src}
         alt={alt}
-        lqip={{ active: true, quality: 20 }}
+        lqip={{ active: true, quality: 10 }}
         loading='lazy'
-        transformation={[
-          {
-            height: '500',
-            width: '800',
-            mode: 'fo-auto',
-          },
-        ]}
+        transformation={transformation}
         {...rest}
       />
     );

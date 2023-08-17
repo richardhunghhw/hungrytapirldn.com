@@ -14,6 +14,7 @@ import { AddToBag } from '~/components/add-to-bag';
 import { getSeoMetas } from '~/utils/seo';
 import type { loader as rootLoader } from '~/root';
 import { MarkdownContent } from '~/components/markdown-content';
+import { CDNImage } from '~/components/cdn-image';
 
 export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { root: typeof rootLoader }>) {
   const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;
@@ -45,18 +46,19 @@ export default function Product() {
   const productContent = productData.data.product;
 
   const aspectRatio = 8 / 9;
-  console.log(`product ${JSON.stringify(productData)}`);
+  // console.log(`product ${JSON.stringify(productData)}`);
   return (
     <>
-      <div className={'content-wrapper bg-' + productData.data.backgroundColour}>
+      <div className={`content-wrapper min-h-screen bg-${productData.data.backgroundColour} h-full`}>
         <div className='content-container my-24 flex flex-col items-center justify-center py-2'>
           <div className='flex flex-col items-center md:flex-row md:space-x-8'>
             <div className='w-[350px] basis-1/2 overflow-hidden rounded-3xl'>
               <AspectRatio ratio={aspectRatio}>
-                <img
-                  src={productData.data.primaryImage}
-                  alt={productData.data.primaryImageAlt}
+                <CDNImage
+                  alt={productData.data.images[0].alt}
+                  src={productData.data.images[0].url}
                   className='h-full w-full object-cover'
+                  transformation={[]}
                 />
               </AspectRatio>
             </div>
