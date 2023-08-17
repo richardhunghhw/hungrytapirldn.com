@@ -75,11 +75,10 @@ async function listStallDates(context: HTAppLoadContext): Promise<BaseEntry[]> {
 }
 
 async function getLatestStallDate(context: HTAppLoadContext): Promise<ContentStoreStallDateEntry> {
+  const datetime = new Date();
   // Get existing latest entry
   const latest = await getStallDate(context, 'latest');
   const latestEndDate = latest ? new Date(latest?.data.endDT) : undefined;
-
-  const datetime = new Date();
 
   // If latest entry is not set or is expired, re-evaluate
   const reeval = !latest || !latestEndDate || datetime > latestEndDate;

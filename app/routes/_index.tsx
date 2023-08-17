@@ -85,7 +85,7 @@ export default function Index() {
         className='flex h-[calc(100vh-200px)] snap-start flex-col items-center justify-center bg-ht-pink-highlight font-bold text-ht-green-highlight md:h-[calc(100vh-100px)]'
       >
         <div className='content-container flex flex-col items-center justify-center'>
-          <div className='absolute'>
+          <div className='absolute inset-0'>
             <CDNImage name='landing' className='h-[calc(100vh-200px)] w-screen object-cover md:h-[calc(100vh-100px)]' />
           </div>
           <div className='absolute flex flex-col items-center'>

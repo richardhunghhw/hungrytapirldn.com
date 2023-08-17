@@ -76,7 +76,7 @@ function NextStall({
         <span className='mr-2 underline'>Location</span>
         <Link
           to={location.data.url}
-          className='block'
+          className='block text-center'
           target='_blank'
           rel='noopener noreferrer'
           aria-label='Google Maps Link'

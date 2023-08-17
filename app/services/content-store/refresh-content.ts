@@ -152,7 +152,6 @@ async function replaceNotionImageUrls(
   } else if (type === 'faq') {
     const faq = entry.data?.faq;
     entry.data.faq = await replaceNotionImageUrlByBlocks(context, replaceImages, entry.type, faq);
-    console.log(entry.data.faq);
   } else if (type === 'product') {
     for (const image of entry.data?.images ?? []) {
       const imageUrl = await upload(context, replaceImages, image.url, image.name, entry.type);
