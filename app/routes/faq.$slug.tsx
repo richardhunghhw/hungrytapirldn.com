@@ -61,9 +61,7 @@ export default function Faq() {
       </header>
       <article className='content-wrapper body-text-wrapper'>
         <div className='content-container mt-4'>
-          <div className='prose prose-lg max-w-none'>
-            <MarkdownContent data={faqContent} />
-          </div>
+          <MarkdownContent data={faqContent} />
         </div>
       </article>
     </>

@@ -49,7 +49,7 @@ export type ContentStoreProductEntry = BaseEntry & {
       url: string;
       alt: string;
     }[];
-    ingredients: Array<string>;
+    ingredients: string;
     product: Array<string>;
     productCart: Array<string>;
     productSection: Array<string>;

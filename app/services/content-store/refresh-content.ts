@@ -73,7 +73,11 @@ function makeContentStoreEntry(isProd: boolean, type: ContentType, entry: FullPa
           alt: x.name,
         }),
       ) as Array<{ name: string; url: string; alt: string }>,
-      ingredients: entry.properties.Ingredients?.multi_select.map((x: { name: any }) => x.name) as Array<string>,
+      ingredients: blockToMarkdown({
+        // Todo revisit hack
+        type: 'text',
+        text: entry.properties.Ingredients,
+      }),
       product: blocksToMarkdown(entry.content),
       productCart: blockToMarkdown({
         // Todo revisit hack
@@ -151,7 +155,7 @@ async function replaceNotionImageUrls(
     entry.data.faq = await replaceNotionImageUrlByBlocks(context, replaceImages, entry.type, faq);
   } else if (type === 'product') {
     for (const image of entry.data?.images ?? []) {
-      const imageUrl = await upload(context, replaceImages, image.url, image.name, entry.type);
+      const imageUrl = await upload(context, replaceImages, image.url, image.alt, entry.type);
       image.url = imageUrl;
     }
   } else if (type === 'stalldate') {
@@ -206,7 +210,11 @@ async function refreshEntries(
   // Upload images to image-store
   console.debug(`Uploading images for [${type}]`);
   for (const entry of csEntries) {
-    await replaceNotionImageUrls(context, replaceImages, entry);
+    await replaceNotionImageUrls(context, replaceImages, entry).catch((err) => {
+      console.error(`Failed to upload images for type [${type}]`, err);
+      // TODO sentry error
+      throw new Error(`Failed to upload images for type [${type}]`);
+    });
   }
 
   // If purge KV

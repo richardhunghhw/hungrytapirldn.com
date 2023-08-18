@@ -13,7 +13,7 @@ import { AspectRatio } from '@radix-ui/react-aspect-ratio';
 import { AddToBag } from '~/components/add-to-bag';
 import { getSeoMetas } from '~/utils/seo';
 import type { loader as rootLoader } from '~/root';
-import { MarkdownContent } from '~/components/markdown-content';
+import { MarkdownContent, MarkdownLine } from '~/components/markdown-content';
 import { CDNImage } from '~/components/cdn-image';
 
 export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { root: typeof rootLoader }>) {
@@ -62,13 +62,18 @@ export default function Product() {
                 />
               </AspectRatio>
             </div>
-            <div className='items-left mt-5 flex basis-1/2 flex-col justify-center space-y-4 md:w-1/2'>
-              <header className='flex flex-row items-end justify-between text-4xl font-extrabold uppercase text-primary sm:text-5xl md:text-6xl'>
+            <div className='items-left mt-5 flex basis-1/2 flex-col justify-center space-y-6 font-mono text-sm md:w-1/2'>
+              <header className='title flex flex-row items-end justify-between text-4xl uppercase text-primary sm:text-5xl md:text-5xl'>
                 <h1>{productData.metadata.title}</h1>
                 <p>£{productData.data.price}</p>
               </header>
-              <div className='prose prose-lg max-w-none'>
+              <div>
+                <h2 className='mb-2 text-2xl font-bold uppercase'>Why we love it</h2>
                 <MarkdownContent data={productContent} />
+              </div>
+              <div>
+                <h2 className='mb-2 text-2xl font-bold uppercase'>What's Inside</h2>
+                <MarkdownLine data={productData.data.ingredients} />
               </div>
               <p className='font-bold'>{productData.data.unit}</p>
               <AddToBag id={productData.data.id} className='text-white' />

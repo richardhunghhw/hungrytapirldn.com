@@ -31,13 +31,18 @@ async function upload(
   file: string,
   fileName: string,
   type: ContentType,
-  tags?: string[],
+  // tags?: string[],
 ): Promise<string> {
   // Check if file already exists
   if (!replaceImages) {
     const fileDetails = await listFiles(context, {
       name: fileName,
     });
+    if (fileDetails.$ResponseMetadata.statusCode !== 200) {
+      throw new Error(
+        `Error listing files: code [${fileDetails.$ResponseMetadata.statusCode}], message [${fileDetails.message}]`,
+      );
+    }
     if (fileDetails && '0' in fileDetails) {
       // File already exists, skip upload
       return fileDetails['0'].url;
@@ -50,8 +55,13 @@ async function upload(
     fileName,
     folder: contentTypeToFolder(type),
     useUniqueFileName: false,
-    tags,
+    // tags,
   });
+  if (uploadedFile.$ResponseMetadata.statusCode !== 200) {
+    throw new Error(
+      `Error listing files: code [${uploadedFile.$ResponseMetadata.statusCode}], message [${uploadedFile.message}]`,
+    );
+  }
   return uploadedFile.url;
 }
 

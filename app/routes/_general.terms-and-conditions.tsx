@@ -35,9 +35,5 @@ export async function loader({ context }: HTActionArgs) {
 export default function TermsAndConditions() {
   const pageData = useLoaderData<ContentStoreGeneralEntry>();
 
-  return (
-    <div className='prose prose-lg max-w-none'>
-      <MarkdownContent data={pageData.data.general} />
-    </div>
-  );
+  return <MarkdownContent data={pageData.data.general} />;
 }

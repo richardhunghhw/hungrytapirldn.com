@@ -35,11 +35,5 @@ export async function loader({ context }: HTActionArgs) {
 export default function ContactUs() {
   const pageData = useLoaderData<ContentStoreGeneralEntry>();
 
-  return (
-    <div className='prose prose-lg max-w-none space-y-4'>
-      <div className='prose prose-lg max-w-none'>
-        <MarkdownContent data={pageData.data.general} />
-      </div>
-    </div>
-  );
+  return <MarkdownContent data={pageData.data.general} />;
 }

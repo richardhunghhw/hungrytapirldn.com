@@ -1,16 +1,21 @@
 import { Form, Link, useLocation } from '@remix-run/react';
-import { Menu } from 'lucide-react';
+import { ChevronDown, Menu } from 'lucide-react';
 import { useState } from 'react';
 import { ShoppingBag, X } from '~/utils/svg/custom';
 import { Button } from './ui/button';
+import type { ContentStoreProductEntry } from '~/services/content-store';
 
 const NAVBAR_LINKS = [
-  [
-    { name: 'Pandan', to: '/product/the-pandan-kaya' },
-    { name: 'Vegan', to: '/product/the-vegan-kaya' },
-  ],
-  { name: 'Our Story', to: '/about-us' },
-  { name: 'Find Us', to: '/contact-us' },
+  {
+    id: 'order-now',
+    name: 'Order Now',
+    links: [
+      { id: 'order-the-pandan-kaya', name: 'The Pandan Kaya', to: '/product/the-pandan-kaya' },
+      { id: 'order-the-vegan-kaya', name: 'The Vegan Kaya', to: '/product/the-vegan-kaya' },
+    ],
+  },
+  { id: 'about-us', name: 'Our Story', to: '/about-us' },
+  { id: 'find-us', name: 'Find Us', to: '/contact-us' },
 ];
 
 function NavLink({
@@ -40,7 +45,6 @@ function NavSidebar() {
   const [navOpen, setNavOpen] = useState(false);
 
   function toggleNav() {
-    console.log('toggleNav' + navOpen);
     setNavOpen((prev) => !prev);
   }
 
@@ -98,7 +102,7 @@ function NavSidebar() {
               From: "opacity-100"
               To: "opacity-0"
           --> */}
-                <div className='flex h-full flex-col overflow-y-scroll bg-ht-orange-highlight px-8 pb-8 pt-16 shadow-xl sm:px-6'>
+                <div className='flex h-full flex-col bg-ht-orange-highlight px-8 pb-8 pt-16 shadow-xl sm:px-6'>
                   <button
                     type='button'
                     className='self-end rounded-md focus:outline-none focus:ring-2'
@@ -108,13 +112,34 @@ function NavSidebar() {
                     <X />
                   </button>
                   <ul className='relative mt-6 space-y-4 text-2xl font-bold'>
-                    {NAVBAR_LINKS.flatMap((link) => link).map((link) => (
-                      <li key={link.to}>
-                        <NavLink key={link.to} to={link.to}>
-                          {link.name}
-                        </NavLink>
-                      </li>
-                    ))}
+                    {NAVBAR_LINKS.flatMap((link) => link).map((link) => {
+                      if (Array.isArray(link.links)) {
+                        return (
+                          <li key={link.id}>
+                            <span>{link.name}</span>
+                            <ul>
+                              {link.links.map((subLink) => {
+                                return (
+                                  <li key={subLink.id}>
+                                    <NavLink id={subLink.id} to={subLink.to}>
+                                      {subLink.name}
+                                    </NavLink>
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                          </li>
+                        );
+                      } else {
+                        return (
+                          <li key={link.id}>
+                            <NavLink id={link.id} to={link.to}>
+                              {link.name}
+                            </NavLink>
+                          </li>
+                        );
+                      }
+                    })}
                   </ul>
                 </div>
               </div>
@@ -126,45 +151,39 @@ function NavSidebar() {
   );
 }
 
-type Product = {
-  id: string;
-  stripe_id: string;
-  form_id: string;
-  name: string;
-  shortDescription: string;
-  price: string;
-  imageSrc: string;
-  imageAlt: string;
-};
-
-const products: Product[] = [
+const products: ContentStoreProductEntry[] = [
   {
-    id: 'kaya-signature',
-    stripe_id: 'prod_Nk7ZiHSHFf24mL',
-    form_id: 'kaya-signature-quantity',
-    name: 'Signature Kaya Jam 6oz',
-    shortDescription: 'Coconut Milk, Gula Melaka, Rock Sugar, Pandan Leaves, Eggs, Salt.',
-    price: '7.00',
-    imageSrc: '/images/product/the-pandan-kaya.png',
-    imageAlt: 'Signature Kaya Jar',
-  },
-  {
-    id: 'kaya-vegan',
-    stripe_id: 'prod_Nk8T1CWRimuaIF',
-    form_id: 'kaya-vegan-quantity',
-    name: 'Vegan Kaya Jam 6oz',
-    shortDescription: 'Coconut Milk, Gula Melaka, Rock Sugar, Pandan Leaves, Tofu, Salt.',
-    price: '7.00',
-    imageSrc: '/images/product/the-pandan-kaya.png',
-    imageAlt: 'Vegan Kaya Jar',
+    type: 'product',
+    slug: 'the-pandan-kaya',
+    metadata: {
+      slug: 'the-pandan-kaya',
+      title: 'The Pandan Kaya',
+      tags: ['pandan', 'kaya', 'jam', 'coconut', 'malaysian', 'singaporean', 'breakfast', 'dessert'],
+      category: '',
+    },
+    data: {
+      stripeId: 'prod_Nk7ZiHSHFf24mL',
+      id: 'the-pandan-kaya',
+      unit: '6oz',
+      price: 7,
+      images: [
+        { url: 'https://ik.imagekit.io/nixibbzora/hungrytapir/product/the-pandan-kaya-1.png', alt: 'The Pandan Kaya' },
+      ],
+      ingredients: ['pandan', 'kaya', 'jam', 'coconut', 'malaysian', 'singaporean', 'breakfast', 'dessert'],
+      product: ['product content'],
+      productCart: ['product cart content'],
+      productSection: ['product section content'],
+      imageColour: 'ht-turquoise',
+      backgroundColour: 'ht-orange-highlight',
+      seoDescription: 'The Pandan Kaya',
+    },
   },
 ];
 
 function CartSidebar() {
-  const [cartOpen, setCartOpen] = useState(true);
+  const [cartOpen, setCartOpen] = useState(false);
 
   function toggleCart() {
-    console.log('toggleCart' + cartOpen);
     setCartOpen((prev) => !prev);
   }
 
@@ -172,7 +191,7 @@ function CartSidebar() {
     <>
       <button
         type='button'
-        className='text-xl focus:outline-none focus:ring-2 focus:ring-white md:text-3xl'
+        className='text-xl focus:outline-none focus:ring-2 focus:ring-white md:text-2xl'
         onClick={() => toggleCart()}
       >
         <span className='sr-only'>Open cart sidebar</span>
@@ -209,11 +228,11 @@ function CartSidebar() {
                   >
                     <ul className='-my-6 divide-y divide-gray-200'>
                       {products.map((product) => (
-                        <li key={product.id} className='flex py-6'>
+                        <li key={product.metadata.slug} className='flex py-6'>
                           <div className='h-24 w-24 flex-shrink-0 overflow-hidden rounded-md'>
                             <img
-                              src={product.imageSrc}
-                              alt={product.imageAlt}
+                              src={product.data.images[0].url}
+                              alt={product.data.images[0].alt}
                               className='h-full w-full object-cover object-center'
                             />
                           </div>
@@ -221,24 +240,23 @@ function CartSidebar() {
                             <div>
                               <div className='flex justify-between'>
                                 <h3 className='font-serif text-base font-medium uppercase tracking-tight md:text-lg'>
-                                  {product.name}
+                                  {product.metadata.title}
                                 </h3>
-                                <p className='ml-4 font-medium'>£{product.price}</p>
+                                <p className='ml-4 font-medium'>£{product.data.price}</p>
                               </div>
-                              <p className='mt-2 text-xs font-light'>{product.shortDescription}</p>
                               <p>
                                 Qty{' '}
                                 <input
                                   type='number'
-                                  id={product.form_id}
-                                  name={product.form_id}
+                                  id={product.metadata.slug}
+                                  name={product.metadata.slug}
                                   className='border-none focus:border-none active:border-none'
                                   min='0'
                                   max='10'
                                   defaultValue='0'
                                 />
                               </p>
-                              <span>Remove</span>
+                              <Button variant='link'>Remove</Button>
                             </div>
                           </div>
                         </li>
@@ -270,26 +288,46 @@ export default function Navbar() {
   return (
     <nav className='content-wrapper fixed z-50 w-[calc(100vw-1.2rem)] bg-transparent py-4 md:w-[calc(100vw-1rem)]'>
       <div className='content-container flex items-center justify-between rounded-full bg-ht-off-white px-6 py-1 font-mono'>
-        {/* <NavSidebar /> */}
-        <div className='flex justify-center gap-4 py-2 align-middle font-serif text-xl font-bold uppercase md:text-3xl'>
+        <NavSidebar />
+        <div className='flex justify-center gap-4 py-2 align-middle font-serif text-xl font-bold uppercase md:text-2xl'>
           <NavLink key='root' to='/'>
             Hungry Tapir
           </NavLink>
         </div>
-        <ul className='hidden text-3xl font-bold uppercase lg:flex'>
+        <ul className='hidden grow justify-center text-2xl font-bold uppercase lg:flex'>
           {NAVBAR_LINKS.map((link) => {
-            if (Array.isArray(link)) {
-              return link.map((subLink) => (
-                <li className='px-5 py-2' key={subLink.to}>
-                  <NavLink key={subLink.to} to={subLink.to}>
-                    {subLink.name}
-                  </NavLink>
+            if (Array.isArray(link.links)) {
+              return (
+                <li className='px-5 py-2' key={link.id}>
+                  <button
+                    id={link.id + '-dropdownButton'}
+                    data-dropdown-toggle={link.id + '-dropdown'}
+                    data-dropdown-trigger='hover'
+                    className='whitespace-nowrap uppercase hover:text-primary focus:text-primary focus:outline-none'
+                    type='button'
+                  >
+                    {link.name} <ChevronDown className='inline' />
+                  </button>
+                  <div
+                    id={link.id + '-dropdown'}
+                    className='z-10 hidden w-44 divide-y divide-gray-100 rounded-lg bg-white dark:divide-gray-600 dark:bg-gray-700'
+                  >
+                    <ul className='py-2 text-sm text-gray-700 dark:text-gray-400' aria-labelledby='dropdownLargeButton'>
+                      {link.links.map((subLink) => {
+                        return (
+                          <li key={subLink.to}>
+                            <NavLink to={subLink.to}>{subLink.name}</NavLink>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
                 </li>
-              ));
+              );
             } else {
               return (
-                <li className='px-5 py-2' key={link.to}>
-                  <NavLink key={link.to} to={link.to}>
+                <li className='px-5 py-2' key={link.id}>
+                  <NavLink id={link.id} to={link.to}>
                     {link.name}
                   </NavLink>
                 </li>
@@ -297,7 +335,7 @@ export default function Navbar() {
             }
           })}
         </ul>
-        {/* <CartSidebar /> */}
+        <CartSidebar />
       </div>
     </nav>
   );
