@@ -77,7 +77,6 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: 'rlig' 1, 'calt' 1;
   }
 }
 
@@ -111,5 +110,13 @@
   .body-text-wrapper {
     @apply min-h-[65vh];
     @apply my-8;
+  }
+
+  .font-serif {
+    @apply tracking-wide;
+  }
+
+  .font-mono {
+    @apply tracking-tight;
   }
 }

@@ -62,7 +62,7 @@ export default function Product() {
                 />
               </AspectRatio>
             </div>
-            <div className='items-left mt-5 flex basis-1/2 flex-col justify-center space-y-6 font-mono text-sm md:w-1/2'>
+            <div className='items-left mt-5 flex basis-1/2 flex-col justify-center space-y-6 text-sm md:w-1/2'>
               <header className='title flex flex-row items-end justify-between text-4xl uppercase text-primary sm:text-5xl md:text-5xl'>
                 <h1>{productData.metadata.title}</h1>
                 <p>£{productData.data.price}</p>

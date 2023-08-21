@@ -1,31 +1,35 @@
 import Markdown from 'markdown-to-jsx';
 import { CDNImage } from './cdn-image';
 
-function MarkdownLine({ key, data }: { key?: number; data: string }) {
+function MarkdownLine({ data }: { data: string }) {
   return (
     <Markdown
-      key={key}
       options={{
         forceBlock: true,
         overrides: {
           h1: {
             props: {
-              className: 'text-5xl font-bold font-mono',
+              className: 'text-5xl font-bold font-serif uppercase',
             },
           },
           h2: {
             props: {
-              className: 'text-3xl font-bold font-mono',
+              className: 'text-3xl font-bold font-serif uppercase',
             },
           },
           h3: {
             props: {
-              className: 'text-2xl font-bold font-mono',
+              className: 'text-2xl font-bold font-serif uppercase',
             },
           },
           p: {
             props: {
               className: 'text-base font-mono',
+            },
+          },
+          li: {
+            props: {
+              className: 'font-mono',
             },
           },
           img: {

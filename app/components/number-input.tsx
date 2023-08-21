@@ -3,7 +3,7 @@ import { cn } from './ui/lib/utils';
 
 export interface NumberInputProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-function NumberInput({ id, className, ...props }: NumberInputProps) {
+export default function NumberInput({ id, className, ...props }: NumberInputProps) {
   return (
     <Input
       type='number'
@@ -16,5 +16,3 @@ function NumberInput({ id, className, ...props }: NumberInputProps) {
     />
   );
 }
-
-export { NumberInput };

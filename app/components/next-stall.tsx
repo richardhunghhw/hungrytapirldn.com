@@ -12,15 +12,18 @@ function AddDaySuffix(date: string) {
     switch (day % 10) {
       case 1:
         suffix = 'st';
+        break;
       case 2:
         suffix = 'nd';
+        break;
       case 3:
         suffix = 'rd';
+        break;
       default:
         suffix = 'th';
     }
   }
-  return day + suffix + date.substring(2);
+  return day + suffix + ' ' + date.substring(2);
 }
 
 function NextStall({

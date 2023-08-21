@@ -88,7 +88,6 @@ export default {
     require('@tailwindcss/forms')({
       strategy: 'base', // only generate global styles
     }),
-    require('@tailwindcss/typography'),
     require('tailwindcss-animate'),
   ],
 } satisfies Config;

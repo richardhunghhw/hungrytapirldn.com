@@ -27,7 +27,7 @@ export default function ProductSection({ product }: { product: ContentStoreProdu
             <h1>{product.metadata.title}</h1>
             <span className='ml-8'>£{product.data.price}</span>
           </div>
-          <p className='prose text-lg md:text-2xl'>{product.data.productSection}</p>
+          <p className='text-lg md:text-xl'>{product.data.productSection}</p>
           <p className='text-base md:text-xl'>{product.data.unit}</p>
           <Input
             type='number'
