@@ -99,7 +99,9 @@ function CartSidebar() {
                                 </h3>
                                 <p className='ml-4 font-medium'>£{product.data.price}</p>
                               </div>
-                              <NumberInput position='sidebar' />
+                              <div className='hidden md:block'>
+                                <NumberInput position='sidebar' />
+                              </div>
                               <Button variant='link'>Remove</Button>
                             </div>
                           </div>
