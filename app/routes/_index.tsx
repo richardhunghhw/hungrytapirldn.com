@@ -61,9 +61,6 @@ function ProductCard({ product }: { product: ContentStoreProductEntry }): JSX.El
           <span key={i}>{word}</span>
         ))}
       </Link>
-      <Button variant='link' asChild className='hidden md:block'>
-        <Link to={makeUriFromContentTypeSlug('product', product.metadata.slug) as string}>Learn more</Link>
-      </Button>
       <div className='text-2xl font-extrabold text-black'>£{product.data.price}</div>
       <AddToBag id={product.data.id} className='text-ht-orange' />
     </div>

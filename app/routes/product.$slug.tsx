@@ -50,9 +50,9 @@ export default function Product() {
   return (
     <>
       <div className={`content-wrapper min-h-screen bg-${productData.data.backgroundColour} h-full`}>
-        <div className='content-container my-24 flex flex-col items-center justify-center py-2'>
-          <div className='mt-4 flex flex-col items-center md:flex-row md:space-x-8'>
-            <div className='w-[350px] basis-1/2 self-baseline overflow-hidden rounded-3xl'>
+        <div className='content-container my-24 flex flex-col items-center justify-center'>
+          <div className='mt-4 flex flex-col items-center space-y-4 md:flex-row md:space-x-8 md:space-y-0'>
+            <div className='w-[350px] basis-1/2 self-center overflow-hidden rounded-3xl md:self-baseline'>
               <AspectRatio ratio={aspectRatio}>
                 <CDNImage
                   alt={productData.data.images[0].alt}
@@ -68,11 +68,11 @@ export default function Product() {
                 <p>£{productData.data.price}</p>
               </header>
               <div>
-                <h2 className='mb-2 text-2xl font-bold uppercase'>Why we love it</h2>
+                <h2 className='title mb-2 text-2xl'>Why we love it</h2>
                 <MarkdownContent data={productContent} />
               </div>
               <div>
-                <h2 className='mb-2 text-2xl font-bold uppercase'>What's Inside</h2>
+                <h2 className='title mb-2 text-2xl'>What's Inside</h2>
                 <MarkdownLine data={productData.data.ingredients} />
               </div>
               <p className='font-bold'>{productData.data.unit}</p>

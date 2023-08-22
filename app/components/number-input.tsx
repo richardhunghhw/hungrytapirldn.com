@@ -65,7 +65,7 @@ function NumberInput({
   };
 
   return (
-    <div className={cn(numberInputVariants({ position }))}>
+    <div className={cn(numberInputVariants({ position, className }))}>
       <InputSpinner position={position} onClick={() => handleDecrement()}>
         -
       </InputSpinner>
