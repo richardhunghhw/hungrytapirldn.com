@@ -1,1 +1,21 @@
-{"name":"","short_name":"","icons":[{"src":"/android-chrome-192x192.png","sizes":"192x192","type":"image/png"},{"src":"/android-chrome-512x512.png","sizes":"512x512","type":"image/png"}],"theme_color":"#ffffff","background_color":"#ffffff","display":"standalone"}
+{
+  "name": "Hungry Tapir LDN",
+  "short_name": "Hungry Tapir",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#F48099",
+  "background_color": "#F9ECE5",
+  "description": "Hungry Tapir | Handmade, cult-favourite South-East Asian foods in London. Taste the city's best Kaya, crafted in small batches. Order online here.",
+  "icons": [
+    {
+      "src": "android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
