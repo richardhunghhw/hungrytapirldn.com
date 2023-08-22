@@ -1,4 +1,4 @@
-import NumberInput from './number-input';
+import { NumberInput } from './number-input';
 import { Button } from './ui/button';
 import { cn } from './ui/lib/utils';
 

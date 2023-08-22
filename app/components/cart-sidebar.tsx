@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { ShoppingBag, X } from '~/utils/svg/custom';
 import { Button } from './ui/button';
 import type { ContentStoreProductEntry } from '~/services/content-store';
+import { NumberInput } from './number-input';
 
 const products: ContentStoreProductEntry[] = [
   {
@@ -36,9 +37,9 @@ const products: ContentStoreProductEntry[] = [
 function CartSidebar() {
   const [cartOpen, setCartOpen] = useState(false);
 
-  function toggleCart() {
+  const toggleCart = () => {
     setCartOpen((prev) => !prev);
-  }
+  };
 
   return (
     <>
@@ -64,7 +65,7 @@ function CartSidebar() {
         <div className='fixed inset-0 overflow-hidden'>
           <div className='pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-8'>
             <div className='pointer-events-auto relative w-screen max-w-md'>
-              <div className='flex h-full flex-col bg-ht-off-white px-8 py-16 md:px-12'>
+              <div className='flex h-full flex-col bg-ht-orange-highlight px-8 py-16 md:px-12'>
                 <div className='flex justify-between self-stretch'>
                   <div className='font-serif text-3xl font-bold uppercase text-gray-900'>Your Cart</div>
                   <button type='button' className='focus:outline-none' onClick={() => toggleCart()}>
@@ -77,8 +78,8 @@ function CartSidebar() {
                   <Form
                     reloadDocument // todo animate form pending state
                     id='order-form'
-                    method='post'
-                    action='/cart'
+                    // method='post'
+                    // action='/cart'
                   >
                     <ul className='-my-6 divide-y divide-gray-200'>
                       {products.map((product) => (
@@ -91,25 +92,14 @@ function CartSidebar() {
                             />
                           </div>
                           <div className='ml-4 flex flex-1 flex-col'>
-                            <div>
+                            <div className='space-y-2'>
                               <div className='flex justify-between'>
                                 <h3 className='font-serif text-base font-medium uppercase tracking-tight md:text-lg'>
                                   {product.metadata.title}
                                 </h3>
                                 <p className='ml-4 font-medium'>£{product.data.price}</p>
                               </div>
-                              <p className='font-mono text-lg'>
-                                Qty{' '}
-                                <input
-                                  type='number'
-                                  id={product.metadata.slug}
-                                  name={product.metadata.slug}
-                                  className='border-none focus:border-none active:border-none'
-                                  min='0'
-                                  max='10'
-                                  defaultValue='0'
-                                />
-                              </p>
+                              <NumberInput position='sidebar' />
                               <Button variant='link'>Remove</Button>
                             </div>
                           </div>

@@ -22,6 +22,7 @@ export default function NavSidebar() {
         <span className='sr-only'>Open mobile nav</span>
         <Menu />
       </button>
+
       <dialog className={'z-10'} onClose={toggleNav} open={navOpen} aria-modal='true'>
         {/* <!--
     Background backdrop, show/hide based on slide-over state.

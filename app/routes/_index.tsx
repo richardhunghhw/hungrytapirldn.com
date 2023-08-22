@@ -116,7 +116,7 @@ export default function Index() {
 
       <section id='what-is-kaya' className='content-wrapper snap-start bg-ht-green py-6 md:py-16'>
         <div className='content-container flex flex-col items-center space-y-4 md:flex-row md:space-x-4 md:space-y-0 lg:space-x-16'>
-          <div className='w-[calc(100vw-2.4rem)] overflow-hidden rounded-3xl md:w-[42rem]'>
+          <div className='w-[calc(100vw-2.4rem)] overflow-hidden rounded-3xl sm:w-[calc(100vw-3.2rem)] md:w-[42rem]'>
             <AspectRatio ratio={8 / 11}>
               <CDNImage name='kayaToast' className='h-full w-full object-cover' />
             </AspectRatio>
@@ -148,7 +148,7 @@ export default function Index() {
               ORDER NOW
             </Button>
           </div>
-          <div className='w-[calc(100vw-2.4rem)] overflow-hidden rounded-3xl md:w-[42rem]'>
+          <div className='w-[calc(100vw-2.4rem)] overflow-hidden rounded-3xl sm:w-[calc(100vw-3.2rem)] md:w-[42rem]'>
             <AspectRatio ratio={8 / 11}>
               <CDNImage name='coconutTree' className='h-full w-full object-cover' />
             </AspectRatio>

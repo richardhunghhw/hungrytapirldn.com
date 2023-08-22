@@ -51,8 +51,8 @@ export default function Product() {
     <>
       <div className={`content-wrapper min-h-screen bg-${productData.data.backgroundColour} h-full`}>
         <div className='content-container my-24 flex flex-col items-center justify-center py-2'>
-          <div className='flex flex-col items-center md:flex-row md:space-x-8'>
-            <div className='w-[350px] basis-1/2 overflow-hidden rounded-3xl'>
+          <div className='mt-4 flex flex-col items-center md:flex-row md:space-x-8'>
+            <div className='w-[350px] basis-1/2 self-baseline overflow-hidden rounded-3xl'>
               <AspectRatio ratio={aspectRatio}>
                 <CDNImage
                   alt={productData.data.images[0].alt}
@@ -62,7 +62,7 @@ export default function Product() {
                 />
               </AspectRatio>
             </div>
-            <div className='items-left mt-5 flex basis-1/2 flex-col justify-center space-y-6 text-sm md:w-1/2'>
+            <div className='items-left flex basis-1/2 flex-col justify-center space-y-6 text-sm md:w-1/2'>
               <header className='title flex flex-row items-end justify-between text-4xl uppercase text-primary sm:text-5xl md:text-5xl'>
                 <h1>{productData.metadata.title}</h1>
                 <p>£{productData.data.price}</p>
