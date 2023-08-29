@@ -16,6 +16,8 @@ withEsbuildOverride((option) => {
           __sentryDsn__: process.env.SENTRY_DSN,
           __sentryEnv__: process.env.SENTRY_ENV,
           __sentryTracesSampleRate__: process.env.SENTRY_TRACES_SAMPLE_RATE,
+          __sentryReplaysSessionSampleRate__: process.env.SENTRY_REPLAYS_SESSION_SAMPLE_RATE,
+          __sentryReplaysOnErrorSampleRate__: process.env.SENTRY_REPLAYS_ONERROR_SAMPLE_RATE,
         },
         include: /(\.jsx?|\.tsx?)$/,
       }),
@@ -29,7 +31,6 @@ withEsbuildOverride((option) => {
  * @type {import('@remix-run/dev').AppConfig}
  */
 export default {
-  devServerBroadcastDelay: 2000,
   ignoredRouteFiles: ['**/.*'],
   server: './server.ts',
   serverBuildPath: 'functions/[[path]].js',
@@ -39,9 +40,10 @@ export default {
   serverMinify: true,
   serverModuleFormat: 'esm',
   serverPlatform: 'neutral',
-
   tailwind: true,
+
   future: {
+    v2_dev: true,
     v2_errorBoundary: true,
     v2_meta: true,
     v2_normalizeFormMethod: true,

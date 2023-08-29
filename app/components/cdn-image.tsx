@@ -37,7 +37,7 @@ function CDNImage({
   alt,
   src,
   lazy = true,
-  transformation = [{ height: '600', width: '800', mode: 'fo-auto' }],
+  transformation = [{ height: '400', width: '600', mode: 'fo-auto' }],
   ...rest
 }: CDNImageProps) {
   if (!name && !(alt && src)) {

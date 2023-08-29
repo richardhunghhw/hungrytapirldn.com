@@ -39,6 +39,9 @@ jobs:
           SENTRY_DSN: 'op://${{ vars.VAULT_NAME }}/Sentry/dsn'
           SENTRY_ORG: 'op://${{ vars.VAULT_NAME }}/Sentry/org-slug'
           SENTRY_PROJECT: 'op://${{ vars.VAULT_NAME }}/Sentry/username'
+          SENTRY_TRACES_SAMPLE_RATE: 'op://${{ vars.VAULT_NAME }}/Sentry/username'
+          SENTRY_REPLAYS_SESSION_SAMPLE_RATE: 'op://${{ vars.VAULT_NAME }}/Sentry/username'
+          SENTRY_REPLAYS_ONERROR_SAMPLE_RATE: 'op://${{ vars.VAULT_NAME }}/Sentry/username'
 
       - name: Set SENTRY_ENV
         run: |
@@ -55,7 +58,9 @@ jobs:
           SENTRY_DEBUG: ${{ env.SENTRY_DEBUG }}
           SENTRY_DSN: ${{ env.SENTRY_DSN }}
           SENTRY_ENV: ${{ env.SENTRY_ENV }}
-          SENTRY_TRACES_SAMPLE_RATE: 1.0
+          SENTRY_TRACES_SAMPLE_RATE: ${{ env.SENTRY_TRACES_SAMPLE_RATE }}
+          SENTRY_REPLAYS_SESSION_SAMPLE_RATE: ${{ env.SENTRY_REPLAYS_SESSION_SAMPLE_RATE }}
+          SENTRY_REPLAYS_ONERROR_SAMPLE_RATE: ${{ env.SENTRY_REPLAYS_ONERROR_SAMPLE_RATE }}
         run: npm install && npm run build
 
       - name: Find sourcemaps

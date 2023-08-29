@@ -34,9 +34,7 @@ function MarkdownLine({ data }: { data: string }) {
           },
           img: {
             component: CDNImage,
-            props: {
-              className: 'mx-auto',
-            },
+            props: {},
           },
         },
       }}
