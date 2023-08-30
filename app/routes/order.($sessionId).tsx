@@ -1,4 +1,4 @@
-import { LoaderArgs, redirect } from '@remix-run/cloudflare';
+import { type LoaderArgs, redirect } from '@remix-run/cloudflare';
 
 export async function loader({ params }: LoaderArgs) {
   if (params?.sessionId) {

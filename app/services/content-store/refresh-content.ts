@@ -1,8 +1,7 @@
-import type { ContentStoreEntry, ContentType, EntryMetadata } from '.';
+import type { ContentStoreEntry, ContentType, EntryMetadata } from '~/server/entities/content';
 import type { FullPageResponse } from './notion';
 import { getPageContent, queryDbByType } from './notion';
-import { allContentTypes } from './';
-import { listKeys, purgeEntries, putEntry } from './kv-cache';
+import { allContentTypes } from '~/server/entities/content';
 import { blockToMarkdown, blocksToMarkdown } from '~/utils/notion-block-to-markdown';
 import { isProd } from '~/utils/misc';
 import { upload } from '../image-store';
@@ -138,7 +137,7 @@ async function replaceNotionImageUrlByBlocks(
 
 // Search ContentStoreEntry for Notion Image URLs, upload to image-store, and replace URLs
 async function replaceNotionImageUrls(
-  context: AppLoadContext,
+  _: AppLoadContext,
   replaceImages: boolean,
   entry: ContentStoreEntry,
 ): Promise<void> {
@@ -146,16 +145,16 @@ async function replaceNotionImageUrls(
 
   if (type === 'general') {
     const faq = entry.data?.general;
-    entry.data.general = await replaceNotionImageUrlByBlocks(context, replaceImages, entry.type, faq);
+    entry.data.general = await replaceNotionImageUrlByBlocks(_, replaceImages, entry.type, faq);
   } else if (type === 'blog') {
     const blog = entry.data?.blog;
-    entry.data.blog = await replaceNotionImageUrlByBlocks(context, replaceImages, entry.type, blog);
+    entry.data.blog = await replaceNotionImageUrlByBlocks(_, replaceImages, entry.type, blog);
   } else if (type === 'faq') {
     const faq = entry.data?.faq;
-    entry.data.faq = await replaceNotionImageUrlByBlocks(context, replaceImages, entry.type, faq);
+    entry.data.faq = await replaceNotionImageUrlByBlocks(_, replaceImages, entry.type, faq);
   } else if (type === 'product') {
     for (const image of entry.data?.images ?? []) {
-      const imageUrl = await upload(context, replaceImages, image.url, image.alt, entry.type);
+      const imageUrl = await upload(_, replaceImages, image.url, image.alt, entry.type);
       image.url = imageUrl;
     }
   } else if (type === 'stalldate') {
@@ -174,14 +173,14 @@ async function replaceNotionImageUrls(
  * @returns
  */
 async function refreshEntries(
-  context: AppLoadContext,
+  _: AppLoadContext,
   type: ContentType,
   purge: boolean = false,
   replaceImages: boolean = false,
 ): Promise<undefined> {
   // Fetch a list of entries (keys, metadata only) from Notion
   console.debug(`Querying notion db for type [${type}]`);
-  const databaseEntries = await queryDbByType(context, type);
+  const databaseEntries = await queryDbByType(_, type);
   if (!databaseEntries) {
     // TODO catch error to sentry
     throw new Error(`Failed to fetch data from Notion for ${type}`);
@@ -192,14 +191,14 @@ async function refreshEntries(
   console.debug(`Querying notion for page blocks for [${type}]`);
   for (const dbEntry of databaseEntries) {
     // Cannot run this concurrently as this will break notion API limits
-    pageContents.push(await getPageContent(context, dbEntry));
+    pageContents.push(await getPageContent(_, dbEntry));
   }
 
   // Map each entry to a content-store entry
   const csEntries: Array<ContentStoreEntry> = [];
   pageContents.forEach((entry) => {
     try {
-      csEntries.push(makeContentStoreEntry(isProd(context), type, entry));
+      csEntries.push(makeContentStoreEntry(isProd(_), type, entry));
     } catch (err) {
       console.error(`Failed to create CS entry for [${type}], ${JSON.stringify(entry)}`, err);
       // TODO sentry error
@@ -210,7 +209,7 @@ async function refreshEntries(
   // Upload images to image-store
   console.debug(`Uploading images for [${type}]`);
   for (const entry of csEntries) {
-    await replaceNotionImageUrls(context, replaceImages, entry).catch((err) => {
+    await replaceNotionImageUrls(_, replaceImages, entry).catch((err) => {
       console.error(`Failed to upload images for type [${type}]`, err);
       // TODO sentry error
       throw new Error(`Failed to upload images for type [${type}]`);
@@ -220,8 +219,8 @@ async function refreshEntries(
   // If purge KV
   if (purge) {
     console.debug(`Purging cache of type [${type}]`);
-    await listKeys(context, type).then(async (keys) => {
-      await purgeEntries(context, type, keys).catch((err) => {
+    await _.repos.contentStore.listKeys(type).then(async (keys) => {
+      await _.repos.contentStore.purgeEntries(type, keys).catch((err) => {
         console.error(`Failed to purge cache for type [${type}]`, err);
         // TODO sentry error
         throw new Error(`Failed to purge cache for type [${type}]`);
@@ -232,7 +231,7 @@ async function refreshEntries(
   // Write to KV
   for (const entry of csEntries) {
     console.debug(`Writing entry type [${entry.type}] slug [${entry.slug}]`);
-    await putEntry(context, type, entry.metadata.slug, entry.metadata, entry.data).catch((err) => {
+    await _.repos.contentStore.putEntry(type, entry.metadata.slug, entry.metadata, entry.data).catch((err) => {
       console.error(`Failed to write entries for [${type}]`, err);
       // TODO sentry error
     });
@@ -240,13 +239,13 @@ async function refreshEntries(
 }
 
 async function refreshAllEntries(
-  context: AppLoadContext,
+  _: AppLoadContext,
   purge: boolean = false,
   typesFilter: string[] = [],
   replaceImages: boolean = false,
 ) {
   for (const type of allContentTypes().filter((x) => typesFilter.length === 0 || typesFilter.includes(x))) {
-    await refreshEntries(context, type as ContentType, purge, replaceImages);
+    await refreshEntries(_, type as ContentType, purge, replaceImages);
   }
 }
 

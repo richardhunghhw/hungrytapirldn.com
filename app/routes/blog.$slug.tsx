@@ -2,11 +2,11 @@
  * Blog page
  */
 
-import { ActionArgs, redirect } from '@remix-run/cloudflare';
+import { type ActionArgs, redirect } from '@remix-run/cloudflare';
 import type { V2_MetaArgs } from '@remix-run/react';
 import { Link, useLoaderData } from '@remix-run/react';
 import { isProd } from '~/utils/misc';
-import type { ContentStoreBlogEntry } from '~/services/content-store';
+import type { ContentStoreBlogEntry } from '~/server/entities/content';
 import { getBlog, validateRequest } from '~/services/content-store';
 import { ArrowLeft } from 'lucide-react';
 import { MarkdownContent } from '~/components/markdown-content';

@@ -1,7 +1,7 @@
 import { type ActionArgs, redirect } from '@remix-run/cloudflare';
 import type { RouteMatch } from '@remix-run/react';
 import { Outlet, useMatches } from '@remix-run/react';
-import type { ContentStoreGeneralEntry } from '~/services/content-store';
+import type { ContentStoreGeneralEntry } from '~/server/entities/content';
 import { getGeneral } from '~/services/content-store';
 import { isProd } from '~/utils/misc';
 

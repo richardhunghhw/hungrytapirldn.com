@@ -16,7 +16,7 @@ function getHeaders({ env: { IMAGEKIT_PRIVATE_KEY } }: AppLoadContext) {
   };
 }
 
-async function listFiles(context: AppLoadContext, listOptions: ListFileOptions): Promise<IKResponse<FileObject[]>> {
+async function listFiles(_: AppLoadContext, listOptions: ListFileOptions): Promise<IKResponse<FileObject[]>> {
   if (typeof listOptions !== 'object') {
     new Error(errorMessages.INVALID_LIST_OPTIONS.message);
   }
@@ -28,7 +28,7 @@ async function listFiles(context: AppLoadContext, listOptions: ListFileOptions):
   // Make the request
   const result = await fetch(`${IMAGEKIT_API_URL}?${new URLSearchParams(listOptions)}`, {
     method: 'GET',
-    headers: { ...getHeaders(context) },
+    headers: { ...getHeaders(_) },
   });
 
   // Deconstruct the response

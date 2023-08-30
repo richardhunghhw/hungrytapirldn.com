@@ -4,8 +4,8 @@
 
 import { type ActionArgs, redirect } from '@remix-run/cloudflare';
 import { Outlet } from '@remix-run/react';
-import { isProd } from '~/utils/misc';
 import { listProducts } from '~/services/content-store';
+import { isProd } from '~/utils/misc';
 
 // Fetch faq data content-store
 export async function loader({ context }: ActionArgs) {

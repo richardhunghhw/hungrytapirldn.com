@@ -1,4 +1,4 @@
-import { allContentTypes, type BaseEntry, type ContentType } from '.';
+import { allContentTypes, type BaseEntry, type ContentType } from '~/server/entities/content';
 
 export type UrlPath = {
   type: ContentType;

@@ -6,7 +6,7 @@ import type { DataFunctionArgs, V2_MetaArgs } from '@remix-run/cloudflare';
 import { redirect } from '@remix-run/cloudflare';
 import { useLoaderData } from '@remix-run/react';
 import { MarkdownContent } from '~/components/markdown-content';
-import type { ContentStoreGeneralEntry } from '~/services/content-store';
+import type { ContentStoreGeneralEntry } from '~/server/entities/content';
 import { getGeneralEntry } from '~/services/content-store/get-content';
 import { isProd } from '~/utils/misc';
 import type { loader as rootLoader } from '~/root';

@@ -5,7 +5,7 @@
 import { AspectRatio } from '@radix-ui/react-aspect-ratio';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
-import type { ContentStoreProductEntry } from '~/services/content-store';
+import type { ContentStoreProductEntry } from '~/server/entities/content';
 
 export default function ProductSection({ product }: { product: ContentStoreProductEntry }): JSX.Element {
   const aspectRatio = 8 / 9;

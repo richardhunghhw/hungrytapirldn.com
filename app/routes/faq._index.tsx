@@ -2,7 +2,7 @@
  * FAQ list page
  */
 
-import type { ContentStoreFaqEntry } from '~/services/content-store';
+import type { ContentStoreFaqEntry } from '~/server/entities/content';
 import type { V2_MetaArgs } from '@remix-run/react';
 import { Link, useMatches } from '@remix-run/react';
 import { ChevronRight } from 'lucide-react';

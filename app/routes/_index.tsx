@@ -1,7 +1,7 @@
 import type { V2_MetaArgs } from '@remix-run/react';
 import { Link, useLoaderData } from '@remix-run/react';
 import { Button } from '~/components/ui/button';
-import type { ContentStoreGeneralEntry, ContentStoreProductEntry } from '~/services/content-store';
+import type { ContentStoreGeneralEntry, ContentStoreProductEntry } from '~/server/entities/content';
 import { getGeneral, getProduct, makeUriFromContentTypeSlug } from '~/services/content-store';
 import { TapirTransparent } from '~/utils/svg/tapir';
 import { AspectRatio } from '~/components/ui/aspect-ratio';

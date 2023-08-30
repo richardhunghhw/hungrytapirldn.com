@@ -2,7 +2,7 @@
  * Blog list page
  */
 
-import type { ContentStoreEntry } from '~/services/content-store';
+import type { ContentStoreEntry } from '~/server/entities/content';
 import type { V2_MetaArgs } from '@remix-run/react';
 import { Link, useMatches } from '@remix-run/react';
 import { ChevronRight } from 'lucide-react';

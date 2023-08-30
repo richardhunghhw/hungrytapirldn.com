@@ -6,7 +6,7 @@
  */
 
 import { Client } from '@notionhq/client';
-import type { ContentType } from '.';
+import type { ContentType } from '~/server/entities/content';
 import type {
   BlockObjectResponse,
   PageObjectResponse,

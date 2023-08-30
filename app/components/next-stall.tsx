@@ -1,7 +1,7 @@
 import { Link } from '@remix-run/react';
 import { ExternalLink } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import type { ContentStoreGeneralEntry } from '~/services/content-store';
+import type { ContentStoreGeneralEntry } from '~/server/entities/content';
 
 function AddDaySuffix(date: string) {
   const day = parseInt(date.split(' ')[0]);

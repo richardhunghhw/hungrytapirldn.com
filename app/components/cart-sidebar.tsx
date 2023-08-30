@@ -2,7 +2,7 @@ import { Form } from '@remix-run/react';
 import { useState } from 'react';
 import { ShoppingBag, X } from '~/utils/svg/custom';
 import { Button } from './ui/button';
-import type { ContentStoreProductEntry } from '~/services/content-store';
+import type { ContentStoreProductEntry } from '~/server/entities/content';
 import { NumberInput } from './number-input';
 
 const products: ContentStoreProductEntry[] = [

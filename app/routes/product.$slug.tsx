@@ -6,14 +6,14 @@ import { type ActionArgs, redirect } from '@remix-run/cloudflare';
 import type { V2_MetaArgs } from '@remix-run/react';
 import { useLoaderData } from '@remix-run/react';
 import { isProd } from '~/utils/misc';
-import type { ContentStoreProductEntry } from '~/services/content-store';
-import { getProduct, validateRequest } from '~/services/content-store';
+import type { ContentStoreProductEntry } from '~/server/entities/content';
 import { AspectRatio } from '@radix-ui/react-aspect-ratio';
 import { AddToBag } from '~/components/add-to-bag';
 import { getSeoMetas } from '~/utils/seo';
 import type { loader as rootLoader } from '~/root';
 import { MarkdownContent, MarkdownLine } from '~/components/markdown-content';
 import { CDNImage } from '~/components/cdn-image';
+import { getProduct, validateRequest } from '~/services/content-store';
 
 export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { root: typeof rootLoader }>) {
   const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;

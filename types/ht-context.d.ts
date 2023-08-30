@@ -1,3 +1,5 @@
+import type { ContentStore } from '~/server/repositories/content-store';
+
 export type HTEnv = {
   /** Base */
   readonly NODE_ENV: string;
@@ -44,11 +46,17 @@ export type HTEnv = {
   readonly SENTRY_REPLAYS_ONERROR_SAMPLE_RATE: number;
 };
 
+export type HTRepos = {
+  contentStore: ContentStore;
+};
+
+export type HTServices = {};
+
 declare module '@remix-run/server-runtime' {
   export interface AppLoadContext {
     env: HTEnv;
-    // services: SDX.Services;
-    // repos: SDX.Repos;
+    repos: HTRepos;
+    services: HTServices;
     // time: Measurer["time"];
   }
 }

@@ -1,5 +1,4 @@
-import { getEntry, listKeys, listNestedKeys, putEntry } from './kv-cache';
-import { allContentTypes } from './';
+import { allContentTypes } from '~/server/entities/content';
 import type {
   BaseEntry,
   ContentStoreBlogEntry,
@@ -7,16 +6,16 @@ import type {
   ContentStoreGeneralEntry,
   ContentStoreProductEntry,
   ContentStoreStallDateEntry,
-} from '.';
+} from '~/server/entities/content';
 import type { AppLoadContext } from '@remix-run/cloudflare';
 
-async function getGeneral(context: AppLoadContext, slug: string): Promise<ContentStoreGeneralEntry | undefined> {
-  const entry = await getEntry(context, 'general', slug);
+async function getGeneral(_: AppLoadContext, slug: string): Promise<ContentStoreGeneralEntry | undefined> {
+  const entry = await _.repos.contentStore.getEntry('general', slug);
   return entry as ContentStoreGeneralEntry | undefined;
 }
 
-async function getGeneralEntry(context: AppLoadContext, slug: string) {
-  const result = await getGeneral(context, slug);
+async function getGeneralEntry(_: AppLoadContext, slug: string) {
+  const result = await getGeneral(_, slug);
   if (!result) {
     // todo sentry error
     throw new Error('Entry not found');
@@ -24,60 +23,60 @@ async function getGeneralEntry(context: AppLoadContext, slug: string) {
   return result;
 }
 
-async function listGenerals(context: AppLoadContext): Promise<BaseEntry[]> {
-  const entries = await listKeys(context, 'general');
+async function listGenerals(_: AppLoadContext): Promise<BaseEntry[]> {
+  const entries = await _.repos.contentStore.listKeys('general');
   return entries;
 }
 
-async function listGeneralLocations(context: AppLoadContext): Promise<BaseEntry[]> {
-  const entries = await listNestedKeys(context, 'general', 'location');
+async function listGeneralLocations(_: AppLoadContext): Promise<BaseEntry[]> {
+  const entries = await _.repos.contentStore.listNestedKeys('general', 'location');
   return entries;
 }
 
-async function getBlog(context: AppLoadContext, slug: string): Promise<ContentStoreBlogEntry | undefined> {
-  const entry = await getEntry(context, 'blog', slug);
+async function getBlog(_: AppLoadContext, slug: string): Promise<ContentStoreBlogEntry | undefined> {
+  const entry = await _.repos.contentStore.getEntry('blog', slug);
   return entry as ContentStoreBlogEntry | undefined;
 }
 
-async function listBlogs(context: AppLoadContext): Promise<BaseEntry[]> {
-  const entries = await listKeys(context, 'blog');
+async function listBlogs(_: AppLoadContext): Promise<BaseEntry[]> {
+  const entries = await _.repos.contentStore.listKeys('blog');
   return entries;
 }
 
-async function getProduct(context: AppLoadContext, slug: string): Promise<ContentStoreProductEntry | undefined> {
-  const entry = await getEntry(context, 'product', slug);
+async function getProduct(_: AppLoadContext, slug: string): Promise<ContentStoreProductEntry | undefined> {
+  const entry = await _.repos.contentStore.getEntry('product', slug);
   return entry as ContentStoreProductEntry | undefined;
 }
 
-async function listProducts(context: AppLoadContext): Promise<BaseEntry[]> {
-  const entries = await listKeys(context, 'product');
+async function listProducts(_: AppLoadContext): Promise<BaseEntry[]> {
+  const entries = await _.repos.contentStore.listKeys('product');
   return entries;
 }
 
-async function getFaq(context: AppLoadContext, slug: string): Promise<ContentStoreFaqEntry | undefined> {
-  const entry = await getEntry(context, 'faq', slug);
+async function getFaq(_: AppLoadContext, slug: string): Promise<ContentStoreFaqEntry | undefined> {
+  const entry = await _.repos.contentStore.getEntry('faq', slug);
   return entry as ContentStoreFaqEntry | undefined;
 }
 
-async function listFaqs(context: AppLoadContext): Promise<BaseEntry[]> {
-  const entries = await listKeys(context, 'faq');
+async function listFaqs(_: AppLoadContext): Promise<BaseEntry[]> {
+  const entries = await _.repos.contentStore.listKeys('faq');
   return entries;
 }
 
-async function getStallDate(context: AppLoadContext, slug: string): Promise<ContentStoreStallDateEntry | undefined> {
-  const entry = await getEntry(context, 'stalldate', slug);
+async function getStallDate(_: AppLoadContext, slug: string): Promise<ContentStoreStallDateEntry | undefined> {
+  const entry = await _.repos.contentStore.getEntry('stalldate', slug);
   return entry as ContentStoreStallDateEntry | undefined;
 }
 
-async function listStallDates(context: AppLoadContext): Promise<BaseEntry[]> {
-  const entries = await listKeys(context, 'stalldate');
+async function listStallDates(_: AppLoadContext): Promise<BaseEntry[]> {
+  const entries = await _.repos.contentStore.listKeys('stalldate');
   return entries;
 }
 
-async function getLatestStallDate(context: AppLoadContext): Promise<ContentStoreStallDateEntry> {
+async function getLatestStallDate(_: AppLoadContext): Promise<ContentStoreStallDateEntry> {
   const datetime = new Date();
   // Get existing latest entry
-  const latest = await getStallDate(context, 'latest');
+  const latest = await getStallDate(_, 'latest');
   const latestEndDate = latest ? new Date(latest?.data.endDT) : undefined;
 
   // If latest entry is not set or is expired, re-evaluate
@@ -87,23 +86,23 @@ async function getLatestStallDate(context: AppLoadContext): Promise<ContentStore
   }
 
   // Get all stall dates, find the next upcoming one
-  const stallDates = await listStallDates(context);
+  const stallDates = await listStallDates(_);
   const newLatest = stallDates
     .filter((e) => new Date(e.slug.split('~')[1]) >= datetime) // filter out past dates
     .sort((a, b) => new Date(a.slug.split('~')[1]) - new Date(b.slug.split('~')[1]))[0]; // sort date asc
-  const newLatestEntry = (await getStallDate(context, newLatest.slug)) as ContentStoreStallDateEntry;
+  const newLatestEntry = (await getStallDate(_, newLatest.slug)) as ContentStoreStallDateEntry;
 
   // Update latest entry
-  await putEntry(context, 'stalldate', 'latest', newLatestEntry?.metadata, newLatestEntry?.data);
+  await _.repos.contentStore.putEntry('stalldate', 'latest', newLatestEntry?.metadata, newLatestEntry?.data);
   return newLatestEntry;
 }
 
 // Get all entries, for sitemap generation
-async function listAll(context: AppLoadContext): Promise<BaseEntry[]> {
+async function listAll(_: AppLoadContext): Promise<BaseEntry[]> {
   const result: BaseEntry[] = [];
   await Promise.all(
     allContentTypes().flatMap(async (type) => {
-      await listKeys(context, type).then((entries) => {
+      await _.repos.contentStore.listKeys(type).then((entries) => {
         result.push(...entries);
       });
     }),
