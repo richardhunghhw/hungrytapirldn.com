@@ -6,17 +6,17 @@ import { Buffer } from 'node:buffer';
 import type { UploadOptions, UploadResponse, FileObject, ListFileOptions } from 'imagekit/dist/libs/interfaces';
 import type IKResponse from 'imagekit/dist/libs/interfaces/IKResponse';
 import errorMessages from 'imagekit/dist/libs/constants/errorMessages';
-import type { HTAppLoadContext } from '~/utils/types';
+import type { AppLoadContext } from '@remix-run/cloudflare';
 
 const IMAGEKIT_API_URL = 'https://api.imagekit.io/v1/files/';
 
-function getHeaders({ IMAGEKIT_PRIVATE_KEY }: HTAppLoadContext) {
+function getHeaders({ env: { IMAGEKIT_PRIVATE_KEY } }: AppLoadContext) {
   return {
     Authorization: `Basic ${Buffer.from(`${IMAGEKIT_PRIVATE_KEY}:`).toString('base64')}`,
   };
 }
 
-async function listFiles(context: HTAppLoadContext, listOptions: ListFileOptions): Promise<IKResponse<FileObject[]>> {
+async function listFiles(context: AppLoadContext, listOptions: ListFileOptions): Promise<IKResponse<FileObject[]>> {
   if (typeof listOptions !== 'object') {
     new Error(errorMessages.INVALID_LIST_OPTIONS.message);
   }
@@ -45,7 +45,7 @@ async function listFiles(context: HTAppLoadContext, listOptions: ListFileOptions
   };
 }
 
-async function upload(context: HTAppLoadContext, uploadOptions: UploadOptions): Promise<IKResponse<UploadResponse>> {
+async function upload(context: AppLoadContext, uploadOptions: UploadOptions): Promise<IKResponse<UploadResponse>> {
   if (typeof uploadOptions !== 'object') {
     throw new Error(errorMessages.MISSING_UPLOAD_DATA.message);
   }

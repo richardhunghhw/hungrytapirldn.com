@@ -1,6 +1,7 @@
 ## Variables set in this file are to be configured as environment variables during build for remix-esbuild-override
 
 # Sentry 
+
 SENTRY_DEBUG=true
 SENTRY_ENV=DEV
 SENTRY_DSN=op://HT-TEST/Sentry/dsn

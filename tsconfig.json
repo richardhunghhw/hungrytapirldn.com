@@ -1,7 +1,13 @@
 {
-  "include": ["remix.env.d.ts", "globals.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+		"functions/[[remix]].ts",
+		"types/*.d.ts",
+		"app/**/*.ts",
+		"app/**/*.tsx",
+		"server/**/*.ts",
+  ],
   "compilerOptions": {
-    "lib": ["DOM", "DOM.Iterable", "ES2019"],
+		"lib": ["DOM", "DOM.Iterable", "ES2019"],
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
@@ -12,8 +18,11 @@
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
+		"skipLibCheck": true,
     "paths": {
-      "~/*": ["./app/*"]
+      "~/*": ["./app/*"],
+			"~/build": ["./types/build.d.ts", "./dist/worker/index.js"],
+			"~/server/*": ["./server/*"],
     },
     // Remix takes care of building everything in `remix build`.
     "noEmit": true

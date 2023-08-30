@@ -1,11 +1,10 @@
-import type { LoaderArgs } from '@remix-run/cloudflare';
+import type { ActionArgs, LoaderArgs } from '@remix-run/cloudflare';
 import { json, redirect } from '@remix-run/cloudflare';
 import type { V2_MetaFunction } from '@remix-run/react';
 import { Form, Link, useLoaderData } from '@remix-run/react';
 import type { Stripe } from 'stripe';
 
 import { getStripe } from '~/services/stripe';
-import type { HTActionArgs } from '~/utils/types';
 
 export const meta: V2_MetaFunction = () => {
   return [{ title: 'Hungry Tapir | Order Kaya' }];
@@ -54,7 +53,7 @@ export async function loader({ params }: LoaderArgs) {
 }
 
 // Handle form POST request
-export async function action({ request, context }: HTActionArgs) {
+export async function action({ request, context }: ActionArgs) {
   const formData = await request.formData();
 
   // todo: validate form data
@@ -81,7 +80,7 @@ export async function action({ request, context }: HTActionArgs) {
   // Get a unique order ID from worker
   let orderId: string | undefined = undefined;
   try {
-    const response = await context.CONFIGSTORE_WORKER.fetch(request.clone());
+    const response = await context.env.CONFIGSTORE_WORKER.fetch(request.clone());
     if (response.status !== 200) {
       throw new Error(`Failed to fetch order ID from worker. Status: ${response.status}`);
     }

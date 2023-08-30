@@ -77,6 +77,7 @@ function NumberInput({
         min='0'
         max='10'
         value={value}
+        onChange={(e) => handleChange(e)}
       />
       <InputSpinner position={position} onClick={() => handleIncrement()}>
         +

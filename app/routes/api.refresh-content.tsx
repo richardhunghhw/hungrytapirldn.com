@@ -1,10 +1,10 @@
 import { AUTH_FAIL_RESPONSE, auth } from '~/services/authenticate';
-import type { HTActionArgs } from '~/utils/types';
 import { refreshAllEntries } from '~/services/content-store';
 import * as Sentry from '@sentry/remix';
+import type { ActionArgs } from '@remix-run/cloudflare';
 
 // Fetch all content data from content-store
-export async function action({ context, request }: HTActionArgs) {
+export async function action({ context, request }: ActionArgs) {
   if (auth(context, request) === false) {
     console.debug('api/refresh-content auth failed');
     return new Response(

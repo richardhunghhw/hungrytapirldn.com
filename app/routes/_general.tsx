@@ -1,12 +1,11 @@
-import { redirect } from '@remix-run/cloudflare';
+import { type ActionArgs, redirect } from '@remix-run/cloudflare';
 import type { RouteMatch } from '@remix-run/react';
 import { Outlet, useMatches } from '@remix-run/react';
 import type { ContentStoreGeneralEntry } from '~/services/content-store';
 import { getGeneral } from '~/services/content-store';
 import { isProd } from '~/utils/misc';
-import type { HTActionArgs } from '~/utils/types';
 
-export async function loader({ request: { url: requestUrl }, context }: HTActionArgs) {
+export async function loader({ request: { url: requestUrl }, context }: ActionArgs) {
   try {
     const url = new URL(requestUrl);
     const urlPath = url.pathname

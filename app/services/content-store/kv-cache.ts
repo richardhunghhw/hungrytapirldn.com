@@ -6,14 +6,14 @@
  * - Purge all data from KV for a given type
  */
 
-import type { HTAppLoadContext } from '~/utils/types';
 import { makeCacheKey, splitCacheKey } from './utils';
 import type { BaseEntry, ContentStoreEntry, ContentType, EntryMetadata } from '.';
 import * as Sentry from '@sentry/remix';
+import type { AppLoadContext } from '@remix-run/cloudflare';
 
 // Get an Entry (row) from KV
 async function getEntry(
-  { CONTENT_STORE }: HTAppLoadContext,
+  { env: { CONTENT_STORE } }: AppLoadContext,
   type: ContentType,
   slug: string,
 ): Promise<ContentStoreEntry | undefined> {
@@ -35,7 +35,7 @@ async function getEntry(
 
 // Add (cache) entry in to KV
 async function putEntry(
-  { CACHE_TTL_DAYS, CONTENT_STORE }: HTAppLoadContext,
+  { env: { CACHE_TTL_DAYS, CONTENT_STORE } }: AppLoadContext,
   type: ContentType,
   slug: string,
   metadata: EntryMetadata,
@@ -66,7 +66,7 @@ function processListResults(response: KVNamespaceListResult<EntryMetadata>): Bas
 }
 
 // Get all content keys and metadata for a given type
-async function listKeys({ CONTENT_STORE }: HTAppLoadContext, type: ContentType): Promise<BaseEntry[]> {
+async function listKeys({ env: { CONTENT_STORE } }: AppLoadContext, type: ContentType): Promise<BaseEntry[]> {
   const response = await CONTENT_STORE.list<EntryMetadata>({
     prefix: type,
     limit: 1000, // Default limit, revisit if needed
@@ -81,7 +81,7 @@ async function listKeys({ CONTENT_STORE }: HTAppLoadContext, type: ContentType):
 }
 
 async function listNestedKeys(
-  { CONTENT_STORE }: HTAppLoadContext,
+  { env: { CONTENT_STORE } }: AppLoadContext,
   type: ContentType,
   nested: string,
 ): Promise<BaseEntry[]> {
@@ -103,7 +103,7 @@ async function listNestedKeys(
 
 // Purge entries for a given type
 async function purgeEntries(
-  { CONTENT_STORE }: HTAppLoadContext,
+  { env: { CONTENT_STORE } }: AppLoadContext,
   type: ContentType,
   entries: BaseEntry[],
 ): Promise<undefined> {

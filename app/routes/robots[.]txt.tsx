@@ -2,10 +2,10 @@
  * Sitemap page, generated from the content-store data
  */
 
+import type { AppLoadContext, LoaderArgs } from '@remix-run/cloudflare';
 import { isProd } from '~/utils/misc';
-import type { HTAppLoadContext, HTLoaderArgs } from '~/utils/types';
 
-const generateRobotText = (context: HTAppLoadContext) => {
+const generateRobotText = (context: AppLoadContext) => {
   if (isProd(context)) {
     return `
         User-agent: Googlebot
@@ -25,7 +25,7 @@ const generateRobotText = (context: HTAppLoadContext) => {
 };
 
 // Fetch all content data from content-store
-export async function loader({ context }: HTLoaderArgs) {
+export async function loader({ context }: LoaderArgs) {
   return new Response(generateRobotText(context), {
     headers: {
       'content-type': 'text/plain',

@@ -2,11 +2,10 @@
  * FAQ page
  */
 
-import { redirect } from '@remix-run/cloudflare';
+import { ActionArgs, redirect } from '@remix-run/cloudflare';
 import type { V2_MetaArgs } from '@remix-run/react';
 import { Link, useLoaderData } from '@remix-run/react';
 import { isProd } from '~/utils/misc';
-import type { HTActionArgs } from '~/utils/types';
 import type { ContentStoreFaqEntry } from '~/services/content-store';
 import { validateRequest, getFaq } from '~/services/content-store';
 import { ArrowLeft } from 'lucide-react';
@@ -23,7 +22,7 @@ export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { r
   });
 }
 
-export async function loader({ request: { url }, context, params }: HTActionArgs) {
+export async function loader({ request: { url }, context, params }: ActionArgs) {
   // Fetch faq data from content-store
   try {
     const urlPath = validateRequest(new URL(url));

@@ -1,13 +1,13 @@
-import type { HTAppLoadContext } from './types';
+import type { AppLoadContext } from '@remix-run/cloudflare';
 
-export function isProd({ NODE_ENV }: HTAppLoadContext): boolean {
+export function isProd({ env: { NODE_ENV } }: AppLoadContext): boolean {
   return NODE_ENV === 'PROD';
 }
 
-export function isTest({ NODE_ENV }: HTAppLoadContext): boolean {
+export function isTest({ env: { NODE_ENV } }: AppLoadContext): boolean {
   return NODE_ENV === 'TEST';
 }
 
-export function isDev(context: HTAppLoadContext) {
+export function isDev(context: AppLoadContext) {
   return !(isProd(context) || isTest(context));
 }

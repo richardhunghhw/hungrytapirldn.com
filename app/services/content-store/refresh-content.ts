@@ -1,4 +1,3 @@
-import type { HTAppLoadContext } from '~/utils/types';
 import type { ContentStoreEntry, ContentType, EntryMetadata } from '.';
 import type { FullPageResponse } from './notion';
 import { getPageContent, queryDbByType } from './notion';
@@ -7,6 +6,7 @@ import { listKeys, purgeEntries, putEntry } from './kv-cache';
 import { blockToMarkdown, blocksToMarkdown } from '~/utils/notion-block-to-markdown';
 import { isProd } from '~/utils/misc';
 import { upload } from '../image-store';
+import type { AppLoadContext } from '@remix-run/cloudflare';
 
 // Extract metadata from notion entry TODO sentry capture errors
 function makeMetadata(type: ContentType, { properties }: FullPageResponse): EntryMetadata {
@@ -110,7 +110,7 @@ function makeContentStoreEntry(isProd: boolean, type: ContentType, entry: FullPa
 
 // Search a block of strings for Notion Image URLs, upload to image-store, and replace URLs
 async function replaceNotionImageUrlByBlocks(
-  context: HTAppLoadContext,
+  context: AppLoadContext,
   replaceImages: boolean,
   type: ContentType,
   blocks: Array<string>,
@@ -138,7 +138,7 @@ async function replaceNotionImageUrlByBlocks(
 
 // Search ContentStoreEntry for Notion Image URLs, upload to image-store, and replace URLs
 async function replaceNotionImageUrls(
-  context: HTAppLoadContext,
+  context: AppLoadContext,
   replaceImages: boolean,
   entry: ContentStoreEntry,
 ): Promise<void> {
@@ -174,7 +174,7 @@ async function replaceNotionImageUrls(
  * @returns
  */
 async function refreshEntries(
-  context: HTAppLoadContext,
+  context: AppLoadContext,
   type: ContentType,
   purge: boolean = false,
   replaceImages: boolean = false,
@@ -240,7 +240,7 @@ async function refreshEntries(
 }
 
 async function refreshAllEntries(
-  context: HTAppLoadContext,
+  context: AppLoadContext,
   purge: boolean = false,
   typesFilter: string[] = [],
   replaceImages: boolean = false,

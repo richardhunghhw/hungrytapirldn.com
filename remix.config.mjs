@@ -9,9 +9,6 @@ withEsbuildOverride((option) => {
     option.plugins.unshift(
       replace({
         values: {
-          __basicCredentials__: Buffer.from(
-            `${process.env.BASIC_AUTH_USERNAME}:${process.env.BASIC_AUTH_PASSWORD}`,
-          ).toString('base64'),
           __sentryDebug__: process.env.SENTRY_DEBUG,
           __sentryDsn__: process.env.SENTRY_DSN,
           __sentryEnv__: process.env.SENTRY_ENV,
@@ -32,8 +29,7 @@ withEsbuildOverride((option) => {
  */
 export default {
   ignoredRouteFiles: ['**/.*'],
-  server: './server.ts',
-  serverBuildPath: 'functions/[[path]].js',
+  serverBuildPath: 'dist/worker/index.js',
   serverConditions: ['worker'],
   serverDependenciesToBundle: 'all',
   serverMainFields: ['browser', 'module', 'main'],
@@ -41,10 +37,11 @@ export default {
   serverModuleFormat: 'esm',
   serverPlatform: 'neutral',
   tailwind: true,
-
+  watchPaths: ['./server/**/*.ts'],
   future: {
     v2_dev: true,
     v2_errorBoundary: true,
+    v2_headers: true,
     v2_meta: true,
     v2_normalizeFormMethod: true,
     v2_routeConvention: true,

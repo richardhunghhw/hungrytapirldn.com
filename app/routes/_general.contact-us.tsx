@@ -2,15 +2,13 @@
  * Contact Us Page
  */
 
-import type { V2_MetaArgs } from '@remix-run/cloudflare';
+import type { ActionArgs, V2_MetaArgs } from '@remix-run/cloudflare';
 import { redirect } from '@remix-run/cloudflare';
 import { useLoaderData } from '@remix-run/react';
 import { MarkdownContent } from '~/components/markdown-content';
 import type { ContentStoreGeneralEntry } from '~/services/content-store';
 import { getGeneralEntry } from '~/services/content-store/get-content';
 import { isProd } from '~/utils/misc';
-import type { HTActionArgs } from '~/utils/types';
-import type { loader as rootLoader } from '~/root';
 import { getSeoMetas } from '~/utils/seo';
 
 export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { root: typeof rootLoader }>) {
@@ -22,7 +20,7 @@ export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { r
   });
 }
 
-export async function loader({ context }: HTActionArgs) {
+export async function loader({ context }: ActionArgs) {
   try {
     return getGeneralEntry(context, 'contact-us');
   } catch (error) {

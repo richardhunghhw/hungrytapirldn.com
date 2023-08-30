@@ -6,7 +6,6 @@
  */
 
 import { Client } from '@notionhq/client';
-import type { HTAppLoadContext } from '~/utils/types';
 import type { ContentType } from '.';
 import type {
   BlockObjectResponse,
@@ -14,9 +13,10 @@ import type {
   PartialBlockObjectResponse,
   PartialPageObjectResponse,
 } from '@notionhq/client/build/src/api-endpoints';
+import type { AppLoadContext } from '@remix-run/cloudflare';
 
 // Setup Notion client
-async function getClient({ NOTION_API_SECRET }: HTAppLoadContext): Promise<Client> {
+async function getClient({ env: { NOTION_API_SECRET } }: AppLoadContext): Promise<Client> {
   return new Client({ auth: NOTION_API_SECRET, notionVersion: '2022-06-28' });
 }
 
@@ -27,14 +27,14 @@ function isPageObjectResponse(
 }
 
 // Query Notion API for all entries in a Database entries given its ContentType
-async function queryDbByType(context: HTAppLoadContext, type: ContentType): Promise<Array<PageObjectResponse>> {
+async function queryDbByType(context: AppLoadContext, type: ContentType): Promise<Array<PageObjectResponse>> {
   const notion = await getClient(context);
-  const databaseId = context[`NOTION_API_DB_${type.toUpperCase()}`] as string;
+  const databaseId = context.env[`NOTION_API_DB_${type.toUpperCase()}`] as string;
 
   const filter = {
     property: 'Environment',
     multi_select: {
-      contains: context.NODE_ENV,
+      contains: context.env.NODE_ENV,
     },
   };
 
@@ -69,7 +69,7 @@ function isBlockObjectResponse(
 }
 
 // Get a single Page's content from Notion API given its id
-async function getPageContent(context: HTAppLoadContext, entry: PageObjectResponse): Promise<FullPageResponse> {
+async function getPageContent(context: AppLoadContext, entry: PageObjectResponse): Promise<FullPageResponse> {
   const notion = await getClient(context);
 
   const results: Array<BlockObjectResponse> = [];

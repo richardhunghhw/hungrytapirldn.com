@@ -9,9 +9,8 @@ import { Button } from '~/components/ui/button';
 import type { ContentStoreGeneralEntry } from '~/services/content-store';
 import { getGeneralEntry, getLatestStallDate } from '~/services/content-store/get-content';
 import { TapirTransparent } from '~/utils/svg/tapir';
-import type { HTLoaderArgs } from '~/utils/types';
 import { NextStall } from '~/components/next-stall';
-import type { V2_MetaArgs } from '@remix-run/cloudflare';
+import type { LoaderArgs, V2_MetaArgs } from '@remix-run/cloudflare';
 import { getSeoMetas } from '~/utils/seo';
 import type { loader as rootLoader } from '~/root';
 
@@ -43,7 +42,7 @@ export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { r
   });
 }
 
-export async function loader({ context }: HTLoaderArgs) {
+export async function loader({ context }: LoaderArgs) {
   const stalldate = await getLatestStallDate(context);
   const location = await getGeneralEntry(context, 'location~' + stalldate.data.location);
   // if (!location)

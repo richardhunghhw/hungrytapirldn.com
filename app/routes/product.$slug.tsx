@@ -2,11 +2,10 @@
  * Product page
  */
 
-import { redirect } from '@remix-run/cloudflare';
+import { type ActionArgs, redirect } from '@remix-run/cloudflare';
 import type { V2_MetaArgs } from '@remix-run/react';
 import { useLoaderData } from '@remix-run/react';
 import { isProd } from '~/utils/misc';
-import type { HTActionArgs } from '~/utils/types';
 import type { ContentStoreProductEntry } from '~/services/content-store';
 import { getProduct, validateRequest } from '~/services/content-store';
 import { AspectRatio } from '@radix-ui/react-aspect-ratio';
@@ -25,7 +24,7 @@ export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { r
   });
 }
 
-export async function loader({ request: { url }, context, params }: HTActionArgs) {
+export async function loader({ request: { url }, context, params }: ActionArgs) {
   // Fetch product data content-store
   try {
     const urlPath = validateRequest(new URL(url));

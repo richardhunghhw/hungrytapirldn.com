@@ -2,14 +2,13 @@
  * Blog Layout
  */
 
-import { redirect } from '@remix-run/cloudflare';
+import { type ActionArgs, redirect } from '@remix-run/cloudflare';
 import { Outlet } from '@remix-run/react';
 import { isProd } from '~/utils/misc';
 import { listBlogs } from '~/services/content-store';
-import type { HTActionArgs } from '~/utils/types';
 
 // Fetch blog data content-store
-export async function loader({ context }: HTActionArgs) {
+export async function loader({ context }: ActionArgs) {
   try {
     const result = await listBlogs(context);
     if (!result || !result.length) {

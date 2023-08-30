@@ -2,8 +2,8 @@
  * Sitemap page, generated from the content-store data
  */
 
+import type { LoaderArgs } from '@remix-run/cloudflare';
 import { listAll, makeUrlFromContent } from '~/services/content-store';
-import type { HTLoaderArgs } from '~/utils/types';
 
 type SitemapData = {
   hostname: string;
@@ -33,13 +33,13 @@ const generateSitemapXml = (sitemapData: SitemapData) => {
 };
 
 // Generate sitemap manually
-export async function loader({ context }: HTLoaderArgs) {
+export async function loader({ context }: LoaderArgs) {
   const allContent = await listAll(context);
   const sitemapData: SitemapData = {
-    hostname: context.HOST_URL,
+    hostname: context.env.HOST_URL,
     urls: allContent
       .map((content) => ({
-        url: makeUrlFromContent(context.HOST_URL, content)!,
+        url: makeUrlFromContent(context.env.HOST_URL, content)!,
         lastMod: new Date().toISOString(),
         changeFreq: 'daily',
         priority: '0.6',

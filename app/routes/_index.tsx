@@ -1,6 +1,5 @@
 import type { V2_MetaArgs } from '@remix-run/react';
 import { Link, useLoaderData } from '@remix-run/react';
-import type { HTLoaderArgs } from '~/utils/types';
 import { Button } from '~/components/ui/button';
 import type { ContentStoreGeneralEntry, ContentStoreProductEntry } from '~/services/content-store';
 import { getGeneral, getProduct, makeUriFromContentTypeSlug } from '~/services/content-store';
@@ -10,6 +9,7 @@ import { AddToBag } from '~/components/add-to-bag';
 import { getSeoMetas } from '~/utils/seo';
 import type { loader as rootLoader } from '~/root';
 import { CDNImage } from '~/components/cdn-image';
+import type { LoaderArgs } from '@remix-run/cloudflare';
 
 const circle = () => <div className='h-4 w-4 rounded-full bg-ht-black' />;
 
@@ -23,7 +23,7 @@ export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { r
   });
 }
 
-export async function loader({ context }: HTLoaderArgs) {
+export async function loader({ context }: LoaderArgs) {
   const orderNow = await getGeneral(context, 'section~order-now');
   const whatKaya = await getGeneral(context, 'section~what-is-kaya');
   const kayaPandan = await getProduct(context, 'the-pandan-kaya');

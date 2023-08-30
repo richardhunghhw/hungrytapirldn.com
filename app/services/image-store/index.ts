@@ -2,7 +2,7 @@
  * Interface to ImageKit for image-store. For the following operations:
  */
 
-import type { HTAppLoadContext } from '~/utils/types';
+import type { AppLoadContext } from '@remix-run/cloudflare';
 import type { ContentType } from '../content-store';
 import { listFiles, upload as uploadToImagekit } from './imagekit';
 
@@ -26,7 +26,7 @@ function contentTypeToFolder(type: ContentType): string {
 }
 
 async function upload(
-  context: HTAppLoadContext,
+  context: AppLoadContext,
   replaceImages: boolean,
   file: string,
   fileName: string,

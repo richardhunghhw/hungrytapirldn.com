@@ -1,4 +1,4 @@
-import type { LinksFunction } from '@remix-run/cloudflare';
+import type { LinksFunction, LoaderArgs } from '@remix-run/cloudflare';
 import {
   Links,
   LiveReload,
@@ -16,7 +16,6 @@ import { withSentry } from '@sentry/remix';
 import stylesheet from '~/styles/tailwind.css';
 import Navbar from './components/navbar';
 import Footer from './components/footer';
-import type { HTLoaderArgs } from './utils/types';
 import { isDev } from './utils/misc';
 
 export const links: LinksFunction = () => {
@@ -52,9 +51,9 @@ export const links: LinksFunction = () => {
 
 const BYPASS_HEADERFOOTER_PATHS = ['/linkinbio'];
 
-export async function loader({ context }: HTLoaderArgs) {
+export async function loader({ context }: LoaderArgs) {
   return {
-    hostUrl: context.HOST_URL,
+    hostUrl: context.env.HOST_URL,
     isDev: isDev(context),
   };
 }
