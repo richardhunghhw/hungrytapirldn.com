@@ -10,7 +10,7 @@ import type {
 import type { AppLoadContext } from '@remix-run/cloudflare';
 
 async function getGeneral(_: AppLoadContext, slug: string): Promise<ContentStoreGeneralEntry | undefined> {
-  const entry = await _.repos.contentStore.getEntry('general', slug);
+  const entry = await _.repos.contentKv.getEntry('general', slug);
   return entry as ContentStoreGeneralEntry | undefined;
 }
 
@@ -24,52 +24,52 @@ async function getGeneralEntry(_: AppLoadContext, slug: string) {
 }
 
 async function listGenerals(_: AppLoadContext): Promise<BaseEntry[]> {
-  const entries = await _.repos.contentStore.listKeys('general');
+  const entries = await _.repos.contentKv.listKeys('general');
   return entries;
 }
 
 async function listGeneralLocations(_: AppLoadContext): Promise<BaseEntry[]> {
-  const entries = await _.repos.contentStore.listNestedKeys('general', 'location');
+  const entries = await _.repos.contentKv.listNestedKeys('general', 'location');
   return entries;
 }
 
 async function getBlog(_: AppLoadContext, slug: string): Promise<ContentStoreBlogEntry | undefined> {
-  const entry = await _.repos.contentStore.getEntry('blog', slug);
+  const entry = await _.repos.contentKv.getEntry('blog', slug);
   return entry as ContentStoreBlogEntry | undefined;
 }
 
 async function listBlogs(_: AppLoadContext): Promise<BaseEntry[]> {
-  const entries = await _.repos.contentStore.listKeys('blog');
+  const entries = await _.repos.contentKv.listKeys('blog');
   return entries;
 }
 
 async function getProduct(_: AppLoadContext, slug: string): Promise<ContentStoreProductEntry | undefined> {
-  const entry = await _.repos.contentStore.getEntry('product', slug);
+  const entry = await _.repos.contentKv.getEntry('product', slug);
   return entry as ContentStoreProductEntry | undefined;
 }
 
 async function listProducts(_: AppLoadContext): Promise<BaseEntry[]> {
-  const entries = await _.repos.contentStore.listKeys('product');
+  const entries = await _.repos.contentKv.listKeys('product');
   return entries;
 }
 
 async function getFaq(_: AppLoadContext, slug: string): Promise<ContentStoreFaqEntry | undefined> {
-  const entry = await _.repos.contentStore.getEntry('faq', slug);
+  const entry = await _.repos.contentKv.getEntry('faq', slug);
   return entry as ContentStoreFaqEntry | undefined;
 }
 
 async function listFaqs(_: AppLoadContext): Promise<BaseEntry[]> {
-  const entries = await _.repos.contentStore.listKeys('faq');
+  const entries = await _.repos.contentKv.listKeys('faq');
   return entries;
 }
 
 async function getStallDate(_: AppLoadContext, slug: string): Promise<ContentStoreStallDateEntry | undefined> {
-  const entry = await _.repos.contentStore.getEntry('stalldate', slug);
+  const entry = await _.repos.contentKv.getEntry('stalldate', slug);
   return entry as ContentStoreStallDateEntry | undefined;
 }
 
 async function listStallDates(_: AppLoadContext): Promise<BaseEntry[]> {
-  const entries = await _.repos.contentStore.listKeys('stalldate');
+  const entries = await _.repos.contentKv.listKeys('stalldate');
   return entries;
 }
 
@@ -93,7 +93,7 @@ async function getLatestStallDate(_: AppLoadContext): Promise<ContentStoreStallD
   const newLatestEntry = (await getStallDate(_, newLatest.slug)) as ContentStoreStallDateEntry;
 
   // Update latest entry
-  await _.repos.contentStore.putEntry('stalldate', 'latest', newLatestEntry?.metadata, newLatestEntry?.data);
+  await _.repos.contentKv.putEntry('stalldate', 'latest', newLatestEntry?.metadata, newLatestEntry?.data);
   return newLatestEntry;
 }
 
@@ -102,7 +102,7 @@ async function listAll(_: AppLoadContext): Promise<BaseEntry[]> {
   const result: BaseEntry[] = [];
   await Promise.all(
     allContentTypes().flatMap(async (type) => {
-      await _.repos.contentStore.listKeys(type).then((entries) => {
+      await _.repos.contentKv.listKeys(type).then((entries) => {
         result.push(...entries);
       });
     }),

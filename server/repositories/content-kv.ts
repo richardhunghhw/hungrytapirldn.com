@@ -8,7 +8,7 @@
 import * as Sentry from '@sentry/remix';
 import type { BaseEntry, ContentStoreEntry, ContentType, EntryMetadata } from '../entities/content';
 
-export class ContentStore {
+export class ContentKv {
   kv: KVNamespace;
   cacheTtlDays: number = 14;
 

@@ -1,4 +1,5 @@
-import type { ContentStore } from '~/server/repositories/content-store';
+import type { ContentKv } from '~/server/repositories/content-kv';
+import type { Notion } from '~/server/repositories/notion';
 
 export type HTEnv = {
   /** Base */
@@ -47,7 +48,8 @@ export type HTEnv = {
 };
 
 export type HTRepos = {
-  contentStore: ContentStore;
+  contentKv: ContentKv;
+  notion: Notion;
 };
 
 export type HTServices = {};
@@ -57,6 +59,5 @@ declare module '@remix-run/server-runtime' {
     env: HTEnv;
     repos: HTRepos;
     services: HTServices;
-    // time: Measurer["time"];
   }
 }

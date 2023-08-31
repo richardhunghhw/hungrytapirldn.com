@@ -1,6 +1,5 @@
 import type { ContentStoreEntry, ContentType, EntryMetadata } from '~/server/entities/content';
-import type { FullPageResponse } from './notion';
-import { getPageContent, queryDbByType } from './notion';
+import type { FullPageResponse } from '~/server/entities/notion';
 import { allContentTypes } from '~/server/entities/content';
 import { blockToMarkdown, blocksToMarkdown } from '~/utils/notion-block-to-markdown';
 import { isProd } from '~/utils/misc';
@@ -180,7 +179,7 @@ async function refreshEntries(
 ): Promise<undefined> {
   // Fetch a list of entries (keys, metadata only) from Notion
   console.debug(`Querying notion db for type [${type}]`);
-  const databaseEntries = await queryDbByType(_, type);
+  const databaseEntries = await _.repos.notion.queryDbByType(type);
   if (!databaseEntries) {
     // TODO catch error to sentry
     throw new Error(`Failed to fetch data from Notion for ${type}`);
@@ -191,7 +190,7 @@ async function refreshEntries(
   console.debug(`Querying notion for page blocks for [${type}]`);
   for (const dbEntry of databaseEntries) {
     // Cannot run this concurrently as this will break notion API limits
-    pageContents.push(await getPageContent(_, dbEntry));
+    pageContents.push(await _.repos.notion.getPageContent(dbEntry));
   }
 
   // Map each entry to a content-store entry
@@ -219,8 +218,8 @@ async function refreshEntries(
   // If purge KV
   if (purge) {
     console.debug(`Purging cache of type [${type}]`);
-    await _.repos.contentStore.listKeys(type).then(async (keys) => {
-      await _.repos.contentStore.purgeEntries(type, keys).catch((err) => {
+    await _.repos.contentKv.listKeys(type).then(async (keys) => {
+      await _.repos.contentKv.purgeEntries(type, keys).catch((err) => {
         console.error(`Failed to purge cache for type [${type}]`, err);
         // TODO sentry error
         throw new Error(`Failed to purge cache for type [${type}]`);
@@ -231,7 +230,7 @@ async function refreshEntries(
   // Write to KV
   for (const entry of csEntries) {
     console.debug(`Writing entry type [${entry.type}] slug [${entry.slug}]`);
-    await _.repos.contentStore.putEntry(type, entry.metadata.slug, entry.metadata, entry.data).catch((err) => {
+    await _.repos.contentKv.putEntry(type, entry.metadata.slug, entry.metadata, entry.data).catch((err) => {
       console.error(`Failed to write entries for [${type}]`, err);
       // TODO sentry error
     });
