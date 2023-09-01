@@ -2,15 +2,19 @@ import { logDevReady } from '@remix-run/cloudflare';
 import { createPagesFunctionHandler, type createRequestHandler } from '@remix-run/cloudflare-pages';
 import * as Sentry from '@sentry/remix';
 import { getClientIPAddress } from 'remix-utils';
-import type { HTEnv } from 'types/ht-context';
+import { Stripe as StripeApi } from 'stripe';
 
 import * as build from '@remix-run/dev/server-build';
+import type { HTEnv } from 'types/ht-context';
 import type { CartFlashData, CartSessionData } from '~/server/entities/cart';
 import { allContentTypes } from '~/server/entities/content';
 import { ContentKv } from '~/server/repositories/content-kv';
 import { Notion, type TypeToDbMap } from '~/server/repositories/notion';
 import { SessionKv } from '~/server/repositories/session-kv';
 import { Cart } from '~/server/services/cart';
+import { ApiAuth } from '~/server/services/api-auth';
+import { Stripe } from '~/server/services/stripe';
+import { ImageKit } from './server/repositories/imagekit';
 
 let remixHandler: ReturnType<typeof createRequestHandler>;
 
@@ -56,6 +60,7 @@ export const onRequest: PagesFunction<HTEnv> = async (context) => {
           {} as TypeToDbMap,
         ),
       ),
+      imageKit: new ImageKit(env.IMAGEKIT_PRIVATE_KEY, env.IMAGEKIT_PUBLIC_KEY),
     };
 
     // Initialize services
@@ -70,8 +75,17 @@ export const onRequest: PagesFunction<HTEnv> = async (context) => {
     );
     const cart = new Cart(sessionKv);
     await cart.init(context.request);
+
+    // Combine services
     const services = {
       cart: cart,
+      apiAuth: new ApiAuth(env.BASIC_AUTH_USERNAME, env.BASIC_AUTH_PASSWORD),
+      stripe: new Stripe(
+        new StripeApi(env.STRIPE_SECRET_KEY, {
+          apiVersion: '2022-11-15',
+          typescript: true,
+        }),
+      ),
     };
 
     // Get response from Remix

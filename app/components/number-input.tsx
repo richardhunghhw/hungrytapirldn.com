@@ -65,25 +65,29 @@ function NumberInput({
 
   const handleIncrement = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    const newValue = value + 1;
+    const newValue = Math.min(value + 1, 10);
     setValue(newValue);
     if (typeof onUpdate === 'function') onUpdate(slug, newValue);
   };
 
   const handleDecrement = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    const newValue = value - 1;
+    const newValue = Math.max(value - 1, 0);
     setValue(newValue);
     if (typeof onUpdate === 'function') onUpdate(slug, newValue);
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    // Check if value is a number
-    if (isNaN(parseInt(e.target.value))) return;
     const newValue = parseInt(e.target.value);
-    setValue(newValue);
-    if (typeof onUpdate === 'function') onUpdate(slug, newValue);
+    if (isNaN(newValue)) {
+      setValue(0);
+      if (typeof onUpdate === 'function') onUpdate(slug, 0);
+    } else {
+      const constrainedValue = Math.min(Math.max(newValue, 0), 10);
+      setValue(constrainedValue);
+      if (typeof onUpdate === 'function') onUpdate(slug, constrainedValue);
+    }
   };
 
   return (

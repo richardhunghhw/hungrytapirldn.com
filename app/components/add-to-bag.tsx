@@ -14,7 +14,13 @@ function AddToBag({ slug, className, ...props }: AddToBagProps) {
       <div className='md:block'>
         <NumberInput slug={slug} />
       </div>
-      <Button id={`${slug}-add-to-bag`} variant='dark' size='lg' className={cn('mt-6 uppercase md:w-full', className)}>
+      <Button
+        type='submit'
+        id={`${slug}-add-to-bag`}
+        variant='dark'
+        size='lg'
+        className={cn('mt-6 uppercase md:w-full', className)}
+      >
         Add to bag
       </Button>
     </Form>

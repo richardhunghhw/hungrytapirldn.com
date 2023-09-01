@@ -108,7 +108,7 @@ function makeContentStoreEntry(isProd: boolean, type: ContentType, entry: FullPa
 
 // Search a block of strings for Notion Image URLs, upload to image-store, and replace URLs
 async function replaceNotionImageUrlByBlocks(
-  context: AppLoadContext,
+  _: AppLoadContext,
   replaceImages: boolean,
   type: ContentType,
   blocks: Array<string>,
@@ -125,7 +125,7 @@ async function replaceNotionImageUrlByBlocks(
       const fileName = x[0].split('~')[1];
       const notionImageUrl = x[1].replace(')', '');
 
-      const imageUrl = await upload(context, replaceImages, notionImageUrl, fileName, type);
+      const imageUrl = await upload(_, replaceImages, notionImageUrl, fileName, type);
       newBlocks.push(`![${altText}](${imageUrl})`);
     } else {
       newBlocks.push(line);

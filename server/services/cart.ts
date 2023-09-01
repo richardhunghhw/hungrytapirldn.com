@@ -1,13 +1,13 @@
 import type { SessionKv } from '~/server/repositories/session-kv';
 import type { Session } from '@remix-run/cloudflare';
-import type { CartItem } from '~/server/entities/cart';
+import type { CartFlashData, CartItem, CartSessionData } from '~/server/entities/cart';
 
 export class Cart {
-  #sessionKv: SessionKv;
+  #sessionKv: SessionKv<CartSessionData, CartFlashData>;
   #session: Session | null = null;
   cartContent: Array<CartItem> = [];
 
-  constructor(sessionKv: SessionKv) {
+  constructor(sessionKv: SessionKv<CartSessionData, CartFlashData>) {
     this.#sessionKv = sessionKv;
   }
 

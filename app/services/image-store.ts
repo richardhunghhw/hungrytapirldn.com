@@ -4,7 +4,6 @@
 
 import type { AppLoadContext } from '@remix-run/cloudflare';
 import type { ContentType } from '~/server/entities/content';
-import { listFiles, upload as uploadToImagekit } from './imagekit';
 
 const IMAGEKIT_URL_ENDPOINT = 'https://ik.imagekit.io/nixibbzora/';
 
@@ -26,7 +25,7 @@ function contentTypeToFolder(type: ContentType): string {
 }
 
 async function upload(
-  _: AppLoadContext,
+  { repos: { imageKit } }: AppLoadContext,
   replaceImages: boolean,
   file: string,
   fileName: string,
@@ -35,7 +34,7 @@ async function upload(
 ): Promise<string> {
   // Check if file already exists
   if (!replaceImages) {
-    const fileDetails = await listFiles(_, {
+    const fileDetails = await imageKit.listFiles({
       name: fileName,
     });
     if (fileDetails.$ResponseMetadata.statusCode !== 200) {
@@ -50,7 +49,7 @@ async function upload(
   }
 
   // Upload file to ImageKit
-  const uploadedFile = await uploadToImagekit(_, {
+  const uploadedFile = await imageKit.upload({
     file,
     fileName,
     folder: contentTypeToFolder(type),
