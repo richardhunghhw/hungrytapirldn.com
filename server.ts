@@ -14,7 +14,10 @@ import { SessionKv } from '~/server/repositories/session-kv';
 import { Cart } from '~/server/services/cart';
 import { ApiAuth } from '~/server/services/api-auth';
 import { Stripe } from '~/server/services/stripe';
-import { ImageKit } from './server/repositories/imagekit';
+import { ImageKit } from '~/server/repositories/imagekit';
+import { Image } from '~/server/services/image';
+import { Content } from '~/server/services/content';
+import { ApiRefresh } from './server/services/api-refresh';
 
 let remixHandler: ReturnType<typeof createRequestHandler>;
 
@@ -50,8 +53,8 @@ export const onRequest: PagesFunction<HTEnv> = async (context) => {
     }
 
     // Initialize repositories
+    const contentKv = new ContentKv(env.CONTENT_STORE, env.CACHE_TTL_DAYS);
     const repos = {
-      contentKv: new ContentKv(env.CONTENT_STORE, env.CACHE_TTL_DAYS),
       notion: new Notion(
         env.NODE_ENV,
         env.NOTION_API_SECRET,
@@ -60,7 +63,7 @@ export const onRequest: PagesFunction<HTEnv> = async (context) => {
           {} as TypeToDbMap,
         ),
       ),
-      imageKit: new ImageKit(env.IMAGEKIT_PRIVATE_KEY, env.IMAGEKIT_PUBLIC_KEY),
+      contentKv: contentKv,
     };
 
     // Initialize services
@@ -76,6 +79,9 @@ export const onRequest: PagesFunction<HTEnv> = async (context) => {
     const cart = new Cart(sessionKv);
     await cart.init(context.request);
 
+    // ImageKit
+    const image = new Image(new ImageKit(env.IMAGEKIT_PRIVATE_KEY, env.IMAGEKIT_PUBLIC_KEY));
+
     // Combine services
     const services = {
       cart: cart,
@@ -86,6 +92,8 @@ export const onRequest: PagesFunction<HTEnv> = async (context) => {
           typescript: true,
         }),
       ),
+      content: new Content(contentKv),
+      apiRefresh: new ApiRefresh(env.NODE_ENV === 'prod', image, repos.contentKv, repos.notion),
     };
 
     // Get response from Remix

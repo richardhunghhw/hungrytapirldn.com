@@ -2,7 +2,7 @@ import type { V2_MetaArgs } from '@remix-run/react';
 import { Link, useLoaderData } from '@remix-run/react';
 import { Button } from '~/components/ui/button';
 import type { ContentStoreGeneralEntry, ContentStoreProductEntry } from '~/server/entities/content';
-import { getGeneral, getProduct, makeUriFromContentTypeSlug } from '~/services/content-store';
+import { makeUriFromContentTypeSlug } from '~/utils/content';
 import { TapirTransparent } from '~/utils/svg/tapir';
 import { AspectRatio } from '~/components/ui/aspect-ratio';
 import { AddToBag } from '~/components/add-to-bag';
@@ -23,11 +23,15 @@ export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { r
   });
 }
 
-export async function loader({ context }: LoaderArgs) {
-  const orderNow = await getGeneral(context, 'section~order-now');
-  const whatKaya = await getGeneral(context, 'section~what-is-kaya');
-  const kayaPandan = await getProduct(context, 'the-pandan-kaya');
-  const kayaVegan = await getProduct(context, 'the-vegan-kaya');
+export async function loader({
+  context: {
+    services: { content },
+  },
+}: LoaderArgs) {
+  const orderNow = await content.getGeneral('section~order-now');
+  const whatKaya = await content.getGeneral('section~what-is-kaya');
+  const kayaPandan = await content.getProduct('the-pandan-kaya');
+  const kayaVegan = await content.getProduct('the-vegan-kaya');
 
   // TODO if any of the above queries fails, there is something wrong with the website, perhaps do something with that information
   return {

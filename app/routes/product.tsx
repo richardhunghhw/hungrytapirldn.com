@@ -4,13 +4,12 @@
 
 import { type ActionArgs, redirect } from '@remix-run/cloudflare';
 import { Outlet } from '@remix-run/react';
-import { listProducts } from '~/services/content-store';
 import { isProd } from '~/utils/misc';
 
 // Fetch faq data content-store
 export async function loader({ context }: ActionArgs) {
   try {
-    const result = await listProducts(context);
+    const result = await context.services.content.listProducts();
     if (!result || !result.length) {
       throw new Error('Product Entries not found');
     }

@@ -1,8 +1,10 @@
-import type { ContentKv } from '~/server/repositories/content-kv';
-import { ImageKit } from '~/server/repositories/imagekit';
 import type { Notion } from '~/server/repositories/notion';
-import type { ApiAuth } from '~/server/services/api-auth';
 import type { Cart } from '~/server/services/cart';
+import type { ApiAuth } from '~/server/services/api-auth';
+import type { Content } from '~/server/services/content';
+import type { Stripe } from '~/server/services/stripe';
+import type { ContentKv } from '~/server/repositories/content-kv';
+import type { ApiRefresh } from '~/server/services/api-refresh';
 
 export type HTEnv = {
   /** Base */
@@ -51,14 +53,16 @@ export type HTEnv = {
 };
 
 export type HTRepos = {
-  contentKv: ContentKv;
   notion: Notion;
-  imageKit: ImageKit;
+  contentKv: ContentKv;
 };
 
 export type HTServices = {
   cart: Cart;
   apiAuth: ApiAuth;
+  stripe: Stripe;
+  content: Content;
+  apiRefresh: ApiRefresh;
 };
 
 declare module '@remix-run/server-runtime' {

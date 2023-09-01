@@ -1,7 +1,6 @@
 /**
  * Config store for Hungry Tapir Store
  */
-
 export { OrderIdObject } from './objects/OrderIdObject';
 
 export default {

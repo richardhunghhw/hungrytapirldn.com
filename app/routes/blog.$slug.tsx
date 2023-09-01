@@ -7,11 +7,11 @@ import type { V2_MetaArgs } from '@remix-run/react';
 import { Link, useLoaderData } from '@remix-run/react';
 import { isProd } from '~/utils/misc';
 import type { ContentStoreBlogEntry } from '~/server/entities/content';
-import { getBlog, validateRequest } from '~/services/content-store';
 import { ArrowLeft } from 'lucide-react';
 import { MarkdownContent } from '~/components/markdown-content';
 import { getSeoMetas } from '~/utils/seo';
 import type { loader as rootLoader } from '~/root';
+import { validateRequest } from '~/utils/content';
 
 export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { root: typeof rootLoader }>) {
   const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;
@@ -26,7 +26,7 @@ export async function loader({ request: { url }, context, params }: ActionArgs) 
   // Fetch blog data content-store
   try {
     const urlPath = validateRequest(new URL(url));
-    const result = await getBlog(context, urlPath.slug);
+    const result = await context.services.content.getBlog(urlPath.slug);
     if (!result) {
       // todo sentry error
       throw new Error('Entry not found');

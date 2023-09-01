@@ -5,12 +5,11 @@
 import { type ActionArgs, redirect } from '@remix-run/cloudflare';
 import { Outlet } from '@remix-run/react';
 import { isProd } from '~/utils/misc';
-import { listFaqs } from '~/services/content-store';
 
 // Fetch faq data content-store
 export async function loader({ context }: ActionArgs) {
   try {
-    const result = await listFaqs(context);
+    const result = await context.services.content.listFaqs();
     if (!result || !result.length) {
       throw new Error('FAQ Entries not found');
     }

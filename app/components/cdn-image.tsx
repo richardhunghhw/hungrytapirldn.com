@@ -1,5 +1,6 @@
 import { IKImage } from 'imagekitio-react';
-import { IMAGEKIT_URL_ENDPOINT } from '~/services/image-store';
+
+const IMAGEKIT_URL_ENDPOINT = 'https://ik.imagekit.io/nixibbzora/';
 
 type Image = {
   id: string;

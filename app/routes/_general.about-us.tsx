@@ -8,7 +8,6 @@ import { useLoaderData } from '@remix-run/react';
 import type { loader as rootLoader } from '~/root';
 import { MarkdownContent } from '~/components/markdown-content';
 import type { ContentStoreGeneralEntry } from '~/server/entities/content';
-import { getGeneralEntry } from '~/services/content-store/get-content';
 import { isProd } from '~/utils/misc';
 import { getSeoMetas } from '~/utils/seo';
 
@@ -23,7 +22,7 @@ export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { r
 
 export async function loader({ context }: DataFunctionArgs) {
   try {
-    return getGeneralEntry(context, 'about-us');
+    return context.services.content.getGeneralEntry('about-us');
   } catch (error) {
     console.error(error); // TODO Sentry badlink
     if (isProd(context)) return redirect('/404');

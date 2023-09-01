@@ -17,7 +17,6 @@ import stylesheet from '~/styles/tailwind.css';
 import Navbar from './components/navbar';
 import Footer from './components/footer';
 import { isDev } from './utils/misc';
-import { getAllProducts } from './services/content-store/get-content';
 
 export const links: LinksFunction = () => {
   return [
@@ -57,7 +56,7 @@ export async function loader({ request, context }: LoaderArgs) {
     hostUrl: context.env.HOST_URL,
     isDev: isDev(context),
     cart: context.services.cart.cartContent,
-    products: await getAllProducts(context),
+    products: await context.services.content.getAllProducts(context),
   };
 }
 

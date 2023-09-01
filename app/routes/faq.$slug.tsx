@@ -7,7 +7,7 @@ import type { V2_MetaArgs } from '@remix-run/react';
 import { Link, useLoaderData } from '@remix-run/react';
 import { isProd } from '~/utils/misc';
 import type { ContentStoreFaqEntry } from '~/server/entities/content';
-import { validateRequest, getFaq } from '~/services/content-store';
+import { validateRequest } from '~/utils/content';
 import { ArrowLeft } from 'lucide-react';
 import { MarkdownContent } from '~/components/markdown-content';
 import { getSeoMetas } from '~/utils/seo';
@@ -26,7 +26,7 @@ export async function loader({ request: { url }, context, params }: ActionArgs) 
   // Fetch faq data from content-store
   try {
     const urlPath = validateRequest(new URL(url));
-    const result = await getFaq(context, urlPath.slug);
+    const result = await context.services.content.getFaq(urlPath.slug);
     if (!result) {
       // todo sentry error
       throw new Error('FAQ Entry not found');

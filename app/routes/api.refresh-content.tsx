@@ -1,4 +1,3 @@
-import { refreshAllEntries } from '~/services/content-store';
 import * as Sentry from '@sentry/remix';
 import type { ActionArgs } from '@remix-run/cloudflare';
 
@@ -18,11 +17,12 @@ export async function action({ context, request }: ActionArgs) {
     const purgeCache = searchParams.get('purge') == 'true';
     const purgeTypes = searchParams.get('types') ? searchParams.get('types')?.split(',') : [];
     const replaceImages = searchParams.get('images') == 'true';
-    return await refreshAllEntries(context, purgeCache, purgeTypes, replaceImages)
+    return await context.services.apiRefresh
+      .refreshAllEntries(purgeCache, purgeTypes, replaceImages)
       .then(() => context.services.apiAuth.responseOptions.success)
       .catch((err) => {
-        // todo sentry error
         Sentry.captureException(err);
+        console.error(err);
         return {
           status: 500,
           headers: {

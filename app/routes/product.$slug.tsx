@@ -13,7 +13,7 @@ import { getSeoMetas } from '~/utils/seo';
 import type { loader as rootLoader } from '~/root';
 import { MarkdownContent, MarkdownLine } from '~/components/markdown-content';
 import { CDNImage } from '~/components/cdn-image';
-import { getProduct, validateRequest } from '~/services/content-store';
+import { validateRequest } from '~/utils/content';
 
 export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { root: typeof rootLoader }>) {
   const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;
@@ -28,7 +28,7 @@ export async function loader({ request: { url }, context, params }: ActionArgs) 
   // Fetch product data content-store
   try {
     const urlPath = validateRequest(new URL(url));
-    const result = await getProduct(context, urlPath.slug);
+    const result = await context.services.content.getProduct(urlPath.slug);
     if (!result) {
       throw new Error('Entry not found');
     }

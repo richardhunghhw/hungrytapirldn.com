@@ -42,14 +42,18 @@ export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { r
   });
 }
 
-export async function loader({ context }: LoaderArgs) {
-  const stalldate = await getLatestStallDate(context);
-  const location = await getGeneralEntry(context, 'location~' + stalldate.data.location);
+export async function loader({
+  context: {
+    services: { content },
+  },
+}: LoaderArgs) {
+  const stalldate = await content.getLatestStallDate();
+  const location = await content.getGeneralEntry('location~' + stalldate.data.location);
   // if (!location)
   // TODO Sentry error
 
   return {
-    entry: (await getGeneralEntry(context, 'linkinbio')) as ContentStoreGeneralEntry,
+    entry: (await content.getGeneralEntry('linkinbio')) as ContentStoreGeneralEntry,
     stalldate,
     location,
   };

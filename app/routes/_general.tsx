@@ -2,7 +2,6 @@ import { type ActionArgs, redirect } from '@remix-run/cloudflare';
 import type { RouteMatch } from '@remix-run/react';
 import { Outlet, useMatches } from '@remix-run/react';
 import type { ContentStoreGeneralEntry } from '~/server/entities/content';
-import { getGeneral } from '~/services/content-store';
 import { isProd } from '~/utils/misc';
 
 export async function loader({ request: { url: requestUrl }, context }: ActionArgs) {
@@ -15,7 +14,7 @@ export async function loader({ request: { url: requestUrl }, context }: ActionAr
     if (urlPath.length !== 1) {
       throw new Error('Invalid request');
     }
-    const result = await getGeneral(context, urlPath[0]);
+    const result = await context.services.content.getGeneral(urlPath[0]);
     if (!result) {
       // todo sentry error
       throw new Error('Entry not found');

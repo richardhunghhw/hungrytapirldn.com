@@ -5,12 +5,11 @@
 import { type ActionArgs, redirect } from '@remix-run/cloudflare';
 import { Outlet } from '@remix-run/react';
 import { isProd } from '~/utils/misc';
-import { listBlogs } from '~/services/content-store';
 
 // Fetch blog data content-store
 export async function loader({ context }: ActionArgs) {
   try {
-    const result = await listBlogs(context);
+    const result = await context.services.content.listBlogs(context);
     if (!result || !result.length) {
       throw new Error('Blog Entries not found');
     }

@@ -3,7 +3,7 @@
  */
 
 import type { LoaderArgs } from '@remix-run/cloudflare';
-import { listAll, makeUrlFromContent } from '~/services/content-store';
+import { makeUrlFromContent } from '~/utils/content';
 
 type SitemapData = {
   hostname: string;
@@ -34,7 +34,7 @@ const generateSitemapXml = (sitemapData: SitemapData) => {
 
 // Generate sitemap manually
 export async function loader({ context }: LoaderArgs) {
-  const allContent = await listAll(context);
+  const allContent = await context.services.content.listAll(context);
   const sitemapData: SitemapData = {
     hostname: context.env.HOST_URL,
     urls: allContent
