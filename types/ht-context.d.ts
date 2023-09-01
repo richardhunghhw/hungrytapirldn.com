@@ -1,5 +1,6 @@
 import type { ContentKv } from '~/server/repositories/content-kv';
 import type { Notion } from '~/server/repositories/notion';
+import type { Cart } from '~/server/services/cart';
 
 export type HTEnv = {
   /** Base */
@@ -52,7 +53,9 @@ export type HTRepos = {
   notion: Notion;
 };
 
-export type HTServices = {};
+export type HTServices = {
+  cart: Cart;
+};
 
 declare module '@remix-run/server-runtime' {
   export interface AppLoadContext {

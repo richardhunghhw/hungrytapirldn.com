@@ -13,6 +13,8 @@ const generateRobotText = (context: AppLoadContext) => {
     
         User-agent: *
         Allow: /
+        Disallow: /cart
+        Disallow: /checkout
     
         Sitemap: ${context.HOST_URL}/sitemap.xml
         `;

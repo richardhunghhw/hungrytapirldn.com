@@ -48,6 +48,12 @@ async function getProduct(_: AppLoadContext, slug: string): Promise<ContentStore
   return entry as ContentStoreProductEntry | undefined;
 }
 
+async function getAllProducts(_: AppLoadContext): Promise<ContentStoreProductEntry[]> {
+  const entries = await listProducts(_);
+  const result = await Promise.all(entries.map((e) => getProduct(_, e.slug)));
+  return result as ContentStoreProductEntry[];
+}
+
 async function listProducts(_: AppLoadContext): Promise<BaseEntry[]> {
   const entries = await _.repos.contentKv.listKeys('product');
   return entries;
@@ -118,6 +124,7 @@ export {
   getBlog,
   listBlogs,
   getProduct,
+  getAllProducts,
   listProducts,
   getFaq,
   listFaqs,

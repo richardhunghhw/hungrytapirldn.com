@@ -1,4 +1,4 @@
-import type { LinksFunction, LoaderArgs } from '@remix-run/cloudflare';
+import { type LinksFunction, type LoaderArgs } from '@remix-run/cloudflare';
 import {
   Links,
   LiveReload,
@@ -17,6 +17,7 @@ import stylesheet from '~/styles/tailwind.css';
 import Navbar from './components/navbar';
 import Footer from './components/footer';
 import { isDev } from './utils/misc';
+import { getAllProducts } from './services/content-store/get-content';
 
 export const links: LinksFunction = () => {
   return [
@@ -49,12 +50,14 @@ export const links: LinksFunction = () => {
   ];
 };
 
-const BYPASS_HEADERFOOTER_PATHS = ['/linkinbio'];
+const BYPASS_HEADERFOOTER_PATHS = ['/linkinbio', '/checkout'];
 
-export async function loader({ context }: LoaderArgs) {
+export async function loader({ request, context }: LoaderArgs) {
   return {
     hostUrl: context.env.HOST_URL,
     isDev: isDev(context),
+    cart: context.services.cart.cartContent,
+    products: await getAllProducts(context),
   };
 }
 
@@ -74,7 +77,9 @@ function App() {
         <Links />
       </head>
       <body>
-        {!BYPASS_HEADERFOOTER_PATHS.includes(pathname) && <Navbar />}
+        {!BYPASS_HEADERFOOTER_PATHS.includes(pathname) && (
+          <Navbar cart={loaderData.cart} products={loaderData.products} />
+        )}
         <Outlet />
         {!BYPASS_HEADERFOOTER_PATHS.includes(pathname) && <Footer />}
         <ScrollRestoration />

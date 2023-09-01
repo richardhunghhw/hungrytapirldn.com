@@ -5,17 +5,17 @@
  * - Rebuild content-store using Notion API on request from admin
  */
 import { Client } from '@notionhq/client';
-import { allContentTypes, type ContentType } from '../entities/content';
 import type {
   BlockObjectResponse,
   PageObjectResponse,
   PartialBlockObjectResponse,
   PartialPageObjectResponse,
 } from '@notionhq/client/build/src/api-endpoints';
-import type { FullPageResponse } from '../entities/notion';
-import type { HTEnv } from 'types/ht-context';
 
-type TypeToDbMap = {
+import type { ContentType } from '~/server/entities/content';
+import type { FullPageResponse } from '~/server/entities/notion';
+
+export type TypeToDbMap = {
   [key in ContentType]: string;
 };
 
@@ -24,13 +24,10 @@ export class Notion {
   client: Client;
   typeToDbMap: TypeToDbMap;
 
-  constructor(env: HTEnv) {
-    this.dbEnv = env.NODE_ENV;
-    this.client = new Client({ auth: env.NOTION_API_SECRET, notionVersion: '2022-06-28' });
-    this.typeToDbMap = allContentTypes().reduce(
-      (acc, type) => ((acc[type] = env[`NOTION_API_DB_${type.toUpperCase()}` as keyof HTEnv] as string), acc),
-      {} as TypeToDbMap,
-    );
+  constructor(dbEnv: string, notionApiSecret: string, typeToDbMap: TypeToDbMap) {
+    this.dbEnv = dbEnv;
+    this.client = new Client({ auth: notionApiSecret, notionVersion: '2022-06-28' });
+    this.typeToDbMap = typeToDbMap;
   }
 
   isPageObjectResponse(response: PartialPageObjectResponse | PageObjectResponse): response is PageObjectResponse {

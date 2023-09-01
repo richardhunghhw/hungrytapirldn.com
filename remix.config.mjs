@@ -29,7 +29,8 @@ withEsbuildOverride((option) => {
  */
 export default {
   ignoredRouteFiles: ['**/.*'],
-  serverBuildPath: 'dist/worker/index.js',
+  server: './server.ts',
+  serverBuildPath: 'functions/[[path]].js',
   serverConditions: ['worker'],
   serverDependenciesToBundle: 'all',
   serverMainFields: ['browser', 'module', 'main'],

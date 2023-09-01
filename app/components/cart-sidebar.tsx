@@ -1,45 +1,71 @@
-import { Form } from '@remix-run/react';
 import { useState } from 'react';
-import { ShoppingBag, X } from '~/utils/svg/custom';
+import { Form } from '@remix-run/react';
+import * as Sentry from '@sentry/remix';
+
 import { Button } from './ui/button';
-import type { ContentStoreProductEntry } from '~/server/entities/content';
 import { NumberInput } from './number-input';
+import { ShoppingBag, X } from '~/utils/svg/custom';
+import type { ContentStoreProductEntry } from '~/server/entities/content';
+import type { CartItem } from '~/server/entities/cart';
 
-const products: ContentStoreProductEntry[] = [
-  {
-    type: 'product',
-    slug: 'the-pandan-kaya',
-    metadata: {
-      slug: 'the-pandan-kaya',
-      title: 'The Pandan Kaya',
-      tags: ['pandan', 'kaya', 'jam', 'coconut', 'malaysian', 'singaporean', 'breakfast', 'dessert'],
-      category: '',
-    },
-    data: {
-      stripeId: 'prod_Nk7ZiHSHFf24mL',
-      id: 'the-pandan-kaya',
-      unit: '6oz',
-      price: 7,
-      images: [
-        { url: 'https://ik.imagekit.io/nixibbzora/hungrytapir/product/the-pandan-kaya-1.png', alt: 'The Pandan Kaya' },
-      ],
-      ingredients: ['pandan', 'kaya', 'jam', 'coconut', 'malaysian', 'singaporean', 'breakfast', 'dessert'].join(', '),
-      product: ['product content'],
-      productCart: ['product cart content'],
-      productSection: ['product section content'],
-      imageColour: 'ht-turquoise',
-      backgroundColour: 'ht-orange-highlight',
-      seoDescription: 'The Pandan Kaya',
-    },
-  },
-];
+export type CartSidebarProps = {
+  cart: CartItem[];
+  products: ContentStoreProductEntry[];
+};
 
-function CartSidebar() {
+function CartSidebar({ cart: initCart, products }: CartSidebarProps) {
+  const [cart, setCart] = useState<CartItem[]>(initCart);
   const [cartOpen, setCartOpen] = useState(false);
+  const [cartUpdating, setCartUpdating] = useState(false);
 
   const toggleCart = () => {
     setCartOpen((prev) => !prev);
   };
+
+  const postCartUpdate = async (action: 'update' | 'remove', slug: string, quantity: number) => {
+    // Set cart updating state
+    setCartUpdating(true);
+
+    // Create a new FormData object
+    const formData = new FormData();
+    formData.append('action', action);
+    formData.append('slug', slug);
+    formData.append(`${slug}-quantity-input`, quantity.toString());
+
+    // Send a POST request with the updated values
+    const response = await fetch('/cart', {
+      method: 'POST',
+      body: formData,
+    });
+
+    // Parse the response
+    const res = (await response.json()) as { cart: CartItem[]; state: string };
+    setCart(res.cart);
+    setCartUpdating(false);
+  };
+
+  const onCartItemUpdate = async (slug: string, quantity: number) => {
+    await postCartUpdate('update', slug, quantity);
+  };
+
+  const onCartItemRemove = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    slug: string,
+    quantity: number,
+  ) => {
+    e.preventDefault();
+    await postCartUpdate('remove', slug, quantity);
+  };
+
+  const subtotal = cart.reduce((acc, cartItem) => {
+    const product = products.find((product) => product.slug === cartItem.slug);
+    if (!product) {
+      Sentry.captureException(`CartItem not found in Products: ${cartItem.slug}`);
+      return acc;
+    }
+    return acc + product.data.price * cartItem.quantity;
+  }, 0.0);
+  const subtotalFormatted = subtotal.toFixed(2);
 
   return (
     <>
@@ -74,53 +100,80 @@ function CartSidebar() {
                   </button>
                 </div>
 
-                <div className='mt-12 flex-1 overflow-y-auto'>
-                  <Form
-                    reloadDocument // todo animate form pending state
-                    id='order-form'
-                    // method='post'
-                    // action='/cart'
-                  >
-                    <ul className='-my-6 divide-y divide-gray-200'>
-                      {products.map((product) => (
-                        <li key={product.metadata.slug} className='flex py-6'>
-                          <div className='h-24 w-24 flex-shrink-0 overflow-hidden rounded-md'>
-                            <img
-                              src={product.data.images[0].url}
-                              alt={product.data.images[0].alt}
-                              className='h-full w-full object-cover object-center'
-                            />
-                          </div>
-                          <div className='ml-4 flex flex-1 flex-col'>
-                            <div className='space-y-2'>
-                              <div className='flex justify-between'>
-                                <h3 className='font-serif text-base font-medium uppercase tracking-tight md:text-lg'>
-                                  {product.metadata.title}
-                                </h3>
-                                <p className='ml-4 font-medium'>£{product.data.price}</p>
-                              </div>
-                              <div className='hidden md:block'>
-                                <NumberInput position='sidebar' />
-                              </div>
-                              <Button variant='link'>Remove</Button>
-                            </div>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </Form>
-                </div>
-
-                <div className='border-t border-ht-black py-2 font-mono font-light'>
-                  <div className='flex justify-between text-3xl'>
-                    <p>Subtotal</p>
-                    <p>£16.00</p>
+                {cart.length === 0 ? (
+                  <div className='mt-12 flex flex-1 flex-col justify-center'>
+                    <p className='title'>Your cart is empty</p>
                   </div>
-                  <p className='mt-2 text-xs'>Shipping and taxes calculated at checkout</p>
-                  <Button type='submit' form='order-form' className='mt-6 w-full font-extralight uppercase' size='lg'>
-                    Continue to checkout
-                  </Button>
-                </div>
+                ) : (
+                  <>
+                    <div className='mt-12 flex-1 overflow-y-auto'>
+                      <Form id='order-form' action='/checkout' method='post'>
+                        <ul className='-my-6 divide-y divide-gray-200'>
+                          {cart.map((cartItem) => {
+                            // TODO optimise this
+                            const product = products.find((product) => product.slug === cartItem.slug);
+
+                            if (!product) {
+                              Sentry.captureException(`CartItem not found in Products: ${cartItem.slug}`);
+                              return null;
+                            }
+
+                            return (
+                              <li key={product.metadata.slug} className='flex py-6'>
+                                <div className='h-24 w-24 flex-shrink-0 overflow-hidden rounded-md'>
+                                  <img
+                                    src={product.data.images[0].url}
+                                    alt={product.data.images[0].alt}
+                                    className='h-full w-full object-cover object-center'
+                                  />
+                                </div>
+                                <div className='ml-4 flex flex-1 flex-col'>
+                                  <div className='space-y-2'>
+                                    <div className='flex justify-between'>
+                                      <h3 className='font-serif text-base font-medium uppercase tracking-tight md:text-lg'>
+                                        {product.metadata.title}
+                                      </h3>
+                                      <p className='ml-4 font-medium'>£{product.data.price}</p>
+                                    </div>
+                                    <NumberInput
+                                      slug={product.slug}
+                                      position='sidebar'
+                                      initValue={cartItem.quantity}
+                                      disabled={cartUpdating}
+                                      onUpdate={onCartItemUpdate}
+                                    />
+                                    <Button
+                                      variant='link'
+                                      onClick={(e) => onCartItemRemove(e, cartItem.slug, cartItem.quantity)}
+                                    >
+                                      Remove
+                                    </Button>
+                                  </div>
+                                </div>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </Form>
+                    </div>
+
+                    <div className='border-t border-ht-black py-2 font-mono font-light'>
+                      <div className='flex justify-between text-3xl'>
+                        <p>Subtotal</p>
+                        <p>£{subtotalFormatted}</p>
+                      </div>
+                      <p className='mt-2 text-xs'>Shipping and taxes calculated at checkout</p>
+                      <Button
+                        type='submit'
+                        form='order-form'
+                        className='mt-6 w-full font-extralight uppercase'
+                        size='lg'
+                      >
+                        Continue to checkout
+                      </Button>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

@@ -1,15 +1,15 @@
 /**
  * Deliveries and Returns Page
  */
-
 import type { ActionArgs, V2_MetaArgs } from '@remix-run/cloudflare';
 import { redirect } from '@remix-run/cloudflare';
 import { useLoaderData } from '@remix-run/react';
+
+import type { loader as rootLoader } from '~/root';
 import { MarkdownContent } from '~/components/markdown-content';
 import type { ContentStoreGeneralEntry } from '~/server/entities/content';
 import { getGeneralEntry } from '~/services/content-store/get-content';
 import { isProd } from '~/utils/misc';
-import type { loader as rootLoader } from '~/root';
 import { getSeoMetas } from '~/utils/seo';
 
 export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { root: typeof rootLoader }>) {

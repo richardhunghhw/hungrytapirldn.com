@@ -1,9 +1,8 @@
-import { Input } from '~/components/ui/input';
-import { cn } from './ui/lib/utils';
-import { useState } from 'react';
+import { type ChangeEvent, useState } from 'react';
 import { cva } from 'class-variance-authority';
 
-export interface NumberInputProps extends React.HTMLAttributes<HTMLDivElement> {}
+import { Input } from '~/components/ui/input';
+import { cn } from './ui/lib/utils';
 
 const inputSpinnerVariants = cva('cursor-pointer border-0 bg-transparent px-8 font-bold', {
   variants: {
@@ -15,16 +14,19 @@ const inputSpinnerVariants = cva('cursor-pointer border-0 bg-transparent px-8 fo
 });
 
 function InputSpinner({
+  id,
   children,
   onClick,
   position = 'page',
 }: {
+  id: string;
   children: React.ReactNode;
-  onClick?: React.MouseEventHandler<HTMLAnchorElement> | undefined;
+  onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined;
   position?: 'page' | 'sidebar';
 }) {
   return (
     <button
+      id={id}
       onClick={(e) => typeof onClick === 'function' && onClick(e)}
       className={cn(inputSpinnerVariants({ position }))}
     >
@@ -33,7 +35,7 @@ function InputSpinner({
   );
 }
 
-const numberInputVariants = cva('inline-flex w-full rounded-full border-2 border-ht-black font-mono', {
+const numberInputVariants = cva('inline-flex md:w-full rounded-full border-2 border-ht-black font-mono', {
   variants: {
     position: {
       page: '',
@@ -42,44 +44,66 @@ const numberInputVariants = cva('inline-flex w-full rounded-full border-2 border
   },
 });
 
-function NumberInput({
-  id,
-  className,
-  position = 'page',
-  ...props
-}: NumberInputProps & {
+export interface NumberInputProps extends React.HTMLAttributes<HTMLDivElement> {
+  slug: string;
   position?: 'page' | 'sidebar';
-}) {
-  const [value, setValue] = useState(0);
+  initValue?: number;
+  disabled?: boolean;
+  onUpdate?: (slug: string, quantity: number) => void;
+}
 
-  const handleIncrement = () => {
-    setValue(value + 1);
+function NumberInput({
+  className,
+  slug,
+  position = 'page',
+  initValue = 1,
+  disabled,
+  onUpdate,
+  ...props
+}: NumberInputProps) {
+  const [value, setValue] = useState(initValue);
+
+  const handleIncrement = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    const newValue = value + 1;
+    setValue(newValue);
+    if (typeof onUpdate === 'function') onUpdate(slug, newValue);
   };
 
-  const handleDecrement = () => {
-    setValue(value - 1);
+  const handleDecrement = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    const newValue = value - 1;
+    setValue(newValue);
+    if (typeof onUpdate === 'function') onUpdate(slug, newValue);
   };
 
-  const handleChange = (e) => {
-    setValue(e.target.value);
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    // Check if value is a number
+    if (isNaN(parseInt(e.target.value))) return;
+    const newValue = parseInt(e.target.value);
+    setValue(newValue);
+    if (typeof onUpdate === 'function') onUpdate(slug, newValue);
   };
 
   return (
     <div className={cn(numberInputVariants({ position, className }))}>
-      <InputSpinner position={position} onClick={() => handleDecrement()}>
+      <InputSpinner id={`${slug}-increment`} position={position} onClick={(e) => handleDecrement(e)}>
         -
       </InputSpinner>
       <Input
         type='number'
-        id={id}
-        name={id}
+        id={`${slug}-quantity-input`}
+        name={`${slug}-quantity-input`}
         className='appearance-none border-0 text-center text-lg'
         min='0'
         max='10'
         value={value}
+        // disabled={disabled}
         onChange={(e) => handleChange(e)}
+        {...props}
       />
-      <InputSpinner position={position} onClick={() => handleIncrement()}>
+      <InputSpinner id={`${slug}-decrement`} position={position} onClick={(e) => handleIncrement(e)}>
         +
       </InputSpinner>
     </div>

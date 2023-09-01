@@ -7,7 +7,7 @@ import {
   NavigationMenuTrigger,
 } from '~/components/ui/navigation-menu';
 import NavSidebar from './nav-sidebar';
-import { CartSidebar } from './cart-sidebar';
+import { CartSidebar, type CartSidebarProps } from './cart-sidebar';
 import { NavLink } from './nav-link';
 import { TapirTransparent } from '~/utils/svg/tapir';
 
@@ -49,7 +49,7 @@ export const NAVBAR_LINKS: NAVBAR_LINK[] = [
   { id: 'find-us', name: 'Find Us', to: '/contact-us', enableSidebar: true, enableNavbar: true },
 ];
 
-export default function Navbar() {
+export default function Navbar({ cart, products }: CartSidebarProps) {
   return (
     <NavigationMenu className='content-wrapper pt-4'>
       <NavigationMenuList className='content-container flex w-[calc(100vw-2.4rem)] items-center justify-between rounded-full bg-ht-off-white px-6 py-1 font-mono text-2xl font-bold uppercase sm:w-[calc(100vw-3.2rem)] md:w-[calc(100vw-4.2rem)]'>
@@ -88,16 +88,18 @@ export default function Navbar() {
                           .filter((link) => link.enableNavbar)
                           .map((subLink) => {
                             return (
-                              <NavLink key={subLink.id} to={subLink.to as string} className='col-span-3'>
-                                <NavigationMenuLink>{subLink.name}</NavigationMenuLink>
-                              </NavLink>
+                              <li key={subLink.id} className='col-span-3'>
+                                <NavLink id={subLink.id} to={subLink.to as string}>
+                                  <NavigationMenuLink>{subLink.name}</NavigationMenuLink>
+                                </NavLink>
+                              </li>
                             );
                           })}
                       </ul>
                     </NavigationMenuContent>
                   </>
                 ) : (
-                  <NavLink id={link.id} to={link.to as string}>
+                  <NavLink id={link.id} to={link.to as string} asChild>
                     <NavigationMenuLink>{link.name}</NavigationMenuLink>
                   </NavLink>
                 )}
@@ -107,7 +109,7 @@ export default function Navbar() {
         </li>
 
         <NavigationMenuItem className='pb-[0.2rem] pt-[0.8rem]'>
-          <CartSidebar />
+          <CartSidebar cart={cart} products={products} />
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>

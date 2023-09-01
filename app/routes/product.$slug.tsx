@@ -2,9 +2,9 @@
  * Product page
  */
 
-import { type ActionArgs, redirect } from '@remix-run/cloudflare';
+import { type ActionArgs, redirect, json } from '@remix-run/cloudflare';
 import type { V2_MetaArgs } from '@remix-run/react';
-import { useLoaderData } from '@remix-run/react';
+import { useActionData, useLoaderData, useNavigation } from '@remix-run/react';
 import { isProd } from '~/utils/misc';
 import type { ContentStoreProductEntry } from '~/server/entities/content';
 import { AspectRatio } from '@radix-ui/react-aspect-ratio';
@@ -39,13 +39,42 @@ export async function loader({ request: { url }, context, params }: ActionArgs) 
   }
 }
 
+export async function action({
+  request,
+  context: {
+    services: { cart },
+  },
+}: ActionArgs) {
+  // Handle Add To Bag action
+  const formData = await request.formData();
+
+  // Validate form data TODO
+
+  // Extract slug and quantity from form data
+  const slug = formData.get('slug') as string;
+  const quantity = parseInt(formData.get(`${slug}-quantity-input`) as string);
+
+  // Update cart
+  cart.addToCart({ slug: slug, quantity: quantity });
+
+  return json({ cart: cart, state: 'success' });
+}
+
 export default function Product() {
+  // const navigation = useNavigation();  TODO
+  // const actionData = useActionData<typeof action>();
   const productData = useLoaderData<ContentStoreProductEntry>();
+
+  const aspectRatio = 8 / 9;
+
   if (!productData || !productData.data) return null;
   const productContent = productData.data.product;
 
-  const aspectRatio = 8 / 9;
-  // console.log(`product ${JSON.stringify(productData)}`);
+  // console.log('actionData');
+  // console.log(actionData);
+  // console.log('navigation');
+  // console.log(navigation);
+
   return (
     <>
       <div className={`content-wrapper min-h-screen bg-${productData.data.backgroundColour} h-full`}>
@@ -75,7 +104,7 @@ export default function Product() {
                 <MarkdownLine data={productData.data.ingredients} />
               </div>
               <p className='font-bold'>{productData.data.unit}</p>
-              <AddToBag id={productData.data.id} className='text-white' />
+              <AddToBag slug={productData.slug} className='text-white' />
             </div>
           </div>
         </div>

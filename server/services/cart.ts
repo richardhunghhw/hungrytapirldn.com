@@ -1,0 +1,72 @@
+import type { SessionKv } from '~/server/repositories/session-kv';
+import type { Session } from '@remix-run/cloudflare';
+import type { CartItem } from '~/server/entities/cart';
+
+export class Cart {
+  #sessionKv: SessionKv;
+  #session: Session | null = null;
+  cartContent: Array<CartItem> = [];
+
+  constructor(sessionKv: SessionKv) {
+    this.#sessionKv = sessionKv;
+  }
+
+  async init(request: Request) {
+    this.#session = await this.#sessionKv.getSession(request.headers.get('Cookie') as string);
+    const cartStr = this.#session.get('cart');
+    this.cartContent = cartStr ? JSON.parse(cartStr) : [];
+  }
+
+  async addToCart(item: CartItem) {
+    if (!this.#session) throw new Error('Session not initialized');
+
+    const exisitingItem = this.cartContent.find((cartItem) => cartItem.slug === item.slug);
+    if (exisitingItem) {
+      exisitingItem.quantity += item.quantity;
+    } else {
+      this.cartContent.push(item);
+    }
+    console.log(`addToCart: ${JSON.stringify(this.cartContent)}`);
+  }
+
+  async removeFromCart(item: CartItem) {
+    if (!this.#session) throw new Error('Session not initialized');
+
+    const exisitingItem = this.cartContent.find((cartItem) => cartItem.slug === item.slug);
+    if (exisitingItem) {
+      exisitingItem.quantity -= item.quantity;
+      if (exisitingItem.quantity <= 0) {
+        this.cartContent = this.cartContent.filter((cartItem) => cartItem.slug !== item.slug);
+      }
+    }
+    console.log(`removeFromCart: ${JSON.stringify(this.cartContent)}`);
+  }
+
+  async updateCart(item: CartItem) {
+    if (!this.#session) throw new Error('Session not initialized');
+
+    const exisitingItem = this.cartContent.find((cartItem) => cartItem.slug === item.slug);
+    if (exisitingItem) {
+      exisitingItem.quantity = item.quantity;
+      if (exisitingItem.quantity <= 0) {
+        this.cartContent = this.cartContent.filter((cartItem) => cartItem.slug !== item.slug);
+      }
+    } else {
+      this.cartContent.push(item);
+    }
+    console.log(`updateCart: ${JSON.stringify(this.cartContent)}`);
+  }
+
+  async clearCart() {
+    if (!this.#session) throw new Error('Session not initialized');
+
+    this.cartContent = [];
+  }
+
+  async commit() {
+    if (!this.#session) throw new Error('Session not initialized');
+
+    this.#session.set('cart', JSON.stringify(this.cartContent));
+    return await this.#sessionKv.commitSession(this.#session);
+  }
+}

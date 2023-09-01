@@ -1,6 +1,6 @@
 {
   "include": [
-		"functions/[[remix]].ts",
+		"server.ts",
 		"types/*.d.ts",
 		"app/**/*.ts",
 		"app/**/*.tsx",
@@ -21,7 +21,7 @@
 		"skipLibCheck": true,
     "paths": {
       "~/*": ["./app/*"],
-			"~/build": ["./types/build.d.ts", "./dist/worker/index.js"],
+			"~/build": ["./types/build.d.ts", "./functions/[[path]].js"],
 			"~/server/*": ["./server/*"],
     },
     // Remix takes care of building everything in `remix build`.

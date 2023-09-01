@@ -1,10 +1,11 @@
 /**
  * Contact Us Page
  */
-
 import type { ActionArgs, V2_MetaArgs } from '@remix-run/cloudflare';
 import { redirect } from '@remix-run/cloudflare';
 import { useLoaderData } from '@remix-run/react';
+
+import type { loader as rootLoader } from '~/root';
 import { MarkdownContent } from '~/components/markdown-content';
 import type { ContentStoreGeneralEntry } from '~/server/entities/content';
 import { getGeneralEntry } from '~/services/content-store/get-content';
