@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Form } from '@remix-run/react';
+import { Form, useFetcher } from '@remix-run/react';
 import * as Sentry from '@sentry/remix';
 
 import { Button } from './ui/button';
@@ -13,19 +13,15 @@ export type CartSidebarProps = {
   products: ContentStoreProductEntry[];
 };
 
-function CartSidebar({ cart: initCart, products }: CartSidebarProps) {
-  const [cart, setCart] = useState<CartItem[]>(initCart);
+function CartSidebar({ cart, products }: CartSidebarProps) {
   const [cartOpen, setCartOpen] = useState(false);
-  const [cartUpdating, setCartUpdating] = useState(false);
+  const fetcher = useFetcher();
 
   const toggleCart = () => {
     setCartOpen((prev) => !prev);
   };
 
   const postCartUpdate = async (action: 'update' | 'remove', slug: string, quantity: number) => {
-    // Set cart updating state
-    setCartUpdating(true);
-
     // Create a new FormData object
     const formData = new FormData();
     formData.append('action', action);
@@ -33,15 +29,10 @@ function CartSidebar({ cart: initCart, products }: CartSidebarProps) {
     formData.append(`${slug}-quantity-input`, quantity.toString());
 
     // Send a POST request with the updated values
-    const response = await fetch('/cart', {
-      method: 'POST',
-      body: formData,
+    fetcher.submit(formData, {
+      method: 'post',
+      action: '/',
     });
-
-    // Parse the response
-    const res = (await response.json()) as { cart: CartItem[]; state: string };
-    setCart(res.cart);
-    setCartUpdating(false);
   };
 
   const onCartItemUpdate = async (slug: string, quantity: number) => {
@@ -139,7 +130,7 @@ function CartSidebar({ cart: initCart, products }: CartSidebarProps) {
                                       slug={product.slug}
                                       position='sidebar'
                                       initValue={cartItem.quantity}
-                                      disabled={cartUpdating}
+                                      // disabled={cartUpdating}
                                       onUpdate={onCartItemUpdate}
                                     />
                                     <Button

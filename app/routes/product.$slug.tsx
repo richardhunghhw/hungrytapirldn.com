@@ -4,7 +4,7 @@
 
 import { type ActionArgs, redirect, json } from '@remix-run/cloudflare';
 import type { V2_MetaArgs } from '@remix-run/react';
-import { useActionData, useLoaderData, useNavigation } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 import { isProd } from '~/utils/misc';
 import type { ContentStoreProductEntry } from '~/server/entities/content';
 import { AspectRatio } from '@radix-ui/react-aspect-ratio';
@@ -61,19 +61,12 @@ export async function action({
 }
 
 export default function Product() {
-  // const navigation = useNavigation();  TODO
-  // const actionData = useActionData<typeof action>();
   const productData = useLoaderData<ContentStoreProductEntry>();
-
-  const aspectRatio = 8 / 9;
 
   if (!productData || !productData.data) return null;
   const productContent = productData.data.product;
 
-  // console.log('actionData');
-  // console.log(actionData);
-  // console.log('navigation');
-  // console.log(navigation);
+  const aspectRatio = 8 / 9;
 
   return (
     <>

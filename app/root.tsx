@@ -1,4 +1,4 @@
-import { type LinksFunction, type LoaderArgs } from '@remix-run/cloudflare';
+import { ActionArgs, json, type LinksFunction, type LoaderArgs } from '@remix-run/cloudflare';
 import {
   Links,
   LiveReload,
@@ -12,11 +12,14 @@ import {
   useRouteError,
 } from '@remix-run/react';
 import { withSentry } from '@sentry/remix';
+import * as Sentry from '@sentry/remix';
 
 import stylesheet from '~/styles/tailwind.css';
 import Navbar from './components/navbar';
 import Footer from './components/footer';
 import { isDev } from './utils/misc';
+import { useEffect, useState } from 'react';
+import type { CartItem } from '~/server/entities/cart';
 
 export const links: LinksFunction = () => {
   return [
@@ -56,8 +59,38 @@ export async function loader({ request, context }: LoaderArgs) {
     hostUrl: context.env.HOST_URL,
     isDev: isDev(context),
     cart: context.services.cart.cartContent,
-    products: await context.services.content.getAllProducts(context),
+    products: await context.services.content.getAllProducts(),
   };
+}
+
+export async function action({
+  request,
+  context: {
+    services: { cart },
+  },
+}: ActionArgs) {
+  // Handle Add To Bag action
+  const formData = await request.formData();
+
+  // Validate form data TODO
+
+  // Extract slug and quantity from form data
+  const action = formData.get('action') as 'add' | 'update' | 'remove';
+  const slug = formData.get('slug') as string;
+  const quantity = parseInt(formData.get(`${slug}-quantity-input`) as string);
+
+  // Update cart
+  if (action === 'add') {
+    cart.addToCart({ slug: slug, quantity: quantity });
+  } else if (action === 'remove') {
+    cart.removeFromCart({ slug: slug, quantity: quantity });
+  } else if (action === 'update') {
+    cart.updateCart({ slug: slug, quantity: quantity });
+  } else {
+    Sentry.captureException(`Invalid cart action: ${action} for slug: ${slug} and quantity: ${quantity}`);
+  }
+
+  return json({ cart: cart.cartContent, state: 'success' });
 }
 
 function App() {
@@ -66,6 +99,12 @@ function App() {
 
   const matches = useMatches();
   const pathname = matches.pop()?.pathname as string;
+
+  // Cart state
+  const [cart, setCart] = useState<CartItem[]>(loaderData.cart);
+  useEffect(() => {
+    setCart(loaderData.cart);
+  }, [loaderData.cart]);
 
   return (
     <html lang='en'>
@@ -76,9 +115,7 @@ function App() {
         <Links />
       </head>
       <body>
-        {!BYPASS_HEADERFOOTER_PATHS.includes(pathname) && (
-          <Navbar cart={loaderData.cart} products={loaderData.products} />
-        )}
+        {!BYPASS_HEADERFOOTER_PATHS.includes(pathname) && <Navbar cart={cart} products={loaderData.products} />}
         <Outlet />
         {!BYPASS_HEADERFOOTER_PATHS.includes(pathname) && <Footer />}
         <ScrollRestoration />

@@ -1,16 +1,21 @@
 import { NumberInput } from './number-input';
 import { Button } from './ui/button';
 import { cn } from './ui/lib/utils';
-import { Form } from '@remix-run/react';
+import { useFetcher } from '@remix-run/react';
 
 export interface AddToBagProps extends React.HTMLAttributes<HTMLDivElement> {
   slug: string;
 }
 
 function AddToBag({ slug, className, ...props }: AddToBagProps) {
+  const fetcher = useFetcher();
+
+  // console.log(fetcher);
+
   return (
-    <Form id={`${slug}-add-to-bag-form`} method='post' className='flex flex-col'>
+    <fetcher.Form id={`${slug}-add-to-bag-form`} action='/' method='post' className='flex flex-col'>
       <input type='hidden' name='slug' value={slug} />
+      <input type='hidden' name='action' value='add' />
       <div className='md:block'>
         <NumberInput slug={slug} />
       </div>
@@ -23,7 +28,7 @@ function AddToBag({ slug, className, ...props }: AddToBagProps) {
       >
         Add to bag
       </Button>
-    </Form>
+    </fetcher.Form>
   );
 }
 
