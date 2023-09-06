@@ -72,8 +72,8 @@ export class ApiRefresh {
     } else if (type === 'product') {
       data = {
         stripeId: (this.#isProd
-          ? entry.properties['Stripe ID TEST']?.rich_text[0]?.plain_text
-          : entry.properties['Stripe ID PROD']?.rich_text[0]?.plain_text) as string,
+          ? entry.properties['Stripe Id PROD']?.rich_text[0]?.plain_text
+          : entry.properties['Stripe Id TEST']?.rich_text[0]?.plain_text) as string,
         id: entry.properties.Id?.rich_text[0].plain_text as string,
         unit: entry.properties.Unit?.rich_text[0].plain_text as string,
         price: entry.properties.Price?.number,

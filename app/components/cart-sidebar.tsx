@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Form, useFetcher } from '@remix-run/react';
+import { Link, useFetcher } from '@remix-run/react';
 import * as Sentry from '@sentry/remix';
 
 import { Button } from './ui/button';
@@ -49,7 +49,7 @@ function CartSidebar({ cart, products }: CartSidebarProps) {
   };
 
   const subtotal = cart.reduce((acc, cartItem) => {
-    const product = products.find((product) => product.slug === cartItem.slug);
+    const product = products.find((product) => product.slug === cartItem.slug); // TODO refine this
     if (!product) {
       Sentry.captureException(`CartItem not found in Products: ${cartItem.slug}`);
       return acc;
@@ -97,55 +97,53 @@ function CartSidebar({ cart, products }: CartSidebarProps) {
                   </div>
                 ) : (
                   <>
-                    <div className='mt-12 flex-1 overflow-y-auto'>
-                      <Form id='order-form' action='/checkout' method='post'>
-                        <ul className='-my-6 divide-y divide-gray-200'>
-                          {cart.map((cartItem) => {
-                            // TODO optimise this
-                            const product = products.find((product) => product.slug === cartItem.slug);
+                    <div className='mt-12 flex-1 divide-y divide-gray-200 overflow-y-auto'>
+                      <ul className=''>
+                        {cart.map((cartItem) => {
+                          // TODO optimise this
+                          const product = products.find((product) => product.slug === cartItem.slug);
 
-                            if (!product) {
-                              Sentry.captureException(`CartItem not found in Products: ${cartItem.slug}`);
-                              return null;
-                            }
+                          if (!product) {
+                            Sentry.captureException(`CartItem not found in Products: ${cartItem.slug}`);
+                            return null;
+                          }
 
-                            return (
-                              <li key={product.metadata.slug} className='flex py-6'>
-                                <div className='h-24 w-24 flex-shrink-0 overflow-hidden rounded-md'>
-                                  <img
-                                    src={product.data.images[0].url}
-                                    alt={product.data.images[0].alt}
-                                    className='h-full w-full object-cover object-center'
-                                  />
-                                </div>
-                                <div className='ml-4 flex flex-1 flex-col'>
-                                  <div className='space-y-2'>
-                                    <div className='flex justify-between'>
-                                      <h3 className='font-serif text-base font-medium uppercase tracking-tight md:text-lg'>
-                                        {product.metadata.title}
-                                      </h3>
-                                      <p className='ml-4 font-medium'>£{product.data.price}</p>
-                                    </div>
-                                    <NumberInput
-                                      slug={product.slug}
-                                      position='sidebar'
-                                      initValue={cartItem.quantity}
-                                      // disabled={cartUpdating}
-                                      onUpdate={onCartItemUpdate}
-                                    />
-                                    <Button
-                                      variant='link'
-                                      onClick={(e) => onCartItemRemove(e, cartItem.slug, cartItem.quantity)}
-                                    >
-                                      Remove
-                                    </Button>
+                          return (
+                            <li key={product.metadata.slug} className='flex py-6'>
+                              <div className='h-24 w-24 flex-shrink-0 overflow-hidden rounded-md'>
+                                <img
+                                  src={product.data.images[0].url}
+                                  alt={product.data.images[0].alt}
+                                  className='h-full w-full object-cover object-center'
+                                />
+                              </div>
+                              <div className='ml-4 flex flex-1 flex-col'>
+                                <div className='space-y-2'>
+                                  <div className='flex justify-between'>
+                                    <h3 className='font-serif text-base font-medium uppercase tracking-tight md:text-lg'>
+                                      {product.metadata.title}
+                                    </h3>
+                                    <p className='ml-4 font-medium'>£{product.data.price}</p>
                                   </div>
+                                  <NumberInput
+                                    slug={product.slug}
+                                    position='sidebar'
+                                    initValue={cartItem.quantity}
+                                    // disabled={cartUpdating}
+                                    onUpdate={onCartItemUpdate}
+                                  />
+                                  <Button
+                                    variant='link'
+                                    onClick={(e) => onCartItemRemove(e, cartItem.slug, cartItem.quantity)}
+                                  >
+                                    Remove
+                                  </Button>
                                 </div>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </Form>
+                              </div>
+                            </li>
+                          );
+                        })}
+                      </ul>
                     </div>
 
                     <div className='border-t border-ht-black py-2 font-mono font-light'>
@@ -154,13 +152,8 @@ function CartSidebar({ cart, products }: CartSidebarProps) {
                         <p>£{subtotalFormatted}</p>
                       </div>
                       <p className='mt-2 text-xs'>Shipping and taxes calculated at checkout</p>
-                      <Button
-                        type='submit'
-                        form='order-form'
-                        className='mt-6 w-full font-extralight uppercase'
-                        size='lg'
-                      >
-                        Continue to checkout
+                      <Button className='mt-6 w-full font-extralight uppercase' asChild>
+                        <Link to='/cart'>Continue to checkout</Link>
                       </Button>
                     </div>
                   </>

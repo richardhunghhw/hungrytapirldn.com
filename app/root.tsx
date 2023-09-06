@@ -52,7 +52,7 @@ export const links: LinksFunction = () => {
   ];
 };
 
-const BYPASS_HEADERFOOTER_PATHS = ['/linkinbio', '/checkout'];
+const BYPASS_HEADERFOOTER_PATHS = ['/linkinbio'];
 
 export async function loader({ request, context }: LoaderArgs) {
   return {

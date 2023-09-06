@@ -82,17 +82,23 @@ export const onRequest: PagesFunction<HTEnv> = async (context) => {
     // ImageKit
     const image = new Image(new ImageKit(env.IMAGEKIT_PRIVATE_KEY, env.IMAGEKIT_PUBLIC_KEY));
 
+    // Content Store
+    const content = new Content(contentKv);
+
     // Combine services
     const services = {
       cart: cart,
       apiAuth: new ApiAuth(env.BASIC_AUTH_USERNAME, env.BASIC_AUTH_PASSWORD),
       stripe: new Stripe(
+        env.HOST_URL,
         new StripeApi(env.STRIPE_SECRET_KEY, {
           apiVersion: '2022-11-15',
           typescript: true,
         }),
+        cart,
+        content,
       ),
-      content: new Content(contentKv),
+      content,
       apiRefresh: new ApiRefresh(env.NODE_ENV === 'prod', image, repos.contentKv, repos.notion),
     };
 

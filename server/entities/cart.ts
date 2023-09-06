@@ -1,6 +1,7 @@
 export type CartItem = {
   slug: string;
   quantity: number;
+  stripeId?: string;
 };
 
 export type CartSessionData = {
