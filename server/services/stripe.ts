@@ -3,12 +3,14 @@ import type { Cart } from './cart';
 import type { Content } from './content';
 
 export class Stripe {
+  #isProd: boolean;
   #stripe: StripeApi;
   #hostUrl: string;
   #cart: Cart;
   #content: Content;
 
-  constructor(hostUrl: string, stripe: StripeApi, cart: Cart, content: Content) {
+  constructor(isProd: boolean, hostUrl: string, stripe: StripeApi, cart: Cart, content: Content) {
+    this.#isProd = isProd;
     this.#hostUrl = hostUrl;
     this.#stripe = stripe;
     this.#cart = cart;
@@ -33,19 +35,62 @@ export class Stripe {
         }),
     );
 
+    const collectionDateDropdownOptions: { label: any; value: any }[] = [
+      {
+        label: 'Delivery',
+        value: 'delivery',
+      },
+    ];
+    const nextStallDates = await this.#content.getNextStallDates(5);
+    for (const stalldate of nextStallDates) {
+      const location = await this.#content.getGeneralEntry('location~' + stalldate.data.location);
+      collectionDateDropdownOptions.push({
+        label:
+          new Date(stalldate.data.startDT).toLocaleDateString('en-GB', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          }) +
+          ' - ' +
+          location.metadata.title,
+        value: stalldate.slug.replaceAll('-', '').replaceAll('~', ''),
+      });
+    }
+
+    // Delivery, Collection
+    const shipping_options_str = this.#isProd
+      ? 'shr_1NnP0XLNU8oiV5Bev3bHssY1,shr_1NnOzGLNU8oiV5Bewqa3y9fm'
+      : 'shr_1NnP1vLNU8oiV5BetQqLrvNE,shr_1NnP2BLNU8oiV5BeRpGBof62';
+    const shipping_options = shipping_options_str.split(',').map((id) => ({
+      shipping_rate: id,
+    }));
+
     return this.#stripe.checkout.sessions.create({
       line_items,
       mode: 'payment',
-      success_url: `${this.#hostUrl}/order/success?session_id={CHECKOUT_SESSION_ID}",`,
-      cancel_url: `${this.#hostUrl}/cart/cancelled`,
+      success_url: `${this.#hostUrl}/order?status=success&session_id={CHECKOUT_SESSION_ID}",`,
+      cancel_url: `${this.#hostUrl}/cart?status=cancelled`,
       client_reference_id: orderId,
 
       allow_promotion_codes: true,
       consent_collection: {
         // promotions: 'auto', consent_collection.promotions` is not available in your country.
-        // terms_of_service: 'required', You cannot collect consent to your terms of service unless a URL is set in the Stripe Dashboard. Update
+        terms_of_service: 'required',
       },
-      // custom_fields:
+      custom_fields: [
+        {
+          key: 'collectionDate',
+          label: {
+            custom: 'Collection Date - If you are ordering for delivery, please select "Delivery"',
+            type: 'custom',
+          },
+          type: 'dropdown',
+          dropdown: {
+            options: collectionDateDropdownOptions,
+          },
+        },
+      ],
+      // custom_text:
       customer_creation: 'always',
       invoice_creation: {
         enabled: true,
@@ -61,7 +106,7 @@ export class Stripe {
       shipping_address_collection: {
         allowed_countries: ['GB'],
       },
-      // shipping_options:
+      shipping_options,
       submit_type: 'pay',
     });
   }

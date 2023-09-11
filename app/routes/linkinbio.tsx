@@ -7,7 +7,6 @@ import SocialIcons from '~/components/social-icons';
 
 import { Button } from '~/components/ui/button';
 import type { ContentStoreGeneralEntry } from '~/server/entities/content';
-import { getGeneralEntry, getLatestStallDate } from '~/services/content-store/get-content';
 import { TapirTransparent } from '~/utils/svg/tapir';
 import { NextStall } from '~/components/next-stall';
 import type { LoaderArgs, V2_MetaArgs } from '@remix-run/cloudflare';

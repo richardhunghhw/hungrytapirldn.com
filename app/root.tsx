@@ -1,4 +1,4 @@
-import { ActionArgs, json, type LinksFunction, type LoaderArgs } from '@remix-run/cloudflare';
+import { type ActionArgs, json, type LinksFunction, type LoaderArgs } from '@remix-run/cloudflare';
 import {
   Links,
   LiveReload,

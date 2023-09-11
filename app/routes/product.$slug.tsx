@@ -39,27 +39,6 @@ export async function loader({ request: { url }, context, params }: ActionArgs) 
   }
 }
 
-export async function action({
-  request,
-  context: {
-    services: { cart },
-  },
-}: ActionArgs) {
-  // Handle Add To Bag action
-  const formData = await request.formData();
-
-  // Validate form data TODO
-
-  // Extract slug and quantity from form data
-  const slug = formData.get('slug') as string;
-  const quantity = parseInt(formData.get(`${slug}-quantity-input`) as string);
-
-  // Update cart
-  cart.addToCart({ slug: slug, quantity: quantity });
-
-  return json({ cart: cart, state: 'success' });
-}
-
 export default function Product() {
   const productData = useLoaderData<ContentStoreProductEntry>();
 
@@ -69,39 +48,37 @@ export default function Product() {
   const aspectRatio = 8 / 9;
 
   return (
-    <>
-      <div className={`content-wrapper min-h-screen bg-${productData.data.backgroundColour} h-full`}>
-        <div className='content-container my-24 flex flex-col items-center justify-center'>
-          <div className='mt-4 flex flex-col items-center space-y-4 md:flex-row md:space-x-8 md:space-y-0'>
-            <div className='w-[350px] basis-1/2 self-center overflow-hidden rounded-3xl md:self-baseline'>
-              <AspectRatio ratio={aspectRatio}>
-                <CDNImage
-                  alt={productData.data.images[0].alt}
-                  src={productData.data.images[0].url}
-                  className='h-full w-full object-cover'
-                  transformation={[]}
-                />
-              </AspectRatio>
+    <div className={`content-wrapper min-h-screen bg-${productData.data.backgroundColour} h-full`}>
+      <div className='content-container my-24 flex flex-col items-center justify-center'>
+        <div className='mt-4 flex flex-col items-center space-y-4 md:flex-row md:space-x-8 md:space-y-0'>
+          <div className='w-[350px] basis-1/2 self-center overflow-hidden rounded-3xl md:self-baseline'>
+            <AspectRatio ratio={aspectRatio}>
+              <CDNImage
+                alt={productData.data.images[0].alt}
+                src={productData.data.images[0].url}
+                className='h-full w-full object-cover'
+                transformation={[]}
+              />
+            </AspectRatio>
+          </div>
+          <div className='items-left flex basis-1/2 flex-col justify-center space-y-6 text-sm md:w-1/2'>
+            <header className='title flex flex-row items-end justify-between text-4xl uppercase text-primary sm:text-5xl md:text-5xl'>
+              <h1>{productData.metadata.title}</h1>
+              <p>£{productData.data.price}</p>
+            </header>
+            <div>
+              <h2 className='title mb-2 text-2xl'>Why we love it</h2>
+              <MarkdownContent data={productContent} />
             </div>
-            <div className='items-left flex basis-1/2 flex-col justify-center space-y-6 text-sm md:w-1/2'>
-              <header className='title flex flex-row items-end justify-between text-4xl uppercase text-primary sm:text-5xl md:text-5xl'>
-                <h1>{productData.metadata.title}</h1>
-                <p>£{productData.data.price}</p>
-              </header>
-              <div>
-                <h2 className='title mb-2 text-2xl'>Why we love it</h2>
-                <MarkdownContent data={productContent} />
-              </div>
-              <div>
-                <h2 className='title mb-2 text-2xl'>What's Inside</h2>
-                <MarkdownLine data={productData.data.ingredients} />
-              </div>
-              <p className='font-bold'>{productData.data.unit}</p>
-              <AddToBag slug={productData.slug} className='text-white' />
+            <div>
+              <h2 className='title mb-2 text-2xl'>What's Inside</h2>
+              <MarkdownLine data={productData.data.ingredients} />
             </div>
+            <p className='font-bold'>{productData.data.unit}</p>
+            <AddToBag slug={productData.slug} className='text-white' />
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

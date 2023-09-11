@@ -117,28 +117,26 @@ function CartSidebar({ cart, products }: CartSidebarProps) {
                                   className='h-full w-full object-cover object-center'
                                 />
                               </div>
-                              <div className='ml-4 flex flex-1 flex-col'>
-                                <div className='space-y-2'>
-                                  <div className='flex justify-between'>
-                                    <h3 className='font-serif text-base font-medium uppercase tracking-tight md:text-lg'>
-                                      {product.metadata.title}
-                                    </h3>
-                                    <p className='ml-4 font-medium'>£{product.data.price}</p>
-                                  </div>
-                                  <NumberInput
-                                    slug={product.slug}
-                                    position='sidebar'
-                                    initValue={cartItem.quantity}
-                                    // disabled={cartUpdating}
-                                    onUpdate={onCartItemUpdate}
-                                  />
-                                  <Button
-                                    variant='link'
-                                    onClick={(e) => onCartItemRemove(e, cartItem.slug, cartItem.quantity)}
-                                  >
-                                    Remove
-                                  </Button>
+                              <div className='ml-4 flex flex-1 flex-col items-start space-y-2'>
+                                <div className='flex justify-between'>
+                                  <h3 className='font-serif text-base font-medium uppercase tracking-tight md:text-lg'>
+                                    {product.metadata.title}
+                                  </h3>
+                                  <p className='ml-4 font-medium'>£{product.data.price}</p>
                                 </div>
+                                <NumberInput
+                                  slug={product.slug}
+                                  position='sidebar'
+                                  initValue={cartItem.quantity}
+                                  // disabled={cartUpdating}
+                                  onUpdate={onCartItemUpdate}
+                                />
+                                <Button
+                                  variant='link'
+                                  onClick={(e) => onCartItemRemove(e, cartItem.slug, cartItem.quantity)}
+                                >
+                                  Remove
+                                </Button>
                               </div>
                             </li>
                           );
@@ -153,7 +151,9 @@ function CartSidebar({ cart, products }: CartSidebarProps) {
                       </div>
                       <p className='mt-2 text-xs'>Shipping and taxes calculated at checkout</p>
                       <Button className='mt-6 w-full font-extralight uppercase' asChild>
-                        <Link to='/cart'>Continue to checkout</Link>
+                        <Link to='/cart' onClick={() => toggleCart()}>
+                          Continue to checkout
+                        </Link>
                       </Button>
                     </div>
                   </>

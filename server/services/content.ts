@@ -110,6 +110,27 @@ export class Content {
     return newLatestEntry;
   }
 
+  async getNextStallDates(n: number): Promise<ContentStoreStallDateEntry[]> {
+    const datetime = new Date();
+
+    // TODO optimise this with a cache
+
+    // Get all stall dates, sort by date asc
+    const stallDates = await this.listStallDates();
+    const sortedStallDates = stallDates
+      .filter((e) => new Date(e.slug.split('~')[1]) >= datetime) // filter out past dates
+      .sort((a, b) => new Date(a.slug.split('~')[1]) - new Date(b.slug.split('~')[1])) // sort date asc
+      .slice(0, n) as BaseEntry[];
+
+    // Fetch stall dates information
+    const stallDatesEntries = (await Promise.all(
+      sortedStallDates.map((e) => this.getStallDate(e.slug)),
+    )) as ContentStoreStallDateEntry[];
+
+    // Return result
+    return stallDatesEntries;
+  }
+
   // Get all entries, for sitemap generation
   async listAll(): Promise<BaseEntry[]> {
     const result: BaseEntry[] = [];

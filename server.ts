@@ -90,6 +90,7 @@ export const onRequest: PagesFunction<HTEnv> = async (context) => {
       cart: cart,
       apiAuth: new ApiAuth(env.BASIC_AUTH_USERNAME, env.BASIC_AUTH_PASSWORD),
       stripe: new Stripe(
+        env.NODE_ENV === 'prod',
         env.HOST_URL,
         new StripeApi(env.STRIPE_SECRET_KEY, {
           apiVersion: '2022-11-15',
