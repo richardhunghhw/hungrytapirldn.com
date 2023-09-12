@@ -102,6 +102,7 @@ export class ApiRefresh {
         imageColour: entry.properties['Image Colour']?.rich_text[0].plain_text as string,
         backgroundColour: entry.properties['Background Colour']?.rich_text[0].plain_text as string,
         seoDescription: entry.properties['SEO Description']?.rich_text[0]?.plain_text as string,
+        enabled: entry.properties.Enabled?.checkbox as boolean,
       };
     } else if (type === 'stalldate') {
       // Store date in UTC fomrat

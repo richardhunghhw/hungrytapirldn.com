@@ -100,7 +100,7 @@ export class Stripe {
       // payment_intent_data
       // payment_method_collection for bacs
       // payment_method_collection
-      payment_method_types: ['card', 'paypal'],
+      payment_method_types: ['card'],
       phone_number_collection: {
         enabled: true,
       },

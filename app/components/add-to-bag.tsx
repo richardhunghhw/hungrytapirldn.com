@@ -5,9 +5,10 @@ import { useFetcher } from '@remix-run/react';
 
 export interface AddToBagProps extends React.HTMLAttributes<HTMLDivElement> {
   slug: string;
+  enabled: boolean;
 }
 
-function AddToBag({ slug, className, ...props }: AddToBagProps) {
+function AddToBag({ slug, enabled, className, ...props }: AddToBagProps) {
   const fetcher = useFetcher();
 
   // console.log(fetcher);
@@ -25,8 +26,9 @@ function AddToBag({ slug, className, ...props }: AddToBagProps) {
         variant='dark'
         size='lg'
         className={cn('mt-6 uppercase md:w-full', className)}
+        enabled={enabled}
       >
-        Add to bag
+        {enabled ? 'Add to bag' : 'Not available'}
       </Button>
     </fetcher.Form>
   );

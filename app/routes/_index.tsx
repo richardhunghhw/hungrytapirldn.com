@@ -66,7 +66,7 @@ function ProductCard({ product }: { product: ContentStoreProductEntry }): JSX.El
         ))}
       </Link>
       <div className='text-2xl font-extrabold text-black'>£{product.data.price}</div>
-      <AddToBag slug={product.slug} className='text-ht-orange' />
+      <AddToBag slug={product.slug} enabled={product.data.enabled} className='text-ht-orange' />
     </div>
   );
 }

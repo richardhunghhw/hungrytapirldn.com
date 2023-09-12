@@ -56,6 +56,7 @@ export type ContentStoreProductEntry = BaseEntry & {
     imageColour: string;
     backgroundColour: string;
     seoDescription: string;
+    enabled: boolean;
   };
 };
 
