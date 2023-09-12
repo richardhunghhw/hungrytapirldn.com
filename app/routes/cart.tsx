@@ -27,11 +27,10 @@ export async function action({
     console.debug(`Fetched order ID from worker: ${orderId}`);
   } catch (error) {
     // TODO Sentry
-    console.error(`Failed to fetch order ID from worker, proceeding without an order ID: ${error}`);
+    console.error('Failed to fetch order ID from worker, proceeding without an order ID.', error);
   }
 
   // Create checkout session
-  console.log(`Creating checkout session for order ID: ${orderId}`);
   const checkoutSession = await stripe.createCheckoutSession(orderId);
   if (!checkoutSession?.url) throw new Error('Unable to create Stripe Checkout Session.'); // TODO handle this better
   const checkoutUrl = checkoutSession.url;

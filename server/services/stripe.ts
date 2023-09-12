@@ -18,6 +18,7 @@ export class Stripe {
   }
 
   async createCheckoutSession(orderId?: string) {
+    console.debug('Creating Stripe checkout Session for order: ' + orderId);
     const line_items = await Promise.all(
       this.#cart.cartContent
         .filter((item) => item.quantity > 0)
@@ -65,7 +66,7 @@ export class Stripe {
       shipping_rate: id,
     }));
 
-    return this.#stripe.checkout.sessions.create({
+    const seessionParams = {
       line_items,
       mode: 'payment',
       success_url: `${this.#hostUrl}/order?status=success&session_id={CHECKOUT_SESSION_ID}",`,
@@ -81,7 +82,7 @@ export class Stripe {
         {
           key: 'collectionDate',
           label: {
-            custom: 'Collection Date - If you are ordering for delivery, please select "Delivery"',
+            custom: 'Collection Date - For delivery, please select "Delivery"',
             type: 'custom',
           },
           type: 'dropdown',
@@ -108,6 +109,7 @@ export class Stripe {
       },
       shipping_options,
       submit_type: 'pay',
-    });
+    };
+    return this.#stripe.checkout.sessions.create(seessionParams);
   }
 }

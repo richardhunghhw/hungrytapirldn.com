@@ -2,14 +2,15 @@
 name = "hungrytapir-store"
 compatibility_date = "2023-06-13"
 compatibility_flags = ["streams_enable_constructors", "nodejs_compat"]
+send_metrics = true
 
 services = [
-  { binding = "CONFIGSTORE_WORKER", service = "hungrytapir-store-config-test" }
+  { binding = "CONFIGSTORE_WORKER", service = "hungrytapir-store-config-test" },
 ]
 
 kv_namespaces = [
-    { binding = "CONTENT_STORE", id = "123", preview_id = "fbabe5eb5d7f43cd9c336fa1656473d1" },
-    { binding = "SESSION_STORE", id = "123", preview_id = "8cd0d491630c45e5b9e794d11b35c92e" }
+  { binding = "CONTENT_STORE", id = "123", preview_id = "fbabe5eb5d7f43cd9c336fa1656473d1" },
+  { binding = "SESSION_STORE", id = "123", preview_id = "8cd0d491630c45e5b9e794d11b35c92e" },
 ]
 
 [env.test]
