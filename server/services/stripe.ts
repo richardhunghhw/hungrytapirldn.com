@@ -82,7 +82,7 @@ export class Stripe {
         {
           key: 'collectionDate',
           label: {
-            custom: 'Collection Date - For delivery, please select "Delivery"',
+            custom: 'Collection Date - For delivery, select "Delivery"',
             type: 'custom',
           },
           type: 'dropdown',
