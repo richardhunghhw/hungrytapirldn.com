@@ -18,6 +18,7 @@ import { ImageKit } from '~/server/repositories/imagekit';
 import { Image } from '~/server/services/image';
 import { Content } from '~/server/services/content';
 import { ApiRefresh } from './server/services/api-refresh';
+import { EnvSchema } from './server/env';
 
 let remixHandler: ReturnType<typeof createRequestHandler>;
 
@@ -28,18 +29,16 @@ logDevReady(build);
 
 export const onRequest: PagesFunction<HTEnv> = async (context) => {
   try {
-    const env = context.env;
-
-    if (env.SENTRY_DSN) {
+    if (context.env.SENTRY_DSN) {
       Sentry.init({
-        debug: env.SENTRY_DEBUG,
-        dsn: env.SENTRY_DSN,
-        environment: env.SENTRY_ENV,
+        debug: context.env.SENTRY_DEBUG,
+        dsn: context.env.SENTRY_DSN,
+        environment: context.env.SENTRY_ENV,
         integrations: [],
         // eslint-disable-next-line no-useless-escape
         // prettier-ignore
         tracePropagationTargets: ['/^https:\/\/www\.hungrytapirldn\.com/', '/^.*.hungrytapir-store\.pages\.dev/', 'localhost', /^\//],
-        tracesSampleRate: env.SENTRY_TRACES_SAMPLE_RATE,
+        tracesSampleRate: context.env.SENTRY_TRACES_SAMPLE_RATE,
         beforeSend(event) {
           if (event.request?.url?.includes('sentry')) return null;
           event.user = {};
@@ -51,6 +50,8 @@ export const onRequest: PagesFunction<HTEnv> = async (context) => {
         },
       });
     }
+
+    const env = EnvSchema.parse(context.env);
 
     // Initialize repositories
     const contentKv = new ContentKv(env.CONTENT_STORE, env.CACHE_TTL_DAYS);
