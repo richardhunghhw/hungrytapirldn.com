@@ -1,4 +1,4 @@
-import { type ChangeEvent, useState } from 'react';
+import { type ChangeEvent, useState, useEffect } from 'react';
 import { cva } from 'class-variance-authority';
 
 import { Input } from '~/components/ui/input';
@@ -62,6 +62,11 @@ function NumberInput({
   ...props
 }: NumberInputProps) {
   const [value, setValue] = useState(initValue);
+
+  useEffect(() => {
+    setValue(initValue);
+    console.log('initValue', initValue);
+  }, [initValue]);
 
   const handleIncrement = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();

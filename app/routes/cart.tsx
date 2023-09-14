@@ -121,9 +121,9 @@ export default function Cart() {
         </div>
       </header>
       <article className='content-wrapper body-text-wrapper'>
-        <div className='content-container mt-4 flex flex-col space-y-4'>
+        <div className='content-container mt-4 flex flex-col'>
           <CartInformation products={products} cart={cart} />
-          <div className='flex flex-col space-y-2 self-end rounded-md border p-8 font-mono md:max-w-5xl'>
+          <div className='mt-8 flex flex-col space-y-2 self-end rounded-md border p-8 font-mono md:mt-12 md:max-w-5xl'>
             <div className='flex justify-between'>
               <span>Subtotal</span> <span>£{cartSubTotal}</span>
             </div>
