@@ -20,14 +20,14 @@ export type TypeToDbMap = {
 };
 
 export class Notion {
-  dbEnv: string;
-  client: Client;
-  typeToDbMap: TypeToDbMap;
+  #dbEnv: string;
+  #client: Client;
+  #typeToDbMap: TypeToDbMap;
 
   constructor(dbEnv: string, notionApiSecret: string, typeToDbMap: TypeToDbMap) {
-    this.dbEnv = dbEnv;
-    this.client = new Client({ auth: notionApiSecret, notionVersion: '2022-06-28' });
-    this.typeToDbMap = typeToDbMap;
+    this.#dbEnv = dbEnv;
+    this.#client = new Client({ auth: notionApiSecret, notionVersion: '2022-06-28' });
+    this.#typeToDbMap = typeToDbMap;
   }
 
   isPageObjectResponse(response: PartialPageObjectResponse | PageObjectResponse): response is PageObjectResponse {
@@ -36,12 +36,12 @@ export class Notion {
 
   // Query Notion API for all entries in a Database entries given its ContentType
   async queryDbByType(type: ContentType): Promise<Array<PageObjectResponse>> {
-    const databaseId = this.typeToDbMap[type];
+    const databaseId = this.#typeToDbMap[type];
 
     const filter = {
       property: 'Environment',
       multi_select: {
-        contains: this.dbEnv,
+        contains: this.#dbEnv,
       },
     };
 
@@ -49,7 +49,7 @@ export class Notion {
     let data: any = {};
     do {
       // Todo this is not async
-      data = await this.client.databases.query({
+      data = await this.#client.databases.query({
         database_id: databaseId,
         filter: filter,
         start_cursor: data?.next_cursor ?? undefined,
@@ -76,7 +76,7 @@ export class Notion {
     let data: any = {};
     do {
       // Todo this is not async
-      data = await this.client.blocks.children
+      data = await this.#client.blocks.children
         .list({
           block_id,
           start_cursor: data?.next_cursor ?? undefined,

@@ -91,7 +91,7 @@ export const onRequest: PagesFunction<HTEnv> = async (context) => {
       cart: cart,
       apiAuth: new ApiAuth(env.BASIC_AUTH_USERNAME, env.BASIC_AUTH_PASSWORD),
       stripe: new Stripe(
-        env.NODE_ENV === 'prod',
+        env.NODE_ENV === 'PROD',
         env.HOST_URL,
         new StripeApi(env.STRIPE_SECRET_KEY, {
           apiVersion: '2022-11-15',
@@ -101,7 +101,7 @@ export const onRequest: PagesFunction<HTEnv> = async (context) => {
         content,
       ),
       content,
-      apiRefresh: new ApiRefresh(env.NODE_ENV === 'prod', image, repos.contentKv, repos.notion),
+      apiRefresh: new ApiRefresh(env.NODE_ENV === 'PROD', image, repos.contentKv, repos.notion),
     };
 
     // Get response from Remix
