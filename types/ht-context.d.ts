@@ -23,7 +23,8 @@ export type HTEnv = {
   readonly SESSION_STORE: KVNamespace;
 
   /** Store Config Worker */
-  readonly CONFIGSTORE_WORKER: ServiceWorkerGlobalScope;
+  // readonly CONFIGSTORE_WORKER: ServiceWorkerGlobalScope;
+  readonly CONFIGSTORE_WORKER_URL: string;
 
   /** Stripe */
   readonly STRIPE_PUBLIC_KEY: string;

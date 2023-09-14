@@ -13,7 +13,8 @@ export let EnvSchema = z.object({
   CONTENT_STORE: z.any(),
   SESSION_STORE: z.any(),
 
-  CONFIGSTORE_WORKER: z.any(),
+  // CONFIGSTORE_WORKER: z.any(),
+  CONFIGSTORE_WORKER_URL: z.string().url(),
 
   STRIPE_PUBLIC_KEY: z.string().length(107),
   STRIPE_SECRET_KEY: z.string().length(107),

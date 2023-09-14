@@ -9,8 +9,8 @@ import { Button } from '~/components/ui/button';
 export async function action({
   request,
   context: {
-    env: { CONFIGSTORE_WORKER },
-    services: { stripe },
+    env: { CONFIGSTORE_WORKER_URL },
+    services: { stripe, apiAuth },
   },
 }: ActionArgs) {
   // Handle Cart checkout action
@@ -18,16 +18,21 @@ export async function action({
   // Get a unique order ID from worker
   let orderId: string | undefined = undefined;
   try {
-    const response = await CONFIGSTORE_WORKER.fetch(request.clone());
+    const response = await fetch(CONFIGSTORE_WORKER_URL + '/orderId', {
+      method: 'POST',
+      headers: { Authorization: apiAuth.getAuthString() },
+    });
     if (response.status !== 200) {
-      throw new Error(`Failed to fetch order ID from worker. Status: ${response.status}`);
+      throw new Error(
+        `Failed to fetch order ID from worker. Status: ${response.status}, message: ${response.statusText}`,
+      );
     }
     const responseBody: { orderId: string } = await response.json();
     orderId = responseBody.orderId;
-    console.debug(`Fetched order ID from worker: ${orderId}`);
+    // console.debug(`Fetched order ID from worker: ${orderId}`);
   } catch (error) {
-    // TODO Sentry
-    console.error('Failed to fetch order ID from worker, proceeding without an order ID.', error);
+    Sentry.captureException(error);
+    console.error('Error occurred fetching orderId, proceeding without.', error);
   }
 
   // Create checkout session

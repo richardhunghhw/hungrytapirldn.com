@@ -11,6 +11,9 @@ ENCRYPTION_SECRET="ENCRYPTION_SECRET"
 BASIC_AUTH_USERNAME="op://HT-TEST/HT Basic/username"
 BASIC_AUTH_PASSWORD="op://HT-TEST/HT Basic/credential"
 
+# Temp till https://github.com/cloudflare/workers-sdk/issues/3436
+CONFIGSTORE_WORKER_URL="op://HT-TEST/HT Basic/store-config"
+
 # Stripe
 STRIPE_PUBLIC_KEY="op://HT-TEST/Stripe API Key/username"
 STRIPE_SECRET_KEY="op://HT-TEST/Stripe API Key/credential"

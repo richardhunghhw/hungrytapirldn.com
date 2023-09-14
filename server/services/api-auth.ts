@@ -26,4 +26,8 @@ export class ApiAuth {
   auth(headers: Headers) {
     return headers.get('Authorization') === `Basic ${this.#passkey}`;
   }
+
+  getAuthString() {
+    return `Basic ${this.#passkey}`;
+  }
 }

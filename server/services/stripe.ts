@@ -1,4 +1,6 @@
 import type { Stripe as StripeApi } from 'stripe';
+import * as Sentry from '@sentry/remix';
+
 import type { Cart } from './cart';
 import type { Content } from './content';
 
@@ -24,6 +26,13 @@ export class Stripe {
         .filter((item) => item.quantity > 0)
         .map(async (item) => {
           const product = await this.#content.getProduct(item.slug);
+          if (!product) {
+            Sentry.captureException('Stripe createCheckoutSession called with invalid product: ' + item.slug);
+            throw new Error('Product not found: ' + item.slug);
+          }
+          if (product.data.enabled === false) {
+            Sentry.captureException('Stripe createCheckoutSession calleed with disabled product: ' + item.slug);
+          }
           return {
             price: product?.data.stripeId,
             quantity: item.quantity,

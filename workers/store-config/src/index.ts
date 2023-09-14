@@ -1,6 +1,8 @@
 /**
  * Config store for Hungry Tapir Store
  */
+import { Buffer } from 'node:buffer';
+
 export { OrderIdObject } from './objects/OrderIdObject';
 
 export default {
@@ -8,12 +10,14 @@ export default {
     try {
       await validateRequest(request, env);
     } catch (error: Error) {
-      if (env.NODE_ENV === 'PROD') {
+      console.error('err', error);
+      if (env.NODE_ENV !== 'PROD') {
         return new Response(error.message, { status: 400 });
       } else {
         return new Response('Invalid request', { status: 400 });
       }
     }
+
     const url = new URL(request.url);
     switch (url.pathname) {
       case '/orderId':
@@ -25,25 +29,15 @@ export default {
 };
 
 async function validateRequest(request: Request, env: Env) {
-  // Validate request method, Accept, Content-Type
-  if (
-    request.method !== 'POST' ||
-    request.headers.get('Accept') !== 'application/json' ||
-    request.headers.get('Content-Type') !== 'application/json'
-  ) {
-    throw new Error('Invalid request, mismatch method, Accept or Content-Type');
+  // Validate request method
+  if (request.method !== 'POST') {
+    throw new Error('Invalid request');
   }
 
-  // Validate request body Token
-  try {
-    const body = await request.json();
-    const token = body.token;
-    const type = body.type;
-    if (token !== env.TOKEN || type !== 'order') {
-      return new Response('Unauthorized', { status: 401 });
-    }
-  } catch (error) {
-    throw new Error('Invalid request body');
+  // Validate request Token
+  const passkey = Buffer.from(`${env.BASIC_AUTH_USERNAME}:${env.BASIC_AUTH_PASSWORD}`).toString('base64');
+  if (request.headers.get('Authorization') !== `Basic ${passkey}`) {
+    throw new Error('Unauthorized');
   }
 }
 

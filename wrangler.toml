@@ -4,9 +4,9 @@ compatibility_date = "2023-06-13"
 compatibility_flags = ["streams_enable_constructors", "nodejs_compat"]
 send_metrics = true
 
-services = [
-  { binding = "CONFIGSTORE_WORKER", service = "hungrytapir-store-config-test" },
-]
+# services = [
+#   { binding = "CONFIGSTORE_WORKER", service = "hungrytapir-store-config-test", environment = "production" },
+# ]
 
 kv_namespaces = [
   { binding = "CONTENT_STORE", id = "123", preview_id = "fbabe5eb5d7f43cd9c336fa1656473d1" },

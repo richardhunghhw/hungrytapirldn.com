@@ -26,7 +26,6 @@ export class Cart {
     } else {
       this.cartContent.push(item);
     }
-    console.log(`addToCart: ${JSON.stringify(this.cartContent)}`);
   }
 
   async removeFromCart(item: CartItem) {
