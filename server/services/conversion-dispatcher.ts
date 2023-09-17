@@ -66,5 +66,7 @@ export class ConversionDispatcher {
     } else {
       await this.#queue.send(message, { contentType: 'json' });
     }
+
+    return message;
   }
 }

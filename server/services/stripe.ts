@@ -44,6 +44,7 @@ export class Stripe {
           };
         }),
     );
+    // TODO validate empty cart
 
     const collectionDateDropdownOptions: { label: any; value: any }[] = [
       {
@@ -78,7 +79,7 @@ export class Stripe {
     const seessionParams = {
       line_items,
       mode: 'payment',
-      success_url: `${this.#hostUrl}/order?status=success&session_id={CHECKOUT_SESSION_ID}",`,
+      success_url: `${this.#hostUrl}/order?status=success&sessionId={CHECKOUT_SESSION_ID}`,
       cancel_url: `${this.#hostUrl}/cart?status=cancelled`,
       client_reference_id: orderId,
 
@@ -119,6 +120,15 @@ export class Stripe {
       shipping_options,
       submit_type: 'pay',
     };
-    return this.#stripe.checkout.sessions.create(seessionParams);
+    const session = await this.#stripe.checkout.sessions.create(seessionParams);
+
+    // Store the checkout session info in the cart session
+    await this.#cart.setCheckoutSession(session.id, orderId);
+
+    return session;
+  }
+
+  async getSession(sessionId: string) {
+    return await this.#stripe.checkout.sessions.retrieve(sessionId);
   }
 }
