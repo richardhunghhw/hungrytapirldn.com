@@ -12,9 +12,3 @@ kv_namespaces = [
   { binding = "CONTENT_STORE", id = "123", preview_id = "fbabe5eb5d7f43cd9c336fa1656473d1" },
   { binding = "SESSION_STORE", id = "123", preview_id = "8cd0d491630c45e5b9e794d11b35c92e" },
 ]
-
-[env.test]
-name = "hungrytapir-store"
-
-[env.prod]
-name = "hungrytapir-store"

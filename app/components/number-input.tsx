@@ -65,7 +65,6 @@ function NumberInput({
 
   useEffect(() => {
     setValue(initValue);
-    console.log('initValue', initValue);
   }, [initValue]);
 
   const handleIncrement = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

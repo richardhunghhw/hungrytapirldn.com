@@ -16,6 +16,8 @@ export let EnvSchema = z.object({
   // CONFIGSTORE_WORKER: z.any(),
   CONFIGSTORE_WORKER_URL: z.string().url(),
 
+  CONVERSION_DISPATCHER_QUEUE: z.any().optional(),
+
   STRIPE_PUBLIC_KEY: z.string().length(107),
   STRIPE_SECRET_KEY: z.string().length(107),
 

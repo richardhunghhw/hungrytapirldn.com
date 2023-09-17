@@ -19,6 +19,7 @@ import { Image } from '~/server/services/image';
 import { Content } from '~/server/services/content';
 import { ApiRefresh } from './server/services/api-refresh';
 import { EnvSchema } from './server/env';
+import { ConversionDispatcher } from './server/services/conversion-dispatcher';
 
 let remixHandler: ReturnType<typeof createRequestHandler>;
 
@@ -102,6 +103,7 @@ export const onRequest: PagesFunction<HTEnv> = async (context) => {
       ),
       content,
       apiRefresh: new ApiRefresh(env.NODE_ENV === 'PROD', image, repos.contentKv, repos.notion),
+      dispatcher: new ConversionDispatcher(env.NODE_ENV === 'DEV', env.CONVERSION_DISPATCHER_QUEUE, cart, content),
     };
 
     // Get response from Remix

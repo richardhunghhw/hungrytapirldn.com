@@ -6,6 +6,8 @@ export type CartItem = {
 
 export type CartSessionData = {
   cart: Array<CartItem>;
+  checkoutSessionId: string;
+  orderId: string;
 };
 
 export type CartFlashData = {

@@ -1,5 +1,5 @@
 {
-  "name": "hungrytapir-store-config",
+  "name": "hungrytapir-conversion-dispatcher",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,8 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "publish:test": "wrangler publish --env test",
     "publish:prod": "wrangler publish --env prod",
-    "logs:test": "wrangler tail hungrytapir-store-config-test",
-    "logs:prod": "wrangler tail hungrytapir-store-config-prod"
+    "logs:test": "wrangler tail hungrytapir-conversion-dispatcher-test",
+    "logs:prod": "wrangler tail hungrytapir-conversion-dispatcher-prod"
   },
   "author": "",
   "license": "ISC",

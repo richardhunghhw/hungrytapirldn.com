@@ -5,6 +5,11 @@ import { Buffer } from 'node:buffer';
 
 export { OrderIdObject } from './objects/OrderIdObject';
 
+type Env = {
+  readonly NODE_ENV: string;
+  DO_ORDERID: DurableObjectNamespace;
+};
+
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     try {
@@ -48,8 +53,3 @@ async function handleOrderIdRequest(request: Request, env: Env): Promise<Respons
 
   return await orderId.fetch(request, env);
 }
-
-type Env = {
-  readonly NODE_ENV: string;
-  DO_ORDERID: DurableObjectNamespace;
-};

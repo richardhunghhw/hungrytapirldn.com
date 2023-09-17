@@ -10,7 +10,7 @@ export async function action({
   request,
   context: {
     env: { CONFIGSTORE_WORKER_URL },
-    services: { stripe, apiAuth },
+    services: { cart, stripe, apiAuth },
   },
 }: ActionArgs) {
   // Handle Cart checkout action
@@ -38,8 +38,12 @@ export async function action({
   // Create checkout session
   const checkoutSession = await stripe.createCheckoutSession(orderId);
   if (!checkoutSession?.url) throw new Error('Unable to create Stripe Checkout Session.'); // TODO handle this better
-  const checkoutUrl = checkoutSession.url;
-  return redirect(checkoutUrl);
+
+  // Save cart to session
+  cart.setCheckoutSession(checkoutSession.id, orderId);
+
+  // Redirect to checkout
+  return redirect(checkoutSession.url);
 }
 
 const CartInformation = ({ products, cart }: { products: ContentStoreProductEntry[]; cart: CartItem[] }) => {

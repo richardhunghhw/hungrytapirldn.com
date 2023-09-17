@@ -6,6 +6,8 @@ export class Cart {
   #sessionKv: SessionKv<CartSessionData, CartFlashData>;
   #session: Session | null = null;
   cartContent: Array<CartItem> = [];
+  checkoutSessionId: string | undefined;
+  orderId: string | undefined;
 
   constructor(sessionKv: SessionKv<CartSessionData, CartFlashData>) {
     this.#sessionKv = sessionKv;
@@ -60,6 +62,13 @@ export class Cart {
     if (!this.#session) throw new Error('Session not initialized');
 
     this.cartContent = [];
+  }
+
+  async setCheckoutSession(checkoutSessionId: string, orderId?: string) {
+    if (!this.#session) throw new Error('Session not initialized');
+
+    this.checkoutSessionId = checkoutSessionId;
+    this.orderId = orderId;
   }
 
   async commit() {

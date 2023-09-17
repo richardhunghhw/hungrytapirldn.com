@@ -1,0 +1,45 @@
+name = "hungrytapir-conversion-dispatcher"
+main = "src/index.ts"
+compatibility_date = "2023-06-13"
+compatibility_flags = ["nodejs_compat"]
+usage_model = "bundled"
+
+[vars]
+NODE_ENV = "DEV"
+
+[[queues.producers]]
+queue = "conversion-dispatcher-inbound-dev"
+binding = "INBOUND"
+
+[[queues.consumers]]
+queue = "conversion-dispatcher-inbound-dev"
+max_batch_size = 1                          # optional: defaults to 10
+max_batch_timeout = 5                       # optional: defaults to 5 seconds
+
+[env.test]
+
+[env.test.vars]
+NODE_ENV = "TEST"
+
+[[env.test.queues.producers]]
+queue = "conversion-dispatcher-inbound-test"
+binding = "INBOUND"
+
+[[env.test.queues.consumers]]
+queue = "conversion-dispatcher-inbound-test"
+max_batch_size = 1
+max_batch_timeout = 5
+
+[env.prod]
+
+[env.prod.vars]
+NODE_ENV = "PROD"
+
+[[env.prod.queues.producers]]
+queue = "conversion-dispatcher-inbound-prod"
+binding = "INBOUND"
+
+[[env.prod.queues.consumers]]
+queue = "conversion-dispatcher-inbound-prod"
+max_batch_size = 1
+max_batch_timeout = 5

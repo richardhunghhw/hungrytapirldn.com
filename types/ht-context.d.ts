@@ -26,6 +26,9 @@ export type HTEnv = {
   // readonly CONFIGSTORE_WORKER: ServiceWorkerGlobalScope;
   readonly CONFIGSTORE_WORKER_URL: string;
 
+  /** Conversion Dispatcher Worker Queue */
+  readonly CONVERSION_DISPATCHER_QUEUE?: Queue<any>;
+
   /** Stripe */
   readonly STRIPE_PUBLIC_KEY: string;
   readonly STRIPE_SECRET_KEY: string;
@@ -64,6 +67,7 @@ export type HTServices = {
   stripe: Stripe;
   content: Content;
   apiRefresh: ApiRefresh;
+  dispatcher: ConversionDispatcher;
 };
 
 declare module '@remix-run/server-runtime' {
