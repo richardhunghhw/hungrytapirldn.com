@@ -27,10 +27,12 @@ export class ConversionDispatcher {
           const product = await this.#content.getProduct(item.slug);
           if (!product) {
             Sentry.captureException('Stripe createCheckoutSession called with invalid product: ' + item.slug);
-            throw new Error('Product not found: ' + item.slug);
+            // throw new Error('Product not found: ' + item.slug);
+            return null;
           }
           if (product.data.enabled === false) {
-            Sentry.captureException('Stripe createCheckoutSession calleed with disabled product: ' + item.slug);
+            Sentry.captureException('Stripe createCheckoutSession called with disabled product: ' + item.slug);
+            return null;
           }
           return {
             price: product?.data.stripeId,
@@ -59,7 +61,7 @@ export class ConversionDispatcher {
       stripe_session_id,
     };
 
-    // Queues are currently in Beta and are not supported in wrangler dev remote mode
+    // TODO Queues are currently in Beta and are not supported in wrangler dev remote mode
     console.log(`ConversionDispatcher: ${JSON.stringify(message)}`);
     if (this.#isDev) {
       console.log('ConversionDispatcher: skipping queue send in dev mode');

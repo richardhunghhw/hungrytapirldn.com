@@ -23,10 +23,11 @@ export async function loader({
     await dispatcher.dispatchStripeCart(sessionId);
 
     // Fetch additional order data from Stripe, redirect back to this page with orderId and email
+    console.debug(`Fetching Stripe session ${sessionId}`);
     const stripeSession = await stripe.getSession(sessionId);
     const orderId = stripeSession.client_reference_id;
     const email = stripeSession.customer_details?.email;
-    console.log(`Retrieved Stripe session ${sessionId}, with orderId ${orderId} for user ${email}`, stripeSession);
+    console.debug(`Retrieved Stripe session ${sessionId}, with orderId ${orderId} for user ${email}`, stripeSession);
     return redirect(`/order?orderId=${orderId}&email=${email}`);
   }
 
