@@ -2,10 +2,10 @@ import { Link } from '@remix-run/react';
 import SocialIcons from './social-icons';
 
 const FOOTER_LINKS = [
-  { name: 'About', to: '/about-us' },
+  { name: 'Our Story', to: '/about-us' },
   { name: 'FAQ', to: '/faq' },
   { name: 'Blogs & Recipes', to: '/blog' },
-  { name: 'Contact', to: '/contact-us' },
+  { name: 'Contact Us', to: '/contact-us' },
   { name: 'Deliveries & Returns', to: '/deliveries-and-returns' },
   { name: 'Terms & Conditions', to: '/terms-and-conditions' },
 ];

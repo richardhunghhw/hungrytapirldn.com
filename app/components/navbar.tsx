@@ -2,14 +2,13 @@ import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '~/components/ui/navigation-menu';
 import NavSidebar from './nav-sidebar';
 import { CartSidebar, type CartSidebarProps } from './cart-sidebar';
 import { NavLink } from './nav-link';
-import { TapirTransparent } from '~/utils/svg/tapir';
+import { useLocation } from '@remix-run/react';
 
 export type NAVBAR_LINK = {
   id: string;
@@ -25,6 +24,7 @@ export const NAVBAR_LINKS: NAVBAR_LINK[] = [
   {
     id: 'order-now',
     name: 'Order Now',
+    to: '/product',
     links: [
       {
         id: 'order-the-pandan-kaya',
@@ -46,10 +46,12 @@ export const NAVBAR_LINKS: NAVBAR_LINK[] = [
   },
   { id: 'about-us', name: 'Our Story', to: '/about-us', enableSidebar: true, enableNavbar: true },
   { id: 'faq', name: 'FAQ', to: '/faq', enableSidebar: true, enableNavbar: false },
-  { id: 'find-us', name: 'Find Us', to: '/contact-us', enableSidebar: true, enableNavbar: true },
+  { id: 'find-us', name: 'Contact Us', to: '/contact-us', enableSidebar: true, enableNavbar: true },
 ];
 
 export default function Navbar({ cart, products }: CartSidebarProps) {
+  const location = useLocation();
+
   return (
     <NavigationMenu className='content-wrapper pt-4'>
       <NavigationMenuList className='content-container flex w-[calc(100vw-2.4rem)] items-center justify-between rounded-full bg-ht-off-white px-6 py-1 font-mono text-2xl font-bold uppercase sm:w-[calc(100vw-3.2rem)] md:w-[calc(100vw-4.2rem)]'>
@@ -67,30 +69,20 @@ export default function Navbar({ cart, products }: CartSidebarProps) {
               <NavigationMenuItem key={link.id}>
                 {Array.isArray(link.links) ? (
                   <>
-                    <NavigationMenuTrigger className='uppercase'>{link.name}</NavigationMenuTrigger>
+                    <NavigationMenuTrigger
+                      className={`uppercase ${location.pathname.startsWith(`${link.to}/`) ? 'underline' : ''}`}
+                    >
+                      {link.name}
+                    </NavigationMenuTrigger>
                     <NavigationMenuContent className='bg-ht-off-white'>
-                      <ul className='grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-7'>
-                        <li className='col-span-4 row-span-3'>
-                          <NavigationMenuLink asChild>
-                            <a
-                              className='flex h-full w-full select-none flex-col justify-end rounded-md bg-white from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md'
-                              href='/'
-                            >
-                              <TapirTransparent className='text-5xl' color='#1C1C1C' />
-                              <p className='text-sm leading-tight text-muted-foreground'>
-                                Handmade, cult-favourite SEA foods in London. Taste the city's best Kaya, crafted in
-                                small batches. Order online here.
-                              </p>
-                            </a>
-                          </NavigationMenuLink>
-                        </li>
+                      <ul className='w-[200px] space-y-4 p-6'>
                         {link.links
                           .filter((link) => link.enableNavbar)
                           .map((subLink) => {
                             return (
-                              <li key={subLink.id} className='col-span-3'>
-                                <NavLink id={subLink.id} to={subLink.to as string}>
-                                  <NavigationMenuLink>{subLink.name}</NavigationMenuLink>
+                              <li key={subLink.id}>
+                                <NavLink id={subLink.id} to={subLink.to as string} className='uppercase'>
+                                  {subLink.name}
                                 </NavLink>
                               </li>
                             );
@@ -99,8 +91,8 @@ export default function Navbar({ cart, products }: CartSidebarProps) {
                     </NavigationMenuContent>
                   </>
                 ) : (
-                  <NavLink id={link.id} to={link.to as string} asChild>
-                    <NavigationMenuLink>{link.name}</NavigationMenuLink>
+                  <NavLink id={link.id} to={link.to as string}>
+                    {link.name}
                   </NavLink>
                 )}
               </NavigationMenuItem>

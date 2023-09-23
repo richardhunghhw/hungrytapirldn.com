@@ -96,7 +96,7 @@ export default function Index() {
           </div>
           <div className='absolute flex flex-col items-center'>
             <TapirTransparent className='text-5xl md:text-8xl' />
-            <h1 className='title text-center text-3xl tracking-widest md:text-6xl'>WE MAKE KAYA</h1>
+            <h1 className='title text-center text-5xl tracking-[.5em] md:text-7xl'>WE MAKE KAYA</h1>
           </div>
         </div>
       </header>
@@ -106,11 +106,11 @@ export default function Index() {
           <ul className='title flex flex-row items-center justify-between space-x-4 overflow-hidden whitespace-nowrap text-xl text-ht-black'>
             <li>HOMEMADE</li>
             <li>{circle()}</li>
-            <li>100% TASTY</li>
-            <li>{circle()}</li>
             <li>SMALL-BATCH</li>
+            <li>{circle()}</li>
+            <li>PRESERVATIVE FREE</li>
             <li className='hidden lg:block'>{circle()}</li>
-            <li className='hidden lg:block'>DAIRY-FREE</li>
+            <li className='hidden lg:block'>MADE WITH CARE</li>
           </ul>
         </div>
       </section>

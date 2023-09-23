@@ -7,7 +7,7 @@ const navLinkVariants = cva('whitespace-nowrap focus:outline-none', {
   variants: {
     variant: {
       default: 'text-ht-black',
-      active: 'text-ht-black underline',
+      active: 'text-ht-black underline font-bold',
     },
     position: {
       navbar: '',
