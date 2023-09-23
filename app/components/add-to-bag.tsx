@@ -14,7 +14,7 @@ function AddToBag({ slug, enabled, className, ...props }: AddToBagProps) {
   // console.log(fetcher);
 
   return (
-    <fetcher.Form id={`${slug}-add-to-bag-form`} action='/' method='post' className='flex flex-col'>
+    <fetcher.Form id={`${slug}-add-to-bag-form`} action='/' method='post' className='flex flex-col items-center'>
       <input type='hidden' name='slug' value={slug} />
       <input type='hidden' name='action' value='add' />
       <div className='md:block'>

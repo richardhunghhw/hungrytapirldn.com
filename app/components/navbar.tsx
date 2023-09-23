@@ -54,7 +54,7 @@ export default function Navbar({ cart, products }: CartSidebarProps) {
 
   return (
     <NavigationMenu className='content-wrapper pt-4'>
-      <NavigationMenuList className='content-container flex w-[calc(100vw-2.4rem)] items-center justify-between rounded-full bg-ht-off-white px-6 py-1 font-mono text-2xl font-bold uppercase sm:w-[calc(100vw-3.2rem)] md:w-[calc(100vw-4.2rem)]'>
+      <NavigationMenuList className='content-container flex w-[calc(100vw-2rem)] items-center justify-between rounded-full bg-ht-off-white px-6 py-1 font-mono text-2xl font-bold uppercase md:w-[calc(100vw-4rem)] lg:w-[calc(100vw-8rem)]'>
         <NavSidebar />
 
         <NavigationMenuItem className='title py-2 text-xl md:text-2xl'>
