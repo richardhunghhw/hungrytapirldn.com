@@ -13,8 +13,11 @@ binding = "INBOUND"
 
 [[queues.consumers]]
 queue = "conversion-dispatcher-inbound-dev"
-max_batch_size = 1                          # optional: defaults to 10
-max_batch_timeout = 5                       # optional: defaults to 5 seconds
+max_batch_size = 1
+max_batch_timeout = 5
+max_retries = 3
+dead_letter_queue = "conversion-dispatcher-deadletter-dev"
+max_concurrency = 1
 
 [env.test]
 
@@ -29,6 +32,9 @@ binding = "INBOUND"
 queue = "conversion-dispatcher-inbound-test"
 max_batch_size = 1
 max_batch_timeout = 5
+max_retries = 3
+dead_letter_queue = "conversion-dispatcher-deadletter-test"
+max_concurrency = 1
 
 [env.prod]
 
@@ -43,3 +49,6 @@ binding = "INBOUND"
 queue = "conversion-dispatcher-inbound-prod"
 max_batch_size = 1
 max_batch_timeout = 5
+max_retries = 3
+dead_letter_queue = "conversion-dispatcher-deadletter-prod"
+max_concurrency = 1

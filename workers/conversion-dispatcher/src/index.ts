@@ -18,17 +18,24 @@ export default {
   },
 
   async queue(batch: MessageBatch<any>, env: Env): Promise<void> {
-    let messages = JSON.stringify(batch.messages);
-    console.log(`consumed from our queue: ${messages}`);
     for (let message of batch.messages) {
-      await processOrderMessage(message);
+      try {
+        await processMessage(env, message);
+        message.ack();
+      } catch (e) {
+        message.retry();
+      }
     }
   },
 };
 
-async function processOrderMessage(order: any) {
-  console.log(`processing order: ${JSON.stringify(order)}`);
-  return fetch(process.env.ORDER_CREATION_API, {
+async function processMessage(env: Env, order: any) {
+  console.log(`Processing message: ${JSON.stringify(order)}`);
+
+  // Validate message to be an order
+
+  // Submit order to API
+  await fetch(env.ORDER_CREATION_API, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

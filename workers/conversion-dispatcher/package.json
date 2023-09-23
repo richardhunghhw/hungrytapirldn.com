@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "wrangler dev src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "publish:test": "wrangler publish --env test",
-    "publish:prod": "wrangler publish --env prod",
+    "publish:test": "wrangler publish --env test --keep-vars",
+    "publish:prod": "wrangler publish --env prod --keep-vars",
     "logs:test": "wrangler tail hungrytapir-conversion-dispatcher-test",
     "logs:prod": "wrangler tail hungrytapir-conversion-dispatcher-prod"
   },

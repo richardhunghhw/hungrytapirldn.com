@@ -4,8 +4,8 @@ import { useLoaderData } from '@remix-run/react';
 /**
  * This loader needs to handle the following scenarios:
  * 1. User is redirected from Stripe with a session_id and status=success
- * 2. No GET params, user is trying to access the page directly
- * 3. GET params of orderId and email
+ * 2. GET params of orderId and email
+ * with No GET params, user is trying to access the page directly, show form
  */
 export async function loader({
   request,
@@ -19,7 +19,7 @@ export async function loader({
   const status = url.searchParams.get('status');
   const sessionId = url.searchParams.get('sessionId');
   if (sessionId && status === 'success') {
-    // Dispatch info to db
+    // Dispatch info to queue
     await dispatcher.dispatchStripeCart(sessionId);
 
     // Fetch additional order data from Stripe, redirect back to this page with orderId and email
