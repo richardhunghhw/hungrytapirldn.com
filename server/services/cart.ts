@@ -71,6 +71,18 @@ export class Cart {
     this.orderId = orderId;
   }
 
+  async resetCheckoutSession() {
+    if (!this.#session) throw new Error('Session not initialized');
+
+    const eCheckoutSessionId = this.checkoutSessionId;
+    const eOrderId = this.orderId;
+
+    this.checkoutSessionId = undefined;
+    this.orderId = undefined;
+
+    return { checkoutSessionId: eCheckoutSessionId, orderId: eOrderId };
+  }
+
   async commit() {
     if (!this.#session) throw new Error('Session not initialized');
 
