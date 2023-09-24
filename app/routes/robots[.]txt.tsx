@@ -16,7 +16,7 @@ const generateRobotText = (context: AppLoadContext) => {
         Disallow: /cart
         Disallow: /checkout
     
-        Sitemap: ${context.HOST_URL}/sitemap.xml
+        Sitemap: ${context.env.HOST_URL}/sitemap.xml
         `;
   } else {
     return `
