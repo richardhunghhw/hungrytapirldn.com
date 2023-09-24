@@ -5,6 +5,8 @@
 import { type ActionArgs, redirect } from '@remix-run/cloudflare';
 import type { V2_MetaArgs } from '@remix-run/react';
 import { Link, useLoaderData } from '@remix-run/react';
+import * as Sentry from '@sentry/remix';
+
 import { isProd } from '~/utils/misc';
 import type { ContentStoreFaqEntry } from '~/server/entities/content';
 import { validateRequest } from '~/utils/content';
@@ -24,19 +26,13 @@ export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { r
 
 export async function loader({ request: { url }, context, params }: ActionArgs) {
   // Fetch faq data from content-store
-  try {
-    const urlPath = validateRequest(new URL(url));
-    const result = await context.services.content.getFaq(urlPath.slug);
-    if (!result) {
-      // todo sentry error
-      throw new Error('FAQ Entry not found');
-    }
-    return result;
-  } catch (error) {
-    console.error(error); // TODO badlink
-    if (isProd(context)) return redirect('/404');
+  const urlPath = validateRequest(new URL(url));
+  const result = await context.services.content.getFaq(urlPath.slug);
+  if (!result) {
+    Sentry.captureMessage(`FAQ Entry not found for slug: ${urlPath.slug}`);
+    return redirect('/faq');
   }
-  return null;
+  return result;
 }
 
 export default function Faq() {

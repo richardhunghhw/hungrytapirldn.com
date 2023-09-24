@@ -5,13 +5,15 @@
 import { type ActionArgs, redirect } from '@remix-run/cloudflare';
 import type { V2_MetaArgs } from '@remix-run/react';
 import { Link, useLoaderData } from '@remix-run/react';
+import * as Sentry from '@sentry/remix';
+
 import { isProd } from '~/utils/misc';
 import type { ContentStoreBlogEntry } from '~/server/entities/content';
+import { validateRequest } from '~/utils/content';
 import { ArrowLeft } from 'lucide-react';
 import { MarkdownContent } from '~/components/markdown-content';
 import { getSeoMetas } from '~/utils/seo';
 import type { loader as rootLoader } from '~/root';
-import { validateRequest } from '~/utils/content';
 
 export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { root: typeof rootLoader }>) {
   const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;
@@ -24,19 +26,13 @@ export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { r
 
 export async function loader({ request: { url }, context, params }: ActionArgs) {
   // Fetch blog data content-store
-  try {
-    const urlPath = validateRequest(new URL(url));
-    const result = await context.services.content.getBlog(urlPath.slug);
-    if (!result) {
-      // todo sentry error
-      throw new Error('Entry not found');
-    }
-    return result;
-  } catch (error) {
-    console.error(error); // TODO badlink
-    if (isProd(context)) return redirect('/404');
+  const urlPath = validateRequest(new URL(url));
+  const result = await context.services.content.getBlog(urlPath.slug);
+  if (!result) {
+    Sentry.captureMessage(`Blog Entry not found for slug: ${urlPath.slug}`);
+    return redirect('/faq');
   }
-  return null;
+  return result;
 }
 
 export default function Blog() {
