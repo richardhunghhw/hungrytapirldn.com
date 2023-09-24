@@ -20,6 +20,7 @@ import Footer from './components/footer';
 import { isDev } from './utils/misc';
 import { useEffect, useState } from 'react';
 import type { CartItem } from '~/server/entities/cart';
+import { LoadingBar } from './components/loading-bar';
 
 export const links: LinksFunction = () => {
   return [
@@ -107,14 +108,15 @@ function App() {
   }, [loaderData.cart]);
 
   return (
-    <html lang='en'>
+    <html lang='en' className='h-full'>
       <head>
         <meta httpEquiv='Content-Type' content='text/html; charset=utf-8' />
         <meta name='viewport' content='width=device-width,initial-scale=1' />
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className='h-full'>
+        <LoadingBar />
         {!BYPASS_HEADERFOOTER_PATHS.includes(pathname) && <Navbar cart={cart} products={loaderData.products} />}
         <Outlet />
         {!BYPASS_HEADERFOOTER_PATHS.includes(pathname) && <Footer />}
