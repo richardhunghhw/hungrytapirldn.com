@@ -41,7 +41,9 @@ export default function FaqIndex() {
     <>
       <div className='content-wrapper bg-ht-green-highlight'>
         <div className='content-container'>
-          <h1 className='title title-section text-center'>Frequently Asked Questions</h1>
+          <div className='title-section text-center'>
+            <h1>Frequently Asked Questions</h1>
+          </div>
         </div>
       </div>
       <div className='content-wrapper'>

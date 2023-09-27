@@ -101,10 +101,27 @@
   }
 
   .title-section {
-    @apply my-56;
+    @apply flex;
+    @apply flex-col;
+    @apply justify-center;
+    @apply h-[38rem];
+  }
+
+  .title-section > h1 {
     @apply text-2xl;
     @apply sm:text-4xl;
     @apply md:text-6xl;
+    @apply text-center;
+    @apply font-serif;
+    @apply font-bold;
+    @apply uppercase;
+  }
+
+  .title-section-backlink {
+    @apply font-mono;
+    @apply text-base;
+    @apply absolute;
+    @apply top-24;
   }
 
   .body-text-wrapper {

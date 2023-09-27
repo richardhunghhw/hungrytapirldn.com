@@ -44,11 +44,11 @@ export default function Blog() {
     <>
       <header className='content-wrapper bg-ht-turquoise'>
         <div className='content-container'>
-          <div className='title-section flex flex-col'>
-            <Link to='/blog' className='text-base'>
+          <div className='title-section'>
+            <Link to='/blog' className='title-section-backlink'>
               <ArrowLeft className='inline' /> Back to Blogs
             </Link>
-            <h1 className='title text-center'>{blogData.metadata.title}</h1>
+            <h1>{blogData.metadata.title}</h1>
           </div>
         </div>
       </header>

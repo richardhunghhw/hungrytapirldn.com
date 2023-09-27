@@ -49,9 +49,9 @@ export default function Order() {
   return (
     <main className='flex min-h-screen flex-col'>
       <header className='content-wrapper bg-ht-green'>
-        <div className='content-container'>
-          <div className='title-section flex flex-col'>
-            <h1 className='title text-center'>Thank you for your order</h1>
+      <div className='content-container'>
+          <div className='title-section text-center'>
+            <h1>Thank you for your order</h1>
           </div>
         </div>
       </header>

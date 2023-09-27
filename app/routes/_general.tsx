@@ -37,8 +37,8 @@ export default function GeneralLayout() {
     <main className='flex min-h-screen flex-col'>
       <header className='content-wrapper bg-ht-orange'>
         <div className='content-container'>
-          <div className='title-section flex flex-col'>
-            <h1 className='title text-center'>{outletData.metadata.title}</h1>
+          <div className='title-section text-center'>
+            <h1>{outletData.metadata.title}</h1>
           </div>
         </div>
       </header>

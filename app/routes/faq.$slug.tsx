@@ -44,13 +44,11 @@ export default function Faq() {
     <>
       <header className='content-wrapper bg-ht-green-highlight'>
         <div className='content-container'>
-          <div className='title-section flex flex-col'>
-            <Link to='/faq' className='text-base'>
-              <ArrowLeft className='inline text-base' /> Back to FAQs
+          <div className='title-section'>
+            <Link to='/faq' className='title-section-backlink'>
+              <ArrowLeft className='inline' /> Back to FAQs
             </Link>
-            <h1 className='title text-center' id={faqEntry.metadata.slug}>
-              {faqEntry.metadata.title}
-            </h1>
+            <h1>{faqEntry.metadata.slug}</h1>
           </div>
         </div>
       </header>

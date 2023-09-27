@@ -38,7 +38,9 @@ export default function BlogIndex() {
     <>
       <div className='content-wrapper bg-ht-turquoise'>
         <div className='content-container'>
-          <h1 className='title title-section text-center'>Blog</h1>
+          <div className='title-section text-center'>
+            <h1>Blog</h1>
+          </div>
         </div>
       </div>
       <div className='content-wrapper'>
