@@ -128,6 +128,7 @@ export default function Index() {
           </div>
           <div className='flex w-full flex-grow flex-col items-start justify-center space-y-4 rounded-3xl px-4 text-left font-mono text-ht-black md:w-auto md:max-w-[70%] md:items-center md:space-y-10 md:border-2 md:border-ht-black md:p-8'>
             <h1 className='title font-serif text-2xl md:text-4xl'>What is kaya?</h1>
+            <hr className='w-full border-2 border-ht-black md:hidden' />
             <div>
               {data.whatKaya.data.general.map((item, index) => (
                 <p key={index}>{item}</p>
