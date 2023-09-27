@@ -38,7 +38,7 @@ function CDNImage({
   alt,
   src,
   lazy = true,
-  transformation = [{ height: '400', width: '600', mode: 'fo-auto' }],
+  transformation = [{ height: '400', width: '600', mode: 'fo-auto', progressive: true }],
   ...rest
 }: CDNImageProps) {
   if (!name && !(alt && src)) {
@@ -55,6 +55,7 @@ function CDNImage({
         alt={image.alt}
         lqip={{ active: true, quality: 10 }}
         loading={lazy ? 'lazy' : 'eager'}
+        transformation={transformation}
         {...rest}
       />
     );

@@ -53,7 +53,7 @@ function ProductCard({ product }: { product: ContentStoreProductEntry }): JSX.El
             alt={product.data.images[0].alt}
             src={product.data.images[0].url}
             className='h-full w-full object-cover'
-            transformation={[]}
+            transformation={[{ height: '600', width: '600', mode: 'fo-auto', progressive: true }]}
           />
         </AspectRatio>
       </div>
@@ -96,6 +96,7 @@ export default function Index() {
               name='landing'
               className='h-[calc(100vh-200px)] w-screen object-cover md:h-[calc(100vh-100px)]'
               lazy={false}
+              transformation={[{ progressive: true }]}
             />
           </div>
           <div className='absolute flex flex-col items-center'>
@@ -123,7 +124,11 @@ export default function Index() {
         <div className='content-container flex flex-col items-center space-y-4 md:flex-row md:space-x-4 md:space-y-0 lg:space-x-16'>
           <div className='w-[calc(100vw-2.4rem)] overflow-hidden rounded-3xl sm:w-[calc(100vw-3.2rem)] md:w-[64rem]'>
             <AspectRatio ratio={8 / 11}>
-              <CDNImage name='kayaToast' className='h-full w-full object-cover' />
+              <CDNImage
+                name='kayaToast'
+                className='h-full w-full object-cover'
+                transformation={[{ progressive: true }]}
+              />
             </AspectRatio>
           </div>
           <div className='flex w-full flex-grow flex-col items-start justify-center space-y-4 rounded-3xl px-4 text-left font-mono text-ht-black md:w-auto md:max-w-[70%] md:items-center md:space-y-10 md:border-2 md:border-ht-black md:p-8'>
@@ -156,7 +161,11 @@ export default function Index() {
           </div>
           <div className='w-[calc(100vw-2.4rem)] overflow-hidden rounded-3xl sm:w-[calc(100vw-3.2rem)] md:w-[42rem]'>
             <AspectRatio ratio={8 / 11}>
-              <CDNImage name='coconutTree' className='h-full w-full object-cover' />
+              <CDNImage
+                name='coconutTree'
+                className='h-full w-full object-cover'
+                transformation={[{ progressive: true }]}
+              />
             </AspectRatio>
           </div>
         </div>

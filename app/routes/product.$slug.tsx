@@ -57,7 +57,7 @@ export default function Product() {
                 alt={productData.data.images[0].alt}
                 src={productData.data.images[0].url}
                 className='h-full w-full object-cover'
-                transformation={[]}
+                transformation={[{ height: '600', width: '600', mode: 'fo-auto', progressive: true }]}
               />
             </AspectRatio>
           </div>
