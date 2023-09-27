@@ -17,15 +17,13 @@ function AddToBag({ slug, enabled, className, ...props }: AddToBagProps) {
     <fetcher.Form id={`${slug}-add-to-bag-form`} action='/' method='post' className='flex flex-col items-center'>
       <input type='hidden' name='slug' value={slug} />
       <input type='hidden' name='action' value='add' />
-      <div className='md:block md:w-full'>
-        <NumberInput slug={slug} />
-      </div>
+      <NumberInput slug={slug} />
       <Button
         type='submit'
         id={`${slug}-add-to-bag`}
         variant='dark'
         size='lg'
-        className={cn('mt-6 uppercase md:w-full', className)}
+        className={cn('mt-6 w-full uppercase', className)}
         enabled={enabled}
       >
         {enabled ? 'Add to bag' : 'Not available'}

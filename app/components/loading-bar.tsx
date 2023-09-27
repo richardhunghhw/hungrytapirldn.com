@@ -4,7 +4,6 @@ import { cn } from './ui/lib/utils';
 function LoadingBar() {
   const navigation = useNavigation();
   const active = navigation.state !== 'idle';
-  console.log('loading', active);
 
   return (
     <div

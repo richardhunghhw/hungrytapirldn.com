@@ -4,7 +4,7 @@ import { cva } from 'class-variance-authority';
 import { Input } from '~/components/ui/input';
 import { cn } from './ui/lib/utils';
 
-const inputSpinnerVariants = cva('cursor-pointer border-0 bg-transparent px-8 font-bold', {
+const inputSpinnerVariants = cva('cursor-pointer border-0 bg-transparent px-6 sm:px-8 font-bold', {
   variants: {
     position: {
       page: 'py-2.5',
@@ -35,14 +35,17 @@ function InputSpinner({
   );
 }
 
-const numberInputVariants = cva('inline-flex md:w-full rounded-full border-2 border-ht-black font-mono', {
-  variants: {
-    position: {
-      page: '',
-      sidebar: '',
+const numberInputVariants = cva(
+  'inline-flex w-full rounded-full border-2 border-ht-black font-mono items-center max-w-56',
+  {
+    variants: {
+      position: {
+        page: '',
+        sidebar: '',
+      },
     },
   },
-});
+);
 
 export interface NumberInputProps extends React.HTMLAttributes<HTMLDivElement> {
   slug: string;
