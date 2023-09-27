@@ -14,17 +14,23 @@ import { getSeoMetas } from '~/utils/seo';
 import type { loader as rootLoader } from '~/root';
 
 const LINKINBIO_LINKS = [
-  // { name: 'Website', to: '/', icon: undefined, cssOverride: undefined },
-  // { name: 'Blog', to: '/blog', icon: undefined, cssOverride: undefined },
-  { name: 'FAQ', to: '/faq', icon: undefined, cssOverride: undefined },
+  { name: 'Website', to: '/', icon: undefined, cssOverride: undefined },
   {
-    name: 'Pre-Order for stall collection',
-    to: '//buy.hungrytapirldn.com/',
+    name: 'Pre-Order for Stall Collection / Delivery',
+    to: '/product/the-pandan-kaya',
     icon: undefined,
     cssOverride: undefined,
   },
+  // { name: 'Blog', to: '/blog', icon: undefined, cssOverride: undefined },
+  { name: 'FAQ', to: '/faq', icon: undefined, cssOverride: undefined },
+  // {
+  //   name: 'Pre-Order for stall collection',
+  //   to: '//buy.hungrytapirldn.com/',
+  //   icon: undefined,
+  //   cssOverride: undefined,
+  // },
   {
-    name: 'DELLI - Order Online',
+    name: 'DELLI Market - IOS only!',
     to: '//delli.app.link/Uo9albLUl0-601hOCxLTAQ/hungrytapirldn',
     icon: undefined,
     cssOverride: 'text-ht-black bg-[#DBAF1F] hover:bg-[#DBAF1F] border-[#DBAF1F] hover:opacity-80',
