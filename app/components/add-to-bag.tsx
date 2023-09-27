@@ -14,7 +14,12 @@ function AddToBag({ slug, enabled, className, ...props }: AddToBagProps) {
   // console.log(fetcher);
 
   return (
-    <fetcher.Form id={`${slug}-add-to-bag-form`} action='/' method='post' className='flex flex-col items-center'>
+    <fetcher.Form
+      id={`${slug}-add-to-bag-form`}
+      action='/'
+      method='post'
+      className={cn('flex flex-col items-center', className)}
+    >
       <input type='hidden' name='slug' value={slug} />
       <input type='hidden' name='action' value='add' />
       <NumberInput slug={slug} />
@@ -23,7 +28,7 @@ function AddToBag({ slug, enabled, className, ...props }: AddToBagProps) {
         id={`${slug}-add-to-bag`}
         variant='dark'
         size='lg'
-        className={cn('mt-6 w-full uppercase', className)}
+        className='mt-6 w-full uppercase'
         enabled={enabled}
       >
         {enabled ? 'Add to bag' : 'Not available'}

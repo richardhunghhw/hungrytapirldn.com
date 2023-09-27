@@ -47,7 +47,7 @@ function ProductCard({ product }: { product: ContentStoreProductEntry }): JSX.El
 
   return (
     <div className='flex w-full flex-grow flex-col items-center justify-center space-y-4 rounded-3xl text-ht-black md:w-fit md:border-2 md:border-ht-black md:p-6 lg:p-12'>
-      <div className='order-first w-[260px] overflow-hidden md:order-none md:w-[280px] lg:w-[320px]'>
+      <div className='order-first w-[260px] overflow-hidden sm:w-[320px] md:order-none md:w-[280px] lg:w-[320px]'>
         <AspectRatio ratio={aspectRatio}>
           <CDNImage
             alt={product.data.images[0].alt}
@@ -66,7 +66,11 @@ function ProductCard({ product }: { product: ContentStoreProductEntry }): JSX.El
         ))}
       </Link>
       <div className='text-2xl font-extrabold text-black'>£{product.data.price}</div>
-      <AddToBag slug={product.slug} enabled={product.data.enabled} className='text-ht-orange' />
+      <AddToBag
+        slug={product.slug}
+        enabled={product.data.enabled}
+        className='w-full max-w-[260px] sm:max-w-[320px] md:max-w-[280px] lg:max-w-[320px]'
+      />
     </div>
   );
 }
