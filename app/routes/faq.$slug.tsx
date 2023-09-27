@@ -48,7 +48,7 @@ export default function Faq() {
             <Link to='/faq' className='title-section-backlink'>
               <ArrowLeft className='inline' /> Back to FAQs
             </Link>
-            <h1>{faqEntry.metadata.slug}</h1>
+            <h1>{faqEntry.metadata.title}</h1>
           </div>
         </div>
       </header>

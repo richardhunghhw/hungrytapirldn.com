@@ -9,17 +9,17 @@ function MarkdownLine({ data }: { data: string }) {
         overrides: {
           h1: {
             props: {
-              className: 'text-5xl font-bold font-serif uppercase',
+              className: 'text-3xl font-bold font-serif uppercase',
             },
           },
           h2: {
             props: {
-              className: 'text-3xl font-bold font-serif uppercase',
+              className: 'text-2xl font-serif uppercase',
             },
           },
           h3: {
             props: {
-              className: 'text-2xl font-bold font-serif uppercase',
+              className: 'text-xl font-serif uppercase',
             },
           },
           p: {

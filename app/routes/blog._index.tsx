@@ -44,7 +44,7 @@ export default function BlogIndex() {
         </div>
       </div>
       <div className='content-wrapper'>
-        <div className='content-container my-8 sm:my-16'>
+        <div className='content-container my-8 font-mono sm:my-16'>
           <ul className='divide-y divide-gray-100'>
             {data?.map((entry: ContentStoreEntry) => (
               <li key={entry.slug} className='m-4 py-4'>

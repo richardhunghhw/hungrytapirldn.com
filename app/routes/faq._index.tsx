@@ -47,7 +47,7 @@ export default function FaqIndex() {
         </div>
       </div>
       <div className='content-wrapper'>
-        <div className='content-container mx-4 my-8'>
+        <div className='content-container mx-4 my-8 font-mono'>
           <ul className='divide-y divide-gray-800'>
             {faqHeadings.map((faqHeading) => {
               const heading = faqHeading.split('~')[1] as string;

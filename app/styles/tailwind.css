@@ -104,7 +104,7 @@
     @apply flex;
     @apply flex-col;
     @apply justify-center;
-    @apply h-[38rem];
+    @apply h-[42rem];
   }
 
   .title-section > h1 {
