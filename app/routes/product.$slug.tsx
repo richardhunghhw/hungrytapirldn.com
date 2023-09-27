@@ -75,7 +75,7 @@ export default function Product() {
               <MarkdownLine data={productData.data.ingredients} />
             </div>
             <p className='font-bold'>{productData.data.unit}</p>
-            <AddToBag slug={productData.slug} enabled={productData.data.enabled} className='text-white' />
+            <AddToBag slug={productData.slug} enabled={productData.data.enabled} />
           </div>
         </div>
       </div>
