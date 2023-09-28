@@ -20,9 +20,9 @@ export default function Footer() {
             <SocialIcons />
           </div>
           <div className='basis-2/3 md:basis-1/2'>
-            <ul className='flex flex-col flex-wrap uppercase lg:h-[5rem]'>
+            <ul className='flex flex-col flex-wrap uppercase lg:h-[7rem]'>
               {FOOTER_LINKS.map((link) => (
-                <li key={link.to}>
+                <li key={link.to} className='py-1'>
                   <Link prefetch='intent' className='hover:text-opacity-50 focus:text-opacity-50' to={link.to}>
                     {link.name}
                   </Link>

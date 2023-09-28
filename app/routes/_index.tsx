@@ -1,10 +1,10 @@
+import { ReactNode, Suspense } from 'react';
 import type { V2_MetaArgs } from '@remix-run/react';
-import { Link, useLoaderData } from '@remix-run/react';
-import { json, type LoaderArgs } from '@remix-run/cloudflare';
-import { promiseHash } from 'remix-utils';
+import { Await, Link, useLoaderData } from '@remix-run/react';
+import { defer, type LoaderArgs } from '@remix-run/cloudflare';
 
 import { Button } from '~/components/ui/button';
-import type { ContentStoreGeneralEntry, ContentStoreProductEntry } from '~/server/entities/content';
+import type { ContentStoreProductEntry } from '~/server/entities/content';
 import { makeUriFromContentTypeSlug } from '~/utils/content';
 import { TapirTransparent } from '~/utils/svg/tapir';
 import { AspectRatio } from '~/components/ui/aspect-ratio';
@@ -12,6 +12,7 @@ import { AddToBag } from '~/components/add-to-bag';
 import { getSeoMetas } from '~/utils/seo';
 import type { loader as rootLoader } from '~/root';
 import { CDNImage } from '~/components/cdn-image';
+import { Skeleton } from '~/components/ui/skeleton';
 
 const circle = () => <div className='h-4 w-4 rounded-full bg-ht-black' />;
 
@@ -30,14 +31,12 @@ export async function loader({
     services: { content },
   },
 }: LoaderArgs) {
-  return json(
-    await promiseHash({
-      orderNow: content.getGeneral('section~order-now'),
-      whatKaya: content.getGeneral('section~what-is-kaya'),
-      kayaPandan: content.getProduct('the-pandan-kaya'),
-      kayaVegan: content.getProduct('the-vegan-kaya'),
-    }),
-  );
+  return defer({
+    orderNow: content.getGeneral('section~order-now'),
+    whatKaya: content.getGeneral('section~what-is-kaya'),
+    kayaPandan: content.getProduct('the-pandan-kaya'),
+    kayaVegan: content.getProduct('the-vegan-kaya'),
+  });
 }
 
 function ProductCard({ product }: { product: ContentStoreProductEntry }): JSX.Element {
@@ -73,14 +72,30 @@ function ProductCard({ product }: { product: ContentStoreProductEntry }): JSX.El
   );
 }
 
+function ProductCardSkeleton() {
+  return (
+    <div className='flex w-full flex-grow flex-col items-center justify-center space-y-4 rounded-3xl text-ht-black md:w-fit md:border-2 md:border-ht-black md:p-6 lg:p-12'>
+      <Skeleton className='h-60 w-[260px] sm:w-[320px] md:w-[280px] lg:w-[320px]' />
+      <Skeleton className='h-6 w-full' />
+      <Skeleton className='h-6 w-full' />
+      <Skeleton className='h-6 w-full' />
+    </div>
+  );
+}
+
+function SectionSkeleton() {
+  return (
+    <div className='flex w-full flex-grow flex-col items-center justify-center space-y-4 overflow-x-hidden'>
+      <Skeleton className='h-6 w-full' />
+      <Skeleton className='h-6 w-full' />
+      <Skeleton className='h-6 w-full' />
+      <Skeleton className='h-6 w-full' />
+    </div>
+  );
+}
+
 export default function Index() {
-  const data = useLoaderData<{
-    orderNow: ContentStoreGeneralEntry;
-    whatKaya: ContentStoreGeneralEntry;
-    kayaPandan: ContentStoreProductEntry;
-    kayaVegan: ContentStoreProductEntry;
-  }>();
-  if (!data) return null; // todo
+  const { orderNow, whatKaya, kayaPandan, kayaVegan } = useLoaderData<typeof loader>();
 
   return (
     <main className='snap-y snap-normal'>
@@ -130,13 +145,17 @@ export default function Index() {
             </AspectRatio>
           </div>
           <div className='flex w-full flex-grow flex-col items-start justify-center space-y-4 rounded-3xl px-4 text-left font-mono text-ht-black md:w-auto md:max-w-[70%] md:items-center md:space-y-10 md:border-2 md:border-ht-black md:p-8'>
-            <h1 className='title font-serif text-2xl md:text-4xl'>What is kaya?</h1>
+            <h2 className='title font-serif text-2xl md:text-4xl'>What is kaya?</h2>
             <hr className='w-full border-2 border-ht-black md:hidden' />
-            <div>
-              {data.whatKaya.data.general.map((item, index) => (
-                <p key={index}>{item}</p>
-              ))}
-            </div>
+            <Suspense fallback={<SectionSkeleton />}>
+              <Await resolve={whatKaya}>
+                {(whatKaya) =>
+                  Array.prototype.map.call(whatKaya.data.general, (item, index) => (
+                    <p key={index}>{item}</p>
+                  )) as ReactNode[]
+                }
+              </Await>
+            </Suspense>
           </div>
         </div>
       </section>
@@ -144,15 +163,19 @@ export default function Index() {
       <section id='order-now' className='content-wrapper snap-start bg-ht-pink py-6 md:py-16'>
         <div className='content-container flex flex-col-reverse items-center space-y-4 space-y-reverse md:flex-row md:space-x-4 md:space-y-0 lg:space-x-16'>
           <div className='flex flex-grow flex-col items-start justify-center space-y-4 rounded-3xl px-4 text-left font-mono text-ht-black md:w-auto md:max-w-[70%] md:items-center md:space-y-10 md:border-2 md:border-ht-black md:p-8 md:text-center'>
-            <h1 className='title font-serif text-2xl md:text-4xl'>Pandan</h1>
-            <h1 className='title font-serif text-2xl md:text-4xl'>Coconut Milk</h1>
-            <h1 className='title font-serif text-2xl md:text-4xl'>Gula Melaka</h1>
+            <h2 className='title font-serif text-2xl md:text-4xl'>Pandan</h2>
+            <h2 className='title font-serif text-2xl md:text-4xl'>Coconut Milk</h2>
+            <h2 className='title font-serif text-2xl md:text-4xl'>Gula Melaka</h2>
             <hr className='w-full border-2 border-ht-black md:hidden' />
-            <div>
-              {data.orderNow.data.general.map((item, index) => (
-                <p key={index}>{item}</p>
-              ))}
-            </div>
+            <Suspense fallback={<SectionSkeleton />}>
+              <Await resolve={orderNow}>
+                {(orderNow) =>
+                  Array.prototype.map.call(orderNow.data.general, (item, index) => (
+                    <p key={index}>{item}</p>
+                  )) as ReactNode[]
+                }
+              </Await>
+            </Suspense>
             <Button variant='outline' size='lg' className='px-16'>
               ORDER NOW
             </Button>
@@ -171,8 +194,12 @@ export default function Index() {
 
       <section id='product-cards' className='content-wrapper snap-start bg-ht-orange py-8 md:py-16'>
         <div className='content-container flex flex-col space-y-12 md:flex-row md:space-x-4 md:space-y-0 lg:space-x-16'>
-          <ProductCard product={data.kayaPandan} />
-          <ProductCard product={data.kayaVegan} />
+          <Suspense fallback={<ProductCardSkeleton />}>
+            <Await resolve={kayaPandan}>{(kayaPandan) => <ProductCard product={kayaPandan} />}</Await>
+          </Suspense>
+          <Suspense fallback={<ProductCardSkeleton />}>
+            <Await resolve={kayaVegan}>{(kayaVegan) => <ProductCard product={kayaVegan} />}</Await>
+          </Suspense>
         </div>
       </section>
     </main>

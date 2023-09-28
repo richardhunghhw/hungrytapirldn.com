@@ -57,7 +57,7 @@ export async function loader({
   return json(
     await promiseHash({
       entry: content.getGeneralEntry('linkinbio'),
-      stalldate: stalldate,
+      stalldate,
       location: content.getGeneralEntry('location~' + stalldate.data.location),
     }),
   );
