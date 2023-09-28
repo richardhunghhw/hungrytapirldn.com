@@ -3,13 +3,14 @@
  */
 import { Link, useLoaderData } from '@remix-run/react';
 import Markdown from 'markdown-to-jsx';
-import SocialIcons from '~/components/social-icons';
+import { promiseHash } from 'remix-utils';
+import { json, type LoaderArgs, type V2_MetaArgs } from '@remix-run/cloudflare';
 
+import SocialIcons from '~/components/social-icons';
 import { Button } from '~/components/ui/button';
 import type { ContentStoreGeneralEntry } from '~/server/entities/content';
 import { TapirTransparent } from '~/utils/svg/tapir';
 import { NextStall } from '~/components/next-stall';
-import type { LoaderArgs, V2_MetaArgs } from '@remix-run/cloudflare';
 import { getSeoMetas } from '~/utils/seo';
 import type { loader as rootLoader } from '~/root';
 
@@ -53,15 +54,13 @@ export async function loader({
   },
 }: LoaderArgs) {
   const stalldate = await content.getLatestStallDate();
-  const location = await content.getGeneralEntry('location~' + stalldate.data.location);
-  // if (!location)
-  // TODO Sentry error
-
-  return {
-    entry: (await content.getGeneralEntry('linkinbio')) as ContentStoreGeneralEntry,
-    stalldate,
-    location,
-  };
+  return json(
+    await promiseHash({
+      entry: content.getGeneralEntry('linkinbio'),
+      stalldate: stalldate,
+      location: content.getGeneralEntry('location~' + stalldate.data.location),
+    }),
+  );
 }
 
 export default function LinkInBio() {

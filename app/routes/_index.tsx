@@ -1,5 +1,8 @@
 import type { V2_MetaArgs } from '@remix-run/react';
 import { Link, useLoaderData } from '@remix-run/react';
+import { json, type LoaderArgs } from '@remix-run/cloudflare';
+import { promiseHash } from 'remix-utils';
+
 import { Button } from '~/components/ui/button';
 import type { ContentStoreGeneralEntry, ContentStoreProductEntry } from '~/server/entities/content';
 import { makeUriFromContentTypeSlug } from '~/utils/content';
@@ -9,7 +12,6 @@ import { AddToBag } from '~/components/add-to-bag';
 import { getSeoMetas } from '~/utils/seo';
 import type { loader as rootLoader } from '~/root';
 import { CDNImage } from '~/components/cdn-image';
-import type { LoaderArgs } from '@remix-run/cloudflare';
 
 const circle = () => <div className='h-4 w-4 rounded-full bg-ht-black' />;
 
@@ -28,18 +30,14 @@ export async function loader({
     services: { content },
   },
 }: LoaderArgs) {
-  const orderNow = await content.getGeneral('section~order-now');
-  const whatKaya = await content.getGeneral('section~what-is-kaya');
-  const kayaPandan = await content.getProduct('the-pandan-kaya');
-  const kayaVegan = await content.getProduct('the-vegan-kaya');
-
-  // TODO if any of the above queries fails, there is something wrong with the website, perhaps do something with that information
-  return {
-    orderNow,
-    whatKaya,
-    kayaPandan,
-    kayaVegan,
-  };
+  return json(
+    await promiseHash({
+      orderNow: content.getGeneral('section~order-now'),
+      whatKaya: content.getGeneral('section~what-is-kaya'),
+      kayaPandan: content.getProduct('the-pandan-kaya'),
+      kayaVegan: content.getProduct('the-vegan-kaya'),
+    }),
+  );
 }
 
 function ProductCard({ product }: { product: ContentStoreProductEntry }): JSX.Element {
