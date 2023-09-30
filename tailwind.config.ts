@@ -84,10 +84,5 @@ export default {
       },
     },
   },
-  plugins: [
-    require('@tailwindcss/forms')({
-      strategy: 'base', // only generate global styles
-    }),
-    require('tailwindcss-animate'),
-  ],
+  plugins: [require('tailwindcss-animate')],
 } satisfies Config;
