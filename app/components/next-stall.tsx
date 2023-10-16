@@ -41,6 +41,10 @@ function NextStall({
     setIsMounted(true);
   }, []);
 
+  if (startDT == undefined || endDT == undefined || location == undefined) {
+    return null;
+  }
+
   if (!isMounted) {
     return null;
   }

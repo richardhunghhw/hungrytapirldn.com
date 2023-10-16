@@ -54,6 +54,15 @@ export async function loader({
   },
 }: LoaderArgs) {
   const stalldate = await content.getLatestStallDate();
+  if (!stalldate) {
+    return json(
+      await promiseHash({
+        entry: content.getGeneralEntry('linkinbio'),
+        stalldate: undefined,
+        location: undefined,
+      }),
+    );
+  }
   return json(
     await promiseHash({
       entry: content.getGeneralEntry('linkinbio'),
@@ -81,11 +90,13 @@ export default function LinkInBio() {
                 ))}
               </div>
             </header>
-            <NextStall
-              startDT={pageData.stalldate.data.startDT}
-              endDT={pageData.stalldate.data.endDT}
-              location={pageData.location}
-            />
+            {pageData.stalldate && pageData.stalldate.data && (
+              <NextStall
+                startDT={pageData.stalldate.data.startDT}
+                endDT={pageData.stalldate.data.endDT}
+                location={pageData.location}
+              />
+            )}
             <div className='flex w-full flex-col space-y-4'>
               {LINKINBIO_LINKS.map((link) => (
                 <Button variant='dark' asChild key={link.to} className={link.cssOverride ? link.cssOverride : ''}>
