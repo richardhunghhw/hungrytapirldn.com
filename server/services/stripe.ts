@@ -44,7 +44,7 @@ export class Stripe {
           };
         }),
     );
-    // TODO validate empty cart
+    // TODO validate empty cart -
 
     const collectionDateDropdownOptions: { label: any; value: any }[] = [
       {
@@ -70,7 +70,7 @@ export class Stripe {
 
     // Delivery, Collection
     const shipping_options_str = this.#isProd
-      ? 'shr_1NnP0XLNU8oiV5Bev3bHssY1,shr_1NnOzGLNU8oiV5Bewqa3y9fm'
+      ? 'shr_1O1nvTLNU8oiV5Bevp1lIXPh,shr_1NnOzGLNU8oiV5Bewqa3y9fm'
       : 'shr_1NnP1vLNU8oiV5BetQqLrvNE,shr_1NnP2BLNU8oiV5BeRpGBof62';
     const shipping_options = shipping_options_str.split(',').map((id) => ({
       shipping_rate: id,
