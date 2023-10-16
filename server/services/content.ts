@@ -86,7 +86,7 @@ export class Content {
     return entries;
   }
 
-  async getLatestStallDate(): Promise<ContentStoreStallDateEntry> {
+  async getLatestStallDate(): Promise<ContentStoreStallDateEntry | undefined> {
     const datetime = new Date();
     // Get existing latest entry
     const latest = await this.getStallDate('latest');
@@ -103,6 +103,10 @@ export class Content {
     const newLatest = stallDates
       .filter((e) => new Date(e.slug.split('~')[1]) >= datetime) // filter out past dates
       .sort((a, b) => new Date(a.slug.split('~')[1]) - new Date(b.slug.split('~')[1]))[0]; // sort date asc
+
+    if (!newLatest) {
+      return undefined;
+    }
     const newLatestEntry = (await this.getStallDate(newLatest.slug)) as ContentStoreStallDateEntry;
 
     // Update latest entry
