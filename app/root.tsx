@@ -41,14 +41,14 @@ export const links: LinksFunction = () => {
       as: 'font',
       type: 'font/woff2',
       crossOrigin: 'anonymous',
-      href: '/fonts/space-mono-v12-latin-regular.woff2',
+      href: '/fonts/inter-v13-latin-regular.woff2',
     },
     {
       rel: 'preload',
       as: 'font',
       type: 'font/woff2',
       crossOrigin: 'anonymous',
-      href: '/fonts/space-mono-v12-latin-700.woff2',
+      href: '/fonts/inter-v13-latin-700.woff2',
     },
   ];
 };
