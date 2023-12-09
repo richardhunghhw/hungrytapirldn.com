@@ -5,10 +5,10 @@ import { Link, useLoaderData } from '@remix-run/react';
 import Markdown from 'markdown-to-jsx';
 import { promiseHash } from 'remix-utils';
 import { json, type LoaderArgs, type V2_MetaArgs } from '@remix-run/cloudflare';
+import * as Sentry from '@sentry/remix';
 
 import SocialIcons from '~/components/social-icons';
 import { Button } from '~/components/ui/button';
-import type { ContentStoreGeneralEntry } from '~/server/entities/content';
 import { TapirTransparent } from '~/utils/svg/tapir';
 import { NextStall } from '~/components/next-stall';
 import { getSeoMetas } from '~/utils/seo';
@@ -22,20 +22,14 @@ const LINKINBIO_LINKS = [
     icon: undefined,
     cssOverride: undefined,
   },
-  // { name: 'Blog', to: '/blog', icon: undefined, cssOverride: undefined },
+  { name: 'Blog', to: '/blog', icon: undefined, cssOverride: undefined },
   { name: 'FAQ', to: '/faq', icon: undefined, cssOverride: undefined },
   // {
-  //   name: 'Pre-Order for stall collection',
-  //   to: '//buy.hungrytapirldn.com/',
+  //   name: 'DELLI Market - IOS only!',
+  //   to: '//delli.app.link/Uo9albLUl0-601hOCxLTAQ/hungrytapirldn',
   //   icon: undefined,
-  //   cssOverride: undefined,
+  //   cssOverride: 'text-ht-black bg-[#DBAF1F] hover:bg-[#DBAF1F] border-[#DBAF1F] hover:opacity-80',
   // },
-  {
-    name: 'DELLI Market - IOS only!',
-    to: '//delli.app.link/Uo9albLUl0-601hOCxLTAQ/hungrytapirldn',
-    icon: undefined,
-    cssOverride: 'text-ht-black bg-[#DBAF1F] hover:bg-[#DBAF1F] border-[#DBAF1F] hover:opacity-80',
-  },
 ];
 
 export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { root: typeof rootLoader }>) {
@@ -54,20 +48,26 @@ export async function loader({
   },
 }: LoaderArgs) {
   const stalldate = await content.getLatestStallDate();
-  if (!stalldate) {
-    return json(
-      await promiseHash({
-        entry: content.getGeneralEntry('linkinbio'),
-        stalldate: undefined,
-        location: undefined,
-      }),
-    );
+
+  if (stalldate) {
+    try {
+      return json(
+        await promiseHash({
+          entry: content.getGeneralEntry('linkinbio'),
+          stalldate,
+          location: content.getGeneralEntry('location~' + stalldate.data.location),
+        }),
+      );
+    } catch (e) {
+      Sentry.captureException(e);
+    }
   }
+
   return json(
     await promiseHash({
       entry: content.getGeneralEntry('linkinbio'),
-      stalldate,
-      location: content.getGeneralEntry('location~' + stalldate.data.location),
+      stalldate: undefined,
+      location: undefined,
     }),
   );
 }
