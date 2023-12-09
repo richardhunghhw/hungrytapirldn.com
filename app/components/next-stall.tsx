@@ -54,14 +54,34 @@ function NextStall({
   const stallEndDT = new Date(endDT);
 
   const stallStartDate = AddDaySuffix(
-    stallStartDT.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' }),
+    stallStartDT.toLocaleDateString('en-GB', {
+      timeZone: 'Europe/London',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }),
   );
-  const stallStartTime = stallStartDT.toLocaleTimeString('en-GB', { hour: 'numeric', minute: 'numeric', hour12: true });
+  const stallStartTime = stallStartDT.toLocaleTimeString('en-GB', {
+    timeZone: 'Europe/London',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  });
 
   const stallEndDate = AddDaySuffix(
-    stallEndDT.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' }),
+    stallEndDT.toLocaleDateString('en-GB', {
+      timeZone: 'Europe/London',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }),
   );
-  const stallEndTime = stallEndDT.toLocaleTimeString('en-GB', { hour: 'numeric', minute: 'numeric', hour12: true });
+  const stallEndTime = stallEndDT.toLocaleTimeString('en-GB', {
+    timeZone: 'Europe/London',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  });
 
   return (
     <div className='mt-4 rounded-md border-2 border-solid border-ht-black bg-ht-orange p-6 text-left font-bold'>
