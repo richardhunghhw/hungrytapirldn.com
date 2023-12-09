@@ -58,6 +58,7 @@ export class Stripe {
       collectionDateDropdownOptions.push({
         label:
           new Date(stalldate.data.startDT).toLocaleDateString('en-GB', {
+            timeZone: 'Europe/London',
             year: 'numeric',
             month: 'long',
             day: 'numeric',
