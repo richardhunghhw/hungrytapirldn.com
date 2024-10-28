@@ -29,6 +29,7 @@ export default {
         'ht-pink': '#f48099',
         'ht-orange-highlight': '#ffcbad',
         'ht-orange': '#fdb085',
+        'gff-gold': '#c0ad75',
         'border': 'hsl(var(--border))',
         'input': 'hsl(var(--input))',
         'ring': 'hsl(var(--ring))',

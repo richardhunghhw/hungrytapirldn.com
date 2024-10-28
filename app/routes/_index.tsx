@@ -16,6 +16,15 @@ import { Skeleton } from '~/components/ui/skeleton';
 
 const circle = () => <div className='h-4 w-4 rounded-full bg-ht-black' />;
 
+const star = () => (
+  <div
+    className='h-4 w-4 bg-gff-gold'
+    style={{
+      clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)',
+    }}
+  />
+);
+
 export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { root: typeof rootLoader }>) {
   const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;
   return getSeoMetas({
@@ -119,7 +128,7 @@ export default function Index() {
         </div>
       </header>
 
-      <section className='content-wrapper h-[3.8rem] snap-start bg-ht-off-white py-4' id='banner'>
+      <section className='content-wrapper hidden h-[3.8rem] snap-start bg-ht-off-white py-4 sm:block' id='banner'>
         <div className='content-container'>
           <ul className='title flex flex-row items-center justify-between space-x-4 overflow-hidden whitespace-nowrap text-xl text-ht-black'>
             <li>HOMEMADE</li>
@@ -157,6 +166,24 @@ export default function Index() {
               </Await>
             </Suspense>
           </div>
+        </div>
+      </section>
+
+      <section className='content-wrapper hidden h-[3.8rem] snap-start bg-ht-black py-4 sm:block' id='banner'>
+        <div className='content-container'>
+          <ul className='title flex flex-row items-center justify-center space-x-4 overflow-hidden whitespace-nowrap text-xl text-ht-off-white'>
+            <li className='flex space-x-1'>
+              {star()}
+              {star()}
+              {star()}
+            </li>
+            <li>Three Star Great Taste Awards 2024</li>
+            <li className='flex space-x-1'>
+              {star()}
+              {star()}
+              {star()}
+            </li>
+          </ul>
         </div>
       </section>
 

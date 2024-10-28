@@ -61,6 +61,6 @@
   ],
   // See https://code.visualstudio.com/remote/advancedcontainers/add-local-file-mount
   "mounts": [
-    "source=/boot/config/ssh/root,target=/root/.ssh,type=bind,consistency=cached"
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/root/.ssh,type=bind,consistency=cached,readonly=false"
   ]
 }
