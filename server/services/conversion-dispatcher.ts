@@ -65,6 +65,8 @@ export class ConversionDispatcher {
     console.log(`ConversionDispatcher: ${JSON.stringify(message)}`);
     if (this.#isDev) {
       console.log('ConversionDispatcher: skipping queue send in dev mode');
+    } else if (true) {
+      console.log('ConversionDispatcher: skipping queue send for now, WNSA: we are not selling anything');
     } else {
       await this.#queue.send(message, { contentType: 'json' });
     }

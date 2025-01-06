@@ -47,6 +47,7 @@ async function validateRequest(request: Request, env: Env) {
 }
 
 // Generate a unique order ID for each order based on date and a sequence number
+// WNSA: we are not selling anything, the DO has been disabled
 async function handleOrderIdRequest(request: Request, env: Env): Promise<Response> {
   const id = env.DO_ORDERID.idFromName('OrderId');
   const orderId = await env.DO_ORDERID.get(id);
