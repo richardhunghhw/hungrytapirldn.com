@@ -1,4 +1,4 @@
-import { type LoaderArgs, redirect } from '@remix-run/cloudflare';
+import { type LoaderFunctionArgs, redirect } from '@remix-run/cloudflare';
 import { useLoaderData } from '@remix-run/react';
 
 /**
@@ -12,7 +12,7 @@ export async function loader({
   context: {
     services: { dispatcher, stripe },
   },
-}: LoaderArgs) {
+}: LoaderFunctionArgs) {
   const url = new URL(request.url);
 
   // Scenario 1

@@ -39,7 +39,7 @@ export class Image {
       });
       if (fileDetails.$ResponseMetadata.statusCode !== 200) {
         throw new Error(
-          `Error listing files: code [${fileDetails.$ResponseMetadata.statusCode}], message [${fileDetails.message}]`,
+          `Error listing files: code [${fileDetails.$ResponseMetadata.statusCode}], message [${(fileDetails as any).message}]`,
         );
       }
       if (fileDetails && '0' in fileDetails) {
@@ -58,7 +58,7 @@ export class Image {
     });
     if (uploadedFile.$ResponseMetadata.statusCode !== 200) {
       throw new Error(
-        `Error listing files: code [${uploadedFile.$ResponseMetadata.statusCode}], message [${uploadedFile.message}]`,
+        `Error listing files: code [${uploadedFile.$ResponseMetadata.statusCode}], message [${(uploadedFile as any).message}]`,
       );
     }
     return uploadedFile.url;

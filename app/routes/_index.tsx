@@ -1,7 +1,7 @@
 import { ReactNode, Suspense } from 'react';
-import type { V2_MetaArgs } from '@remix-run/react';
+import type { MetaArgs } from '@remix-run/react';
 import { Await, Link, useLoaderData } from '@remix-run/react';
-import { defer, type LoaderArgs } from '@remix-run/cloudflare';
+import { defer, type LoaderFunctionArgs } from '@remix-run/cloudflare';
 
 import { Button } from '~/components/ui/button';
 import type { ContentStoreProductEntry } from '~/server/entities/content';
@@ -25,7 +25,7 @@ const star = () => (
   />
 );
 
-export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { root: typeof rootLoader }>) {
+export function meta({ matches, location, data }: MetaArgs<typeof loader, { root: typeof rootLoader }>) {
   const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;
   return getSeoMetas({
     url: hostUrl + location.pathname,
@@ -39,7 +39,7 @@ export async function loader({
   context: {
     services: { content },
   },
-}: LoaderArgs) {
+}: LoaderFunctionArgs) {
   return defer({
     orderNow: content.getGeneral('section~order-now'),
     whatKaya: content.getGeneral('section~what-is-kaya'),

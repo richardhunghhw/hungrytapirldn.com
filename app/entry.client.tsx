@@ -14,10 +14,12 @@ Sentry.init({
   dsn: '__sentryDsn__',
   environment: '__sentryEnv__',
   integrations: [
-    new Sentry.BrowserTracing({
-      routingInstrumentation: Sentry.remixRouterInstrumentation(useEffect, useLocation, useMatches),
+    Sentry.browserTracingIntegration({
+      useEffect,
+      useLocation,
+      useMatches,
     }),
-    new Sentry.Replay(),
+    Sentry.replayIntegration(),
   ],
   // Performance Monitoring
   tracesSampleRate: __sentryTracesSampleRate__,

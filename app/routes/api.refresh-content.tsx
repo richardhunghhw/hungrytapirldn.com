@@ -1,8 +1,8 @@
 import * as Sentry from '@sentry/remix';
-import type { ActionArgs } from '@remix-run/cloudflare';
+import type { ActionFunctionArgs } from '@remix-run/cloudflare';
 
 // Fetch all content data from content-store
-export async function action({ context, request }: ActionArgs) {
+export async function action({ context, request }: ActionFunctionArgs) {
   if (!context.services.apiAuth.auth(request.headers)) {
     console.debug('api/refresh-content auth failed');
     return new Response(

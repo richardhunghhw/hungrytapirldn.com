@@ -64,7 +64,7 @@ function CDNImage({
     return (
       <IKImage
         urlEndpoint={IMAGEKIT_URL_ENDPOINT}
-        src={src}
+        src={src ?? ''}
         alt={alt}
         lqip={{ active: true, quality: 10 }}
         loading='lazy'

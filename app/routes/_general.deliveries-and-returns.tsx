@@ -1,9 +1,10 @@
 /**
  * Deliveries and Returns Page
  */
-import type { ActionArgs, V2_MetaArgs } from '@remix-run/cloudflare';
+import type { LoaderFunctionArgs } from '@remix-run/cloudflare';
 import { redirect } from '@remix-run/cloudflare';
 import { useLoaderData } from '@remix-run/react';
+import type { MetaArgs } from '@remix-run/react';
 
 import type { loader as rootLoader } from '~/root';
 import { MarkdownContent } from '~/components/markdown-content';
@@ -11,7 +12,7 @@ import type { ContentStoreGeneralEntry } from '~/server/entities/content';
 import { isProd } from '~/utils/misc';
 import { getSeoMetas } from '~/utils/seo';
 
-export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { root: typeof rootLoader }>) {
+export function meta({ matches, location, data }: MetaArgs<typeof loader, { root: typeof rootLoader }>) {
   const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;
   return getSeoMetas({
     url: hostUrl + location.pathname,
@@ -20,7 +21,7 @@ export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { r
   });
 }
 
-export async function loader({ context }: ActionArgs) {
+export async function loader({ context }: LoaderFunctionArgs) {
   try {
     return context.services.content.getGeneralEntry('deliveries-and-returns');
   } catch (error) {

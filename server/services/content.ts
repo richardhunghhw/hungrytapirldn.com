@@ -102,7 +102,7 @@ export class Content {
     const stallDates = await this.listStallDates();
     const newLatest = stallDates
       .filter((e) => new Date(e.slug.split('~')[1]) >= datetime) // filter out past dates
-      .sort((a, b) => new Date(a.slug.split('~')[1]) - new Date(b.slug.split('~')[1]))[0]; // sort date asc
+      .sort((a, b) => new Date(a.slug.split('~')[1]).getTime() - new Date(b.slug.split('~')[1]).getTime())[0]; // sort date asc
 
     if (!newLatest) {
       return undefined;
@@ -123,7 +123,7 @@ export class Content {
     const stallDates = await this.listStallDates();
     const sortedStallDates = stallDates
       .filter((e) => new Date(e.slug.split('~')[1]) >= datetime) // filter out past dates
-      .sort((a, b) => new Date(a.slug.split('~')[1]) - new Date(b.slug.split('~')[1])) // sort date asc
+      .sort((a, b) => new Date(a.slug.split('~')[1]).getTime() - new Date(b.slug.split('~')[1]).getTime()) // sort date asc
       .slice(0, n) as BaseEntry[];
 
     // Fetch stall dates information

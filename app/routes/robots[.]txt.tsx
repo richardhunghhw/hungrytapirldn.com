@@ -2,7 +2,7 @@
  * Sitemap page, generated from the content-store data
  */
 
-import type { AppLoadContext, LoaderArgs } from '@remix-run/cloudflare';
+import type { AppLoadContext, LoaderFunctionArgs } from '@remix-run/cloudflare';
 import { isProd } from '~/utils/misc';
 
 const generateRobotText = (context: AppLoadContext) => {
@@ -27,7 +27,7 @@ const generateRobotText = (context: AppLoadContext) => {
 };
 
 // Fetch all content data from content-store
-export async function loader({ context }: LoaderArgs) {
+export async function loader({ context }: LoaderFunctionArgs) {
   return new Response(generateRobotText(context), {
     headers: {
       'content-type': 'text/plain',

@@ -1,10 +1,10 @@
-import { type ActionArgs, redirect } from '@remix-run/cloudflare';
-import type { RouteMatch } from '@remix-run/react';
+import { type LoaderFunctionArgs, redirect } from '@remix-run/cloudflare';
+import type { UIMatch } from '@remix-run/react';
 import { Outlet, useMatches } from '@remix-run/react';
 import type { ContentStoreGeneralEntry } from '~/server/entities/content';
 import { isProd } from '~/utils/misc';
 
-export async function loader({ request: { url: requestUrl }, context }: ActionArgs) {
+export async function loader({ request: { url: requestUrl }, context }: LoaderFunctionArgs) {
   try {
     const url = new URL(requestUrl);
     const urlPath = url.pathname
@@ -29,9 +29,9 @@ export async function loader({ request: { url: requestUrl }, context }: ActionAr
 
 export default function GeneralLayout() {
   const matches = useMatches();
-  const outletEntry = matches.find((route: RouteMatch) => !new Set(['root', 'routes/_general']).has(route.id));
+  const outletEntry = matches.find((route: UIMatch) => !new Set(['root', 'routes/_general']).has(route.id));
   if (!outletEntry?.data) throw new Error('Invalid route');
-  const outletData: ContentStoreGeneralEntry = outletEntry?.data;
+  const outletData = outletEntry?.data as ContentStoreGeneralEntry;
 
   return (
     <main className='flex min-h-screen flex-col'>

@@ -2,8 +2,8 @@
  * Blog page
  */
 
-import { type ActionArgs, redirect } from '@remix-run/cloudflare';
-import type { V2_MetaArgs } from '@remix-run/react';
+import { type LoaderFunctionArgs, redirect } from '@remix-run/cloudflare';
+import type { MetaArgs } from '@remix-run/react';
 import { Link, useLoaderData } from '@remix-run/react';
 import * as Sentry from '@sentry/remix';
 
@@ -15,7 +15,7 @@ import { MarkdownContent } from '~/components/markdown-content';
 import { getSeoMetas } from '~/utils/seo';
 import type { loader as rootLoader } from '~/root';
 
-export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { root: typeof rootLoader }>) {
+export function meta({ matches, location, data }: MetaArgs<typeof loader, { root: typeof rootLoader }>) {
   const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;
   return getSeoMetas({
     url: hostUrl + location.pathname,
@@ -24,7 +24,7 @@ export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { r
   });
 }
 
-export async function loader({ request: { url }, context, params }: ActionArgs) {
+export async function loader({ request: { url }, context, params }: LoaderFunctionArgs) {
   // Fetch blog data content-store
   const urlPath = validateRequest(new URL(url));
   const result = await context.services.content.getBlog(urlPath.slug);

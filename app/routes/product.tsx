@@ -2,12 +2,12 @@
  * Product Layout
  */
 
-import { type ActionArgs, redirect } from '@remix-run/cloudflare';
+import { type LoaderFunctionArgs, redirect } from '@remix-run/cloudflare';
 import { Outlet } from '@remix-run/react';
 import { isProd } from '~/utils/misc';
 
 // Fetch faq data content-store
-export async function loader({ context }: ActionArgs) {
+export async function loader({ context }: LoaderFunctionArgs) {
   try {
     const result = await context.services.content.listProducts();
     if (!result || !result.length) {

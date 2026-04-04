@@ -3,7 +3,7 @@
  */
 
 import type { ContentStoreEntry } from '~/server/entities/content';
-import type { V2_MetaArgs } from '@remix-run/react';
+import type { MetaArgs } from '@remix-run/react';
 import { Link, useMatches } from '@remix-run/react';
 import { ChevronRight } from 'lucide-react';
 import type { loader as rootLoader } from '~/root';
@@ -19,7 +19,7 @@ function BlogRow({ entry }: { entry: ContentStoreEntry }) {
   );
 }
 
-export function meta({ matches, location, data }: V2_MetaArgs<unknown, { root: typeof rootLoader }>) {
+export function meta({ matches, location, data }: MetaArgs<unknown, { root: typeof rootLoader }>) {
   const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;
   return getSeoMetas({
     url: hostUrl + location.pathname,
