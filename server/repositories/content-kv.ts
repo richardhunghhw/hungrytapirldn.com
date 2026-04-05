@@ -37,10 +37,8 @@ export class ContentKv {
       type: type,
       slug: slug,
       metadata: metadata as EntryMetadata,
-      data: {
-        ...JSON.parse(value),
-      } as ContentStoreEntry['data'],
-    };
+      data: JSON.parse(value),
+    } as ContentStoreEntry;
   }
 
   // Add (cache) entry in to KV

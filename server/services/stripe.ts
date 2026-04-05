@@ -87,16 +87,16 @@ export class Stripe {
       allow_promotion_codes: true,
       consent_collection: {
         // promotions: 'auto', consent_collection.promotions` is not available in your country.
-        terms_of_service: 'required',
+        terms_of_service: 'required' as const,
       },
       custom_fields: [
         {
           key: 'collectionDate',
           label: {
             custom: 'Collection Date - For delivery, select "Delivery"',
-            type: 'custom',
+            type: 'custom' as const,
           },
-          type: 'dropdown',
+          type: 'dropdown' as const,
           dropdown: {
             options: collectionDateDropdownOptions,
           },
@@ -121,7 +121,7 @@ export class Stripe {
       shipping_options,
       submit_type: 'pay',
     };
-    const session = await this.#stripe.checkout.sessions.create(seessionParams);
+    const session = await this.#stripe.checkout.sessions.create(seessionParams as any);
 
     // Store the checkout session info in the cart session
     await this.#cart.setCheckoutSession(session.id, orderId);

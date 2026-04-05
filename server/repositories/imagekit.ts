@@ -33,7 +33,7 @@ export class ImageKit {
     }
 
     // Make the request
-    const result = await fetch(`${IMAGEKIT_API_URL}?${new URLSearchParams(listOptions)}`, {
+    const result = await fetch(`${IMAGEKIT_API_URL}?${new URLSearchParams(listOptions as Record<string, string>)}`, {
       method: 'GET',
       headers: { ...this.getHeaders() },
     });
@@ -49,7 +49,7 @@ export class ImageKit {
         headers: Object.fromEntries(headers.entries()),
       },
       ...json,
-    };
+    } as IKResponse<FileObject[]>;
   }
 
   async upload(uploadOptions: UploadOptions): Promise<IKResponse<UploadResponse>> {
@@ -71,7 +71,7 @@ export class ImageKit {
     for (key in uploadOptions) {
       if (key) {
         if (key == 'file' && typeof uploadOptions.file != 'string') {
-          form.append('file', uploadOptions.file, String(uploadOptions.fileName));
+          form.append('file', uploadOptions.file as unknown as Blob, String(uploadOptions.fileName));
         } else if (key == 'tags' && Array.isArray(uploadOptions.tags)) {
           form.append('tags', uploadOptions.tags.join(','));
         } else if (key == 'responseFields' && Array.isArray(uploadOptions.responseFields)) {

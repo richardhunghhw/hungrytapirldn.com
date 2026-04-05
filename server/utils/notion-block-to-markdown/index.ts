@@ -79,7 +79,7 @@ function blockToMarkdown(block: BlockObjectResponse): string {
         imageType === 'external' ? blockContent.external.url : imageType === 'file' ? blockContent.file.url : '';
 
       // image caption as alt with filename
-      const filename = block.parent.page_id + '_' + block.id;
+      const filename = (block.parent as any).page_id + '_' + block.id;
       // const;
 
       const image_caption_plain = blockContent.caption.map((item: any) => item.plain_text).join('');
@@ -180,7 +180,7 @@ function blockToMarkdown(block: BlockObjectResponse): string {
       // In this case typescript is not able to index the types properly, hence ignoring the error
       // @ts-ignore
       let blockContent = block[type].text || block[type].rich_text || [];
-      blockContent.map((content: Text | Equation) => {
+      blockContent.map((content: any) => {
         if (content.type === 'equation') {
           parsedData += md.inlineEquation(content.equation.expression);
           return;
@@ -269,7 +269,7 @@ function blockToMarkdown(block: BlockObjectResponse): string {
 
     case 'numbered_list_item':
       {
-        parsedData = md.bullet(parsedData, block.numbered_list_item.number);
+        parsedData = md.bullet(parsedData);
       }
       break;
 
