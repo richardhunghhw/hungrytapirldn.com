@@ -16,12 +16,12 @@ jobs:
     name: Deploy to Cloudflare Workers store-config
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Load secrets from 1Password
-        uses: 1Password/load-secrets-action@v1
+        uses: 1Password/load-secrets-action@v2
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
           CLOUDFLARE_API_TOKEN: 'op://${{ vars.VAULT_NAME }}/Cloudflare API Token/credential'
@@ -36,7 +36,7 @@ jobs:
           fi
 
       - name: Publish to Cloudflare Workers
-        uses: cloudflare/wrangler-action@2.0.0
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: '${{ env.CLOUDFLARE_API_TOKEN }}'
           accountId: '${{ env.CLOUDFLARE_ACCOUNT_ID }}'
