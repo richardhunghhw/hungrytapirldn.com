@@ -35,7 +35,7 @@ function validateRequest(url: URL): UrlPath {
 }
 
 function isContentType(str: string): str is ContentType {
-  return allContentTypes().includes(str);
+  return (allContentTypes() as string[]).includes(str);
 }
 
 function makeCacheKey(contentType: string, contentSlug: string): string {

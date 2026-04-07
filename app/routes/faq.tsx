@@ -2,12 +2,13 @@
  * FAQ Layout
  */
 
-import { type ActionArgs, redirect } from '@remix-run/cloudflare';
+import { type LoaderFunctionArgs, redirect } from '@remix-run/cloudflare';
+import * as Sentry from '@sentry/remix';
 import { Outlet } from '@remix-run/react';
 import { isProd } from '~/utils/misc';
 
 // Fetch faq data content-store
-export async function loader({ context }: ActionArgs) {
+export async function loader({ context }: LoaderFunctionArgs) {
   try {
     const result = await context.services.content.listFaqs();
     if (!result || !result.length) {
@@ -15,7 +16,8 @@ export async function loader({ context }: ActionArgs) {
     }
     return result;
   } catch (error) {
-    console.error(error); // TODO badlink
+    console.error(error);
+    Sentry.captureException(error);
     if (isProd(context)) return redirect('/404');
   }
   return null;

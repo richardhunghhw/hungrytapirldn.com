@@ -40,7 +40,7 @@ export type HTEnv = {
   readonly NOTION_API_DB_GENERAL: string;
   readonly NOTION_API_DB_BLOG: string;
   readonly NOTION_API_DB_FAQ: string;
-  readonly NOTION_API_DB_PRODUCTS: string;
+  readonly NOTION_API_DB_PRODUCT: string;
   readonly NOTION_API_DB_STALLDATE: string;
 
   /** ImageKit */

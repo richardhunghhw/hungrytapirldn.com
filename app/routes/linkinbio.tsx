@@ -2,9 +2,9 @@
  * linkinbio page for Socials, QR code...
  */
 import { Link, useLoaderData } from '@remix-run/react';
+import type { MetaArgs } from '@remix-run/react';
 import Markdown from 'markdown-to-jsx';
-import { promiseHash } from 'remix-utils';
-import { json, type LoaderArgs, type V2_MetaArgs } from '@remix-run/cloudflare';
+import { json, type LoaderFunctionArgs } from '@remix-run/cloudflare';
 import * as Sentry from '@sentry/remix';
 
 import SocialIcons from '~/components/social-icons';
@@ -32,11 +32,11 @@ const LINKINBIO_LINKS = [
   // },
 ];
 
-export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { root: typeof rootLoader }>) {
+export function meta({ matches, location, data }: MetaArgs<typeof loader, { root: typeof rootLoader }>) {
   const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;
   return getSeoMetas({
     url: hostUrl + location.pathname,
-    title: data?.metadata?.title ? data.metadata.title + ' | Hungry Tapir' : undefined,
+    title: data?.entry?.metadata?.title ? data.entry.metadata.title + ' | Hungry Tapir' : undefined,
     description:
       'Find all the latest links, socials and more from Hungry Tapir in one place. Follow us on @hungrytapirldn.',
   });
@@ -46,30 +46,21 @@ export async function loader({
   context: {
     services: { content },
   },
-}: LoaderArgs) {
-  const stalldate = await content.getLatestStallDate();
+}: LoaderFunctionArgs) {
+  const stalldate = await content.getLatestStallDate() ?? null;
+  let location = null as Awaited<ReturnType<typeof content.getGeneralEntry>> | null;
 
   if (stalldate) {
     try {
-      return json(
-        await promiseHash({
-          entry: content.getGeneralEntry('linkinbio'),
-          stalldate,
-          location: content.getGeneralEntry('location~' + stalldate.data.location),
-        }),
-      );
+      location = await content.getGeneralEntry('location~' + stalldate.data.location);
     } catch (e) {
+      console.error(e);
       Sentry.captureException(e);
     }
   }
 
-  return json(
-    await promiseHash({
-      entry: content.getGeneralEntry('linkinbio'),
-      stalldate: undefined,
-      location: undefined,
-    }),
-  );
+  const entry = await content.getGeneralEntry('linkinbio');
+  return json({ entry, stalldate, location });
 }
 
 export default function LinkInBio() {
@@ -90,11 +81,11 @@ export default function LinkInBio() {
                 ))}
               </div>
             </header>
-            {pageData.stalldate && pageData.stalldate.data && (
+            {pageData.stalldate && pageData.stalldate.data && pageData.location && (
               <NextStall
                 startDT={pageData.stalldate.data.startDT}
                 endDT={pageData.stalldate.data.endDT}
-                location={pageData.location}
+                location={pageData.location as any}
               />
             )}
             <div className='flex w-full flex-col space-y-4'>

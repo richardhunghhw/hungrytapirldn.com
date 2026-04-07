@@ -23,6 +23,7 @@ export default {
         await processMessage(env, message);
         message.ack();
       } catch (e) {
+        console.error('Failed to process message, retrying:', e);
         message.retry();
       }
     }

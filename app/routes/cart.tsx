@@ -1,4 +1,4 @@
-import { redirect, type ActionArgs, type LoaderArgs } from '@remix-run/cloudflare';
+import { redirect, type ActionFunctionArgs, type LoaderFunctionArgs } from '@remix-run/cloudflare';
 import { Form, Link, useActionData, useLoaderData, useMatches } from '@remix-run/react';
 import { Angry, HeartCrack, ExternalLink } from 'lucide-react';
 import * as Sentry from '@sentry/remix';
@@ -18,7 +18,7 @@ export async function loader({
   context: {
     services: { cart },
   },
-}: LoaderArgs): Promise<{ exisitingCheckoutError: boolean; checkoutSessionId?: string; orderId?: string }> {
+}: LoaderFunctionArgs): Promise<{ exisitingCheckoutError: boolean; checkoutSessionId?: string; orderId?: string }> {
   const url = new URL(request.url);
   const status = url.searchParams.get('status');
 
@@ -39,7 +39,7 @@ export async function action({
     env: { CONFIGSTORE_WORKER_URL },
     services: { cart, stripe, apiAuth },
   },
-}: ActionArgs): Promise<{ emptyCartError: boolean }> {
+}: ActionFunctionArgs) {
   // Check if checkout session exists, reset if so
 
   // Check empty cart
@@ -91,6 +91,7 @@ const CartInformation = ({ products, cart }: { products: ContentStoreProductEntr
           const product = products.find((product) => product.slug === cartItem.slug);
 
           if (!product) {
+            console.error(`CartItem not found in Products: ${cartItem.slug}`);
             Sentry.captureException(`CartItem not found in Products: ${cartItem.slug}`);
             return null;
           }
@@ -131,13 +132,13 @@ const CartInformation = ({ products, cart }: { products: ContentStoreProductEntr
 
 export default function Cart() {
   const matches = useMatches();
-  const rootLoaderData = matches.find((match) => match.id === 'root')?.data;
+  const rootLoaderData = matches.find((match) => match.id === 'root')?.data as any;
 
   // const loaderData = useLoaderData();
-  const actionData = useActionData();
+  const actionData = useActionData() as { emptyCartError: boolean } | undefined;
 
-  const cart = rootLoaderData.cart as CartItem[];
-  const products = rootLoaderData.products as ContentStoreProductEntry[];
+  const cart = rootLoaderData?.cart as CartItem[];
+  const products = rootLoaderData?.products as ContentStoreProductEntry[];
 
   const cartSubTotal = cart
     .reduce((acc, cartItem) => {

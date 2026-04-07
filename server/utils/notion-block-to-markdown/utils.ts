@@ -2,8 +2,8 @@
  * Based entirely on https://github.com/souvikinator/notion-to-md. all credits to @souvikinator
  */
 
-// import { CalloutIcon } from "../types";
 // import markdownTable from "markdown-table";
+type CalloutIcon = { type: 'emoji'; emoji: string } | { type: string; [key: string]: any };
 
 export const inlineCode = (text: string) => {
   return `\`${text}\``;

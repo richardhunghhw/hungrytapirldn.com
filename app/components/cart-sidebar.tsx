@@ -46,6 +46,7 @@ function CartSidebar({ cart, products }: CartSidebarProps) {
   const subtotal = cart.reduce((acc, cartItem) => {
     const product = products.find((product) => product.slug === cartItem.slug); // TODO refine this
     if (!product) {
+      console.error(`CartItem not found in Products: ${cartItem.slug}`);
       Sentry.captureException(`CartItem not found in Products: ${cartItem.slug}`);
       return acc;
     }
@@ -87,7 +88,8 @@ function CartSidebar({ cart, products }: CartSidebarProps) {
                     const product = products.find((product) => product.slug === cartItem.slug);
 
                     if (!product) {
-                      Sentry.captureException(`CartItem not found in Products: ${cartItem.slug}`);
+                      console.error(`CartItem not found in Products: ${cartItem.slug}`);
+      Sentry.captureException(`CartItem not found in Products: ${cartItem.slug}`);
                       return null;
                     }
 

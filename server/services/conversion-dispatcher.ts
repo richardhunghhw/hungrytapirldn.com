@@ -26,11 +26,13 @@ export class ConversionDispatcher {
         .map(async (item) => {
           const product = await this.#content.getProduct(item.slug);
           if (!product) {
+            console.error('Stripe createCheckoutSession called with invalid product: ' + item.slug);
             Sentry.captureException('Stripe createCheckoutSession called with invalid product: ' + item.slug);
             // throw new Error('Product not found: ' + item.slug);
             return null;
           }
           if (product.data.enabled === false) {
+            console.error('Stripe createCheckoutSession called with disabled product: ' + item.slug);
             Sentry.captureException('Stripe createCheckoutSession called with disabled product: ' + item.slug);
             return null;
           }
@@ -48,6 +50,7 @@ export class ConversionDispatcher {
 
     const stripe_session_id = this.#cart.checkoutSessionId;
     if (stripe_session_id !== stripeSessionId) {
+      console.error('Stripe createCheckoutSession called with invalid session id: ' + stripeSessionId);
       Sentry.captureException('Stripe createCheckoutSession called with invalid session id: ' + stripeSessionId);
       // throw new Error('Stripe createCheckoutSession called with invalid session id: ' + stripeSessionId);
       // TODO what do we do here

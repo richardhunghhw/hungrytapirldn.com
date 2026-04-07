@@ -2,8 +2,9 @@
  * Product page
  */
 
-import { type ActionArgs, redirect, json } from '@remix-run/cloudflare';
-import type { V2_MetaArgs } from '@remix-run/react';
+import { type LoaderFunctionArgs, redirect, json } from '@remix-run/cloudflare';
+import * as Sentry from '@sentry/remix';
+import type { MetaArgs } from '@remix-run/react';
 import { useLoaderData } from '@remix-run/react';
 import { isProd } from '~/utils/misc';
 import type { ContentStoreProductEntry } from '~/server/entities/content';
@@ -15,7 +16,7 @@ import { MarkdownContent, MarkdownLine } from '~/components/markdown-content';
 import { CDNImage } from '~/components/cdn-image';
 import { validateRequest } from '~/utils/content';
 
-export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { root: typeof rootLoader }>) {
+export function meta({ matches, location, data }: MetaArgs<typeof loader, { root: typeof rootLoader }>) {
   const hostUrl = matches.find((match) => match.id === 'root')?.data?.hostUrl as string;
   return getSeoMetas({
     url: hostUrl + location.pathname,
@@ -24,7 +25,7 @@ export function meta({ matches, location, data }: V2_MetaArgs<typeof loader, { r
   });
 }
 
-export async function loader({ request: { url }, context, params }: ActionArgs) {
+export async function loader({ request: { url }, context, params }: LoaderFunctionArgs) {
   // Fetch product data content-store
   try {
     const urlPath = validateRequest(new URL(url));
@@ -34,7 +35,8 @@ export async function loader({ request: { url }, context, params }: ActionArgs) 
     }
     return result;
   } catch (error) {
-    console.error(error); // TODO badlink
+    console.error(error);
+    Sentry.captureException(error);
     if (isProd(context)) return redirect('/404');
   }
 }

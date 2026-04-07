@@ -1,7 +1,7 @@
-import { logDevReady } from '@remix-run/cloudflare';
+import 'regenerator-runtime/runtime';
 import { createPagesFunctionHandler, type createRequestHandler } from '@remix-run/cloudflare-pages';
 import * as Sentry from '@sentry/remix';
-import { getClientIPAddress } from 'remix-utils';
+import { getClientIPAddress } from 'remix-utils/get-client-ip-address';
 import { Stripe as StripeApi } from 'stripe';
 
 import * as build from '@remix-run/dev/server-build';
@@ -23,10 +23,6 @@ import { ConversionDispatcher } from './server/services/conversion-dispatcher';
 
 let remixHandler: ReturnType<typeof createRequestHandler>;
 
-// console.log(process);
-// if (process.env.NODE_ENV === 'DEV') {
-logDevReady(build);
-// }
 
 export const onRequest: PagesFunction<HTEnv> = async (context) => {
   try {
@@ -95,7 +91,7 @@ export const onRequest: PagesFunction<HTEnv> = async (context) => {
         env.NODE_ENV === 'PROD',
         env.HOST_URL,
         new StripeApi(env.STRIPE_SECRET_KEY, {
-          apiVersion: '2022-11-15',
+          apiVersion: '2023-10-16',
           typescript: true,
         }),
         cart,
@@ -112,7 +108,7 @@ export const onRequest: PagesFunction<HTEnv> = async (context) => {
         build,
         mode: env.NODE_ENV === 'DEV' ? 'development' : env.NODE_ENV === 'TEST' ? 'test' : 'production',
         getLoadContext() {
-          return { env, repos, services };
+          return { env: env as unknown as HTEnv, repos, services };
         },
       });
     }
@@ -125,6 +121,7 @@ export const onRequest: PagesFunction<HTEnv> = async (context) => {
     // Return response
     return response;
   } catch (error) {
+    console.error(error);
     Sentry.captureException(error);
     throw error;
   }

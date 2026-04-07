@@ -1,4 +1,4 @@
-import { type ActionArgs, json, type LinksFunction, type LoaderArgs } from '@remix-run/cloudflare';
+import { type ActionFunctionArgs, json, type LinksFunction, type LoaderFunctionArgs } from '@remix-run/cloudflare';
 import {
   Links,
   LiveReload,
@@ -55,7 +55,7 @@ export const links: LinksFunction = () => {
 
 const BYPASS_HEADERFOOTER_PATHS = ['/linkinbio'];
 
-export async function loader({ request, context }: LoaderArgs) {
+export async function loader({ request, context }: LoaderFunctionArgs) {
   return {
     hostUrl: context.env.HOST_URL,
     isDev: isDev(context),
@@ -69,7 +69,7 @@ export async function action({
   context: {
     services: { cart },
   },
-}: ActionArgs) {
+}: ActionFunctionArgs) {
   // Handle Add To Bag action
   const formData = await request.formData();
 
@@ -88,6 +88,7 @@ export async function action({
   } else if (action === 'update') {
     cart.updateCart({ slug: slug, quantity: quantity });
   } else {
+    console.error(`Invalid cart action: ${action} for slug: ${slug} and quantity: ${quantity}`);
     Sentry.captureException(`Invalid cart action: ${action} for slug: ${slug} and quantity: ${quantity}`);
   }
 

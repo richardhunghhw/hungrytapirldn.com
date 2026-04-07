@@ -15,8 +15,8 @@ export default function ProductSection({ product }: { product: ContentStoreProdu
       <div className='w-[350] overflow-hidden'>
         <AspectRatio ratio={aspectRatio}>
           <img
-            src={product.data.primaryImage}
-            alt={product.data.primaryImageAlt}
+            src={product.data.images[0]?.url}
+            alt={product.data.images[0]?.alt}
             className='h-full w-full object-cover'
           />
         </AspectRatio>
@@ -39,7 +39,7 @@ export default function ProductSection({ product }: { product: ContentStoreProdu
             defaultValue='0'
           />
 
-          <Button variant='secondary'>ADD TO CART</Button>
+          <Button variant='dark'>ADD TO CART</Button>
         </div>
       </div>
     </div>

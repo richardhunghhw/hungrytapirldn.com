@@ -10,7 +10,7 @@ export class SessionKv<Data, FlashData> {
         name: name,
         // domain: hostUrl,
         httpOnly: true,
-        maxAge: 60,
+        maxAge: 60 * 60 * 24 * 7, // 7 days
         path: '/',
         sameSite: 'lax',
         secrets: [sessionSecret],

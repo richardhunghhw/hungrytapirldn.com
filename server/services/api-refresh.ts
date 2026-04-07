@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/remix';
 import { allContentTypes, type ContentStoreEntry, type ContentType, type EntryMetadata } from '../entities/content';
 import type { FullPageResponse } from '../entities/notion';
 import type { Image } from './image';
@@ -19,7 +20,9 @@ export class ApiRefresh {
   }
 
   // Extract metadata from notion entry TODO sentry capture errors
-  #makeMetadata(type: ContentType, { properties }: FullPageResponse): EntryMetadata {
+  #makeMetadata(type: ContentType, { properties: rawProperties }: FullPageResponse): EntryMetadata {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const properties = rawProperties as any;
     let slug = properties.Slug?.url as string;
     if (type === 'stalldate') {
       const location = properties.Location?.select.name as string;
@@ -45,6 +48,8 @@ export class ApiRefresh {
 
   // Santize entry from notion, extract data fields
   #makeContentStoreEntry(type: ContentType, entry: FullPageResponse): ContentStoreEntry {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const entryProps = entry.properties as any;
     const metadata: EntryMetadata = this.#makeMetadata(type, entry);
     const slug: string = metadata.slug;
     if (!slug) {
@@ -56,67 +61,58 @@ export class ApiRefresh {
     if (type === 'general') {
       data = {
         general: blocksToMarkdown(entry.content),
-        url: entry.properties.URL?.url as string,
+        url: entryProps.URL?.url as string,
       };
     } else if (type === 'blog') {
       data = {
         blog: blocksToMarkdown(entry.content),
-        seoDescription: entry.properties['SEO Description']?.rich_text[0]?.plain_text as string,
+        seoDescription: entryProps['SEO Description']?.rich_text[0]?.plain_text as string,
       };
     } else if (type === 'faq') {
       data = {
         faq: blocksToMarkdown(entry.content),
-        productSectionRef: entry.properties['Product Section Ref']?.rich_text[0]?.plain_text as string,
-        seoDescription: entry.properties['SEO Description']?.rich_text[0]?.plain_text as string,
+        productSectionRef: entryProps['Product Section Ref']?.rich_text[0]?.plain_text as string,
+        seoDescription: entryProps['SEO Description']?.rich_text[0]?.plain_text as string,
       };
     } else if (type === 'product') {
       data = {
         stripeId: (this.#isProd
-          ? entry.properties['Stripe Id PROD']?.rich_text[0]?.plain_text
-          : entry.properties['Stripe Id TEST']?.rich_text[0]?.plain_text) as string,
-        id: entry.properties.Id?.rich_text[0].plain_text as string,
-        unit: entry.properties.Unit?.rich_text[0].plain_text as string,
-        price: entry.properties.Price?.number,
-        images: entry.properties.Images?.files.map(
+          ? entryProps['Stripe Id PROD']?.rich_text[0]?.plain_text
+          : entryProps['Stripe Id TEST']?.rich_text[0]?.plain_text) as string,
+        id: entryProps.Id?.rich_text[0].plain_text as string,
+        unit: entryProps.Unit?.rich_text[0].plain_text as string,
+        price: entryProps.Price?.number,
+        images: entryProps.Images?.files.map(
           (x: { name: string; type: string; file: { url: string; expiry_time: string } }) => ({
             url: x.file.url,
             alt: x.name,
           }),
         ) as Array<{ name: string; url: string; alt: string }>,
-        ingredients: blockToMarkdown({
-          // Todo revisit hack
-          type: 'text',
-          text: entry.properties.Ingredients,
-        }),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ingredients: blockToMarkdown({ type: 'text', text: entryProps.Ingredients } as any),
         product: blocksToMarkdown(entry.content),
-        productCart: blockToMarkdown({
-          // Todo revisit hack
-          type: 'text',
-          text: entry.properties['Cart Description'],
-        }),
-        productSection: blockToMarkdown({
-          // Todo revisit hack
-          type: 'text',
-          text: entry.properties['Section Description'],
-        }),
-        imageColour: entry.properties['Image Colour']?.rich_text[0].plain_text as string,
-        backgroundColour: entry.properties['Background Colour']?.rich_text[0].plain_text as string,
-        seoDescription: entry.properties['SEO Description']?.rich_text[0]?.plain_text as string,
-        enabled: entry.properties.Enabled?.checkbox as boolean,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        productCart: blockToMarkdown({ type: 'text', text: entryProps['Cart Description'] } as any),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        productSection: blockToMarkdown({ type: 'text', text: entryProps['Section Description'] } as any),
+        imageColour: entryProps['Image Colour']?.rich_text[0].plain_text as string,
+        backgroundColour: entryProps['Background Colour']?.rich_text[0].plain_text as string,
+        seoDescription: entryProps['SEO Description']?.rich_text[0]?.plain_text as string,
+        enabled: entryProps.Enabled?.checkbox as boolean,
       };
     } else if (type === 'stalldate') {
       // Store date in UTC fomrat
       data = {
-        location: entry.properties.Location?.select.name as string,
-        startDT: new Date(entry.properties.Date?.date.start as string),
-        endDT: new Date(entry.properties.Date?.date.end as string),
-        collectionEnabled: entry.properties['Allow Collection']?.checkbox as boolean,
+        location: entryProps.Location?.select.name as string,
+        startDT: new Date(entryProps.Date?.date.start as string),
+        endDT: new Date(entryProps.Date?.date.end as string),
+        collectionEnabled: entryProps['Allow Collection']?.checkbox as boolean,
       };
     } else {
       // TODO sentry
       throw new Error(`Invalid type ${type}`);
     }
-    return { type, slug, metadata, data: data };
+    return { type, slug, metadata, data: data as ContentStoreEntry['data'] } as ContentStoreEntry;
   }
 
   // Search a block of strings for Notion Image URLs, upload to image-store, and replace URLs
@@ -149,18 +145,20 @@ export class ApiRefresh {
   // Search ContentStoreEntry for Notion Image URLs, upload to image-store, and replace URLs
   async #replaceNotionImageUrls(replaceImages: boolean, entry: ContentStoreEntry): Promise<void> {
     const { type } = entry;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const data = entry.data as any;
 
     if (type === 'general') {
-      const faq = entry.data?.general;
-      entry.data.general = await this.#replaceNotionImageUrlByBlocks(replaceImages, entry.type, faq);
+      const faq = data?.general;
+      data.general = await this.#replaceNotionImageUrlByBlocks(replaceImages, entry.type, faq);
     } else if (type === 'blog') {
-      const blog = entry.data?.blog;
-      entry.data.blog = await this.#replaceNotionImageUrlByBlocks(replaceImages, entry.type, blog);
+      const blog = data?.blog;
+      data.blog = await this.#replaceNotionImageUrlByBlocks(replaceImages, entry.type, blog);
     } else if (type === 'faq') {
-      const faq = entry.data?.faq;
-      entry.data.faq = await this.#replaceNotionImageUrlByBlocks(replaceImages, entry.type, faq);
+      const faq = data?.faq;
+      data.faq = await this.#replaceNotionImageUrlByBlocks(replaceImages, entry.type, faq);
     } else if (type === 'product') {
-      for (const image of entry.data?.images ?? []) {
+      for (const image of data?.images ?? []) {
         const imageUrl = await this.#image.upload(replaceImages, image.url, image.alt, entry.type);
         image.url = imageUrl;
       }
@@ -203,7 +201,7 @@ export class ApiRefresh {
         csEntries.push(this.#makeContentStoreEntry(type, entry));
       } catch (err) {
         console.error(`Failed to create CS entry for [${type}], ${JSON.stringify(entry)}`, err);
-        // TODO sentry error
+        Sentry.captureException(err);
         throw new Error(`Failed to create CS entry for [${type}], ${JSON.stringify(entry)}`);
       }
     });
@@ -213,7 +211,7 @@ export class ApiRefresh {
     for (const entry of csEntries) {
       await this.#replaceNotionImageUrls(replaceImages, entry).catch((err) => {
         console.error(`Failed to upload images for type [${type}]`, err);
-        // TODO sentry error
+        Sentry.captureException(err);
         throw new Error(`Failed to upload images for type [${type}]`);
       });
     }
@@ -224,7 +222,7 @@ export class ApiRefresh {
       await this.#contentKv.listKeys(type).then(async (keys) => {
         await this.#contentKv.purgeEntries(type, keys).catch((err) => {
           console.error(`Failed to purge cache for type [${type}]`, err);
-          // TODO sentry error
+          Sentry.captureException(err);
           throw new Error(`Failed to purge cache for type [${type}]`);
         });
       });
@@ -235,7 +233,8 @@ export class ApiRefresh {
       console.debug(`Writing entry type [${entry.type}] slug [${entry.slug}]`);
       await this.#contentKv.putEntry(type, entry.metadata.slug, entry.metadata, entry.data).catch((err) => {
         console.error(`Failed to write entries for [${type}]`, err);
-        // TODO sentry error
+        Sentry.captureException(err);
+        throw new Error(`Failed to write entries for [${type}]`);
       });
     }
   }

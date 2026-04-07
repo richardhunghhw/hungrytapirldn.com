@@ -4,6 +4,7 @@
  * - Use Notion API as a fallback if content-store does not have the data
  * - Rebuild content-store using Notion API on request from admin
  */
+import * as Sentry from '@sentry/remix';
 import { Client } from '@notionhq/client';
 import type {
   BlockObjectResponse,
@@ -82,8 +83,9 @@ export class Notion {
           start_cursor: data?.next_cursor ?? undefined,
         })
         .catch((err) => {
-          //todo sentry errror
           console.error(err);
+          Sentry.captureException(err);
+          throw err;
         });
 
       // filter out array elements with PartialBlockObjectResponse TODO find out what this is
