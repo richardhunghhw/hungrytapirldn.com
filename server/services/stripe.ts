@@ -27,10 +27,12 @@ export class Stripe {
         .map(async (item) => {
           const product = await this.#content.getProduct(item.slug);
           if (!product) {
+            console.error('Stripe createCheckoutSession called with invalid product: ' + item.slug);
             Sentry.captureException('Stripe createCheckoutSession called with invalid product: ' + item.slug);
             throw new Error('Product not found: ' + item.slug);
           }
           if (product.data.enabled === false) {
+            console.error('Stripe createCheckoutSession called with disabled product: ' + item.slug);
             Sentry.captureException('Stripe createCheckoutSession calleed with disabled product: ' + item.slug);
           }
           return {

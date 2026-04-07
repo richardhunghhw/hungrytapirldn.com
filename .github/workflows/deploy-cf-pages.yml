@@ -1,5 +1,6 @@
 name: Deploy to Cloudflare Pages
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -82,5 +83,5 @@ jobs:
         with:
           apiToken: '${{ env.CLOUDFLARE_API_TOKEN }}'
           accountId: '${{ env.CLOUDFLARE_ACCOUNT_ID }}'
-          command: pages deploy public --project-name=hungrytapir-store --compatibility-date=2024-09-23 --compatibility-flags=nodejs_compat --compatibility-flags=streams_enable_constructors
+          command: pages deploy public --project-name=hungrytapir-store
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}

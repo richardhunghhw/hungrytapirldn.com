@@ -1,4 +1,5 @@
 import { type LoaderFunctionArgs, redirect } from '@remix-run/cloudflare';
+import * as Sentry from '@sentry/remix';
 import type { UIMatch } from '@remix-run/react';
 import { Outlet, useMatches } from '@remix-run/react';
 import type { ContentStoreGeneralEntry } from '~/server/entities/content';
@@ -16,12 +17,12 @@ export async function loader({ request: { url: requestUrl }, context }: LoaderFu
     }
     const result = await context.services.content.getGeneral(urlPath[0]);
     if (!result) {
-      // todo sentry error
       throw new Error('Entry not found');
     }
     return result;
   } catch (error) {
-    console.error(error); // TODO badlink
+    console.error(error);
+    Sentry.captureException(error);
     if (isProd(context)) return redirect('/404');
   }
   return null;

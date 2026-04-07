@@ -1,3 +1,4 @@
+import 'regenerator-runtime/runtime';
 import { createPagesFunctionHandler, type createRequestHandler } from '@remix-run/cloudflare-pages';
 import * as Sentry from '@sentry/remix';
 import { getClientIPAddress } from 'remix-utils/get-client-ip-address';
@@ -120,6 +121,7 @@ export const onRequest: PagesFunction<HTEnv> = async (context) => {
     // Return response
     return response;
   } catch (error) {
+    console.error(error);
     Sentry.captureException(error);
     throw error;
   }

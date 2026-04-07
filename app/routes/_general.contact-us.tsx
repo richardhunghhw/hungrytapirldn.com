@@ -3,6 +3,7 @@
  */
 import type { LoaderFunctionArgs } from '@remix-run/cloudflare';
 import { redirect } from '@remix-run/cloudflare';
+import * as Sentry from '@sentry/remix';
 import { useLoaderData } from '@remix-run/react';
 import type { MetaArgs } from '@remix-run/react';
 
@@ -25,7 +26,8 @@ export async function loader({ context }: LoaderFunctionArgs) {
   try {
     return context.services.content.getGeneralEntry('contact-us');
   } catch (error) {
-    console.error(error); // TODO Sentry badlink
+    console.error(error);
+    Sentry.captureException(error);
     if (isProd(context)) return redirect('/404');
     else return {};
   }

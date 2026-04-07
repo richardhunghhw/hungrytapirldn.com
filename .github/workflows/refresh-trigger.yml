@@ -15,15 +15,17 @@ jobs:
       - name: Set env based on schedule time / source branch
         run: |
           echo "REFRESH_PURGE=${{ vars.REFRESH_PURGE }}" >> $GITHUB_ENV
-          if [ "${{ github.event.schedule == '0 5 * * 0' }}"  ]; then
-            echo "ENVIRONMENT=PROD" >> $GITHUB_ENV
-          elif [ "${{ github.event.schedule == '0 7 */2 * *' }}" ]; then
-            echo "ENVIRONMENT=TEST" >> $GITHUB_ENV
-          elif [ "${{ github.event.workflow_run.conclusion == 'success' }}" ]; then
-            echo "REFRESH_PURGE=True" >> $GITHUB_ENV
-            if [ "${{ github.ref == 'refs/heads/main' }}"  ]; then
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            if [ "${{ github.event.schedule }}" = "0 5 * * 0" ]; then
               echo "ENVIRONMENT=PROD" >> $GITHUB_ENV
-            elif [ "${{ github.ref == 'refs/heads/develop' }}"  ]; then
+            elif [ "${{ github.event.schedule }}" = "0 7 */2 * *" ]; then
+              echo "ENVIRONMENT=TEST" >> $GITHUB_ENV
+            fi
+          elif [ "${{ github.event_name }}" = "workflow_run" ] && [ "${{ github.event.workflow_run.conclusion }}" = "success" ]; then
+            echo "REFRESH_PURGE=True" >> $GITHUB_ENV
+            if [ "${{ github.event.workflow_run.head_branch }}" = "main" ]; then
+              echo "ENVIRONMENT=PROD" >> $GITHUB_ENV
+            elif [ "${{ github.event.workflow_run.head_branch }}" = "develop" ]; then
               echo "ENVIRONMENT=TEST" >> $GITHUB_ENV
             fi
           fi
@@ -52,10 +54,10 @@ jobs:
 
       - name: Set URL
         run: |
-          if [ "${{ env.REFRESH_PURGE == 'True' }}" ]; then
-            echo "URL=${{ env.HOST }}/api/refresh-content?purge=true" >> $GITHUB_ENV
+          if [ "$REFRESH_PURGE" = "True" ]; then
+            echo "URL=$HOST/api/refresh-content?purge=true" >> $GITHUB_ENV
           else
-            echo "URL=${{ env.HOST }}/api/refresh-content" >> $GITHUB_ENV
+            echo "URL=$HOST/api/refresh-content" >> $GITHUB_ENV
           fi
 
       - name: Post request on Refresh Content API

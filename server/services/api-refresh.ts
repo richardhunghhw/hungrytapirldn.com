@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/remix';
 import { allContentTypes, type ContentStoreEntry, type ContentType, type EntryMetadata } from '../entities/content';
 import type { FullPageResponse } from '../entities/notion';
 import type { Image } from './image';
@@ -200,7 +201,7 @@ export class ApiRefresh {
         csEntries.push(this.#makeContentStoreEntry(type, entry));
       } catch (err) {
         console.error(`Failed to create CS entry for [${type}], ${JSON.stringify(entry)}`, err);
-        // TODO sentry error
+        Sentry.captureException(err);
         throw new Error(`Failed to create CS entry for [${type}], ${JSON.stringify(entry)}`);
       }
     });
@@ -210,7 +211,7 @@ export class ApiRefresh {
     for (const entry of csEntries) {
       await this.#replaceNotionImageUrls(replaceImages, entry).catch((err) => {
         console.error(`Failed to upload images for type [${type}]`, err);
-        // TODO sentry error
+        Sentry.captureException(err);
         throw new Error(`Failed to upload images for type [${type}]`);
       });
     }
@@ -221,7 +222,7 @@ export class ApiRefresh {
       await this.#contentKv.listKeys(type).then(async (keys) => {
         await this.#contentKv.purgeEntries(type, keys).catch((err) => {
           console.error(`Failed to purge cache for type [${type}]`, err);
-          // TODO sentry error
+          Sentry.captureException(err);
           throw new Error(`Failed to purge cache for type [${type}]`);
         });
       });
@@ -232,7 +233,8 @@ export class ApiRefresh {
       console.debug(`Writing entry type [${entry.type}] slug [${entry.slug}]`);
       await this.#contentKv.putEntry(type, entry.metadata.slug, entry.metadata, entry.data).catch((err) => {
         console.error(`Failed to write entries for [${type}]`, err);
-        // TODO sentry error
+        Sentry.captureException(err);
+        throw new Error(`Failed to write entries for [${type}]`);
       });
     }
   }

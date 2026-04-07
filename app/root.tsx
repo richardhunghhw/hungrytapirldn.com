@@ -88,6 +88,7 @@ export async function action({
   } else if (action === 'update') {
     cart.updateCart({ slug: slug, quantity: quantity });
   } else {
+    console.error(`Invalid cart action: ${action} for slug: ${slug} and quantity: ${quantity}`);
     Sentry.captureException(`Invalid cart action: ${action} for slug: ${slug} and quantity: ${quantity}`);
   }
 

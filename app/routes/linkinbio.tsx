@@ -54,6 +54,7 @@ export async function loader({
     try {
       location = await content.getGeneralEntry('location~' + stalldate.data.location);
     } catch (e) {
+      console.error(e);
       Sentry.captureException(e);
     }
   }

@@ -91,6 +91,7 @@ const CartInformation = ({ products, cart }: { products: ContentStoreProductEntr
           const product = products.find((product) => product.slug === cartItem.slug);
 
           if (!product) {
+            console.error(`CartItem not found in Products: ${cartItem.slug}`);
             Sentry.captureException(`CartItem not found in Products: ${cartItem.slug}`);
             return null;
           }
