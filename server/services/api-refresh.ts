@@ -8,11 +8,11 @@ import { blockToMarkdown, blocksToMarkdown } from '~/server/utils/notion-block-t
 
 export class ApiRefresh {
   #isProd: boolean;
-  #notion: Notion;
+  #notion: Notion | null;
   #contentKv: ContentKv;
   #image: Image;
 
-  constructor(isProd: boolean, image: Image, contentKv: ContentKv, notion: Notion) {
+  constructor(isProd: boolean, image: Image, contentKv: ContentKv, notion: Notion | null) {
     this.#isProd = isProd;
     this.#notion = notion;
     this.#contentKv = contentKv;
@@ -178,6 +178,10 @@ export class ApiRefresh {
    * @returns
    */
   async refreshEntries(type: ContentType, purge: boolean = false, replaceImages: boolean = false): Promise<undefined> {
+    if (!this.#notion) {
+      console.info(`ApiRefresh: USE_LOCAL_CONTENT is active — skipping Notion refresh for [${type}]`);
+      return;
+    }
     // Fetch a list of entries (keys, metadata only) from Notion
     console.debug(`Querying notion db for type [${type}]`);
     const databaseEntries = await this.#notion.queryDbByType(type);

@@ -4,6 +4,7 @@ import type { ApiAuth } from '~/server/services/api-auth';
 import type { Content } from '~/server/services/content';
 import type { Stripe } from '~/server/services/stripe';
 import type { ContentKv } from '~/server/repositories/content-kv';
+import type { LocalContent } from '~/server/repositories/local-content';
 import type { ApiRefresh } from '~/server/services/api-refresh';
 
 export type HTEnv = {
@@ -18,8 +19,8 @@ export type HTEnv = {
   readonly BASIC_AUTH_USERNAME: string;
   readonly BASIC_AUTH_PASSWORD: string;
 
-  /** KV namespaces */
-  readonly CONTENT_STORE: KVNamespace;
+  /** KV namespaces — CONTENT_STORE is optional when USE_LOCAL_CONTENT=true */
+  readonly CONTENT_STORE?: KVNamespace;
   readonly SESSION_STORE: KVNamespace;
 
   /** Store Config Worker */
@@ -33,15 +34,17 @@ export type HTEnv = {
   readonly STRIPE_PUBLIC_KEY: string;
   readonly STRIPE_SECRET_KEY: string;
 
-  /** Notion */
-  readonly CACHE_TTL_DAYS: number;
-  readonly NOTION_API_SECRET: string;
+  /** Feature flag: serve content from bundled JSON instead of KV + Notion */
+  readonly USE_LOCAL_CONTENT?: boolean;
 
-  readonly NOTION_API_DB_GENERAL: string;
-  readonly NOTION_API_DB_BLOG: string;
-  readonly NOTION_API_DB_FAQ: string;
-  readonly NOTION_API_DB_PRODUCT: string;
-  readonly NOTION_API_DB_STALLDATE: string;
+  /** Notion — optional when USE_LOCAL_CONTENT=true */
+  readonly CACHE_TTL_DAYS?: number;
+  readonly NOTION_API_SECRET?: string;
+  readonly NOTION_API_DB_GENERAL?: string;
+  readonly NOTION_API_DB_BLOG?: string;
+  readonly NOTION_API_DB_FAQ?: string;
+  readonly NOTION_API_DB_PRODUCT?: string;
+  readonly NOTION_API_DB_STALLDATE?: string;
 
   /** ImageKit */
   readonly IMAGEKIT_PUBLIC_KEY: string;
@@ -57,8 +60,8 @@ export type HTEnv = {
 };
 
 export type HTRepos = {
-  notion: Notion;
-  contentKv: ContentKv;
+  notion: Notion | null;
+  contentKv: ContentKv | LocalContent;
 };
 
 export type HTServices = {

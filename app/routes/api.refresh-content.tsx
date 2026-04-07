@@ -13,6 +13,15 @@ export async function action({ context, request }: ActionFunctionArgs) {
     );
   } else {
     console.info('Recieved authenticated request for api/refresh-content');
+
+    if (context.env.USE_LOCAL_CONTENT) {
+      console.info('api/refresh-content: USE_LOCAL_CONTENT=true, skipping Notion refresh');
+      return new Response(JSON.stringify({ message: 'Notion refresh disabled (USE_LOCAL_CONTENT=true)' }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
     const { searchParams } = new URL(request.url);
     const purgeCache = searchParams.get('purge') == 'true';
     const purgeTypes = searchParams.get('types') ? searchParams.get('types')?.split(',') : [];

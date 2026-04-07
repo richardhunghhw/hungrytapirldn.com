@@ -7,12 +7,12 @@ import {
   type ContentStoreProductEntry,
   type ContentStoreStallDateEntry,
 } from '~/server/entities/content';
-import type { ContentKv } from '~/server/repositories/content-kv';
+import type { IContentRepository } from '~/server/repositories/content-repository';
 
 export class Content {
-  #contentKv: ContentKv;
+  #contentKv: IContentRepository;
 
-  constructor(contentKv: ContentKv) {
+  constructor(contentKv: IContentRepository) {
     this.#contentKv = contentKv;
   }
 
