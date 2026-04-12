@@ -7,8 +7,9 @@
  */
 import * as Sentry from '@sentry/remix';
 import type { BaseEntry, ContentStoreEntry, ContentType, EntryMetadata } from '../entities/content';
+import type { IContentRepository } from './content-repository';
 
-export class ContentKv {
+export class ContentKv implements IContentRepository {
   kv: KVNamespace;
   cacheTtlDays: number = 14;
 

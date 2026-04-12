@@ -9,6 +9,7 @@ import type { HTEnv } from 'types/ht-context';
 import type { CartFlashData, CartSessionData } from '~/server/entities/cart';
 import { allContentTypes } from '~/server/entities/content';
 import { ContentKv } from '~/server/repositories/content-kv';
+import { LocalContent } from '~/server/repositories/local-content';
 import { Notion, type TypeToDbMap } from '~/server/repositories/notion';
 import { SessionKv } from '~/server/repositories/session-kv';
 import { Cart } from '~/server/services/cart';
@@ -50,18 +51,27 @@ export const onRequest: PagesFunction<HTEnv> = async (context) => {
 
     const env = EnvSchema.parse(context.env);
 
-    // Initialize repositories
-    const contentKv = new ContentKv(env.CONTENT_STORE, env.CACHE_TTL_DAYS);
+    // Initialize repositories — switch between KV-backed and local static content
+    const useLocalContent = env.USE_LOCAL_CONTENT;
+
+    const contentRepo = useLocalContent
+      ? new LocalContent()
+      : new ContentKv(env.CONTENT_STORE!, env.CACHE_TTL_DAYS!);
+
+    const notionRepo = useLocalContent
+      ? null
+      : new Notion(
+          env.NODE_ENV,
+          env.NOTION_API_SECRET!,
+          allContentTypes().reduce(
+            (acc, type) => ((acc[type] = env[`NOTION_API_DB_${type.toUpperCase()}` as keyof HTEnv] as string), acc),
+            {} as TypeToDbMap,
+          ),
+        );
+
     const repos = {
-      notion: new Notion(
-        env.NODE_ENV,
-        env.NOTION_API_SECRET,
-        allContentTypes().reduce(
-          (acc, type) => ((acc[type] = env[`NOTION_API_DB_${type.toUpperCase()}` as keyof HTEnv] as string), acc),
-          {} as TypeToDbMap,
-        ),
-      ),
-      contentKv: contentKv,
+      notion: notionRepo,
+      contentKv: contentRepo,
     };
 
     // Initialize services
@@ -81,7 +91,7 @@ export const onRequest: PagesFunction<HTEnv> = async (context) => {
     const image = new Image(new ImageKit(env.IMAGEKIT_PRIVATE_KEY, env.IMAGEKIT_PUBLIC_KEY));
 
     // Content Store
-    const content = new Content(contentKv);
+    const content = new Content(contentRepo);
 
     // Combine services
     const services = {
@@ -98,7 +108,7 @@ export const onRequest: PagesFunction<HTEnv> = async (context) => {
         content,
       ),
       content,
-      apiRefresh: new ApiRefresh(env.NODE_ENV === 'PROD', image, repos.contentKv, repos.notion),
+      apiRefresh: new ApiRefresh(env.NODE_ENV === 'PROD', image, repos.contentKv as ContentKv, notionRepo),
       dispatcher: new ConversionDispatcher(env.NODE_ENV === 'DEV', env.CONVERSION_DISPATCHER_QUEUE, cart, content),
     };
 
