@@ -1,19 +1,18 @@
 /**
- * One-time export script: dumps all content from Cloudflare KV into
+ * Run locally to dump all content from Cloudflare KV into
  * server/content/{type}.json files for use with USE_LOCAL_CONTENT=true.
  *
  * Prerequisites:
- *   wrangler login (or CLOUDFLARE_API_TOKEN set)
+ *   npx wrangler login   (or set CLOUDFLARE_API_TOKEN in your shell)
  *
  * Usage:
- *   # Export from TEST KV (default)
  *   npx tsx scripts/export-content.ts
+ *   npx tsx scripts/export-content.ts --namespace-id <id>   # explicit KV namespace
  *
- *   # Export from PROD KV
- *   npx tsx scripts/export-content.ts --env production
- *
- * The script reads CONTENT_STORE KV namespace ID from wrangler.toml or
- * accepts it via --namespace-id flag.
+ * After running:
+ *   1. Review server/content/*.json
+ *   2. git add server/content/*.json && git commit
+ *   3. Set USE_LOCAL_CONTENT=true in Cloudflare Pages env vars (TEST first)
  */
 
 import { execSync } from 'child_process';
