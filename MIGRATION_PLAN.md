@@ -272,7 +272,8 @@ Feature branch → develop (TEST) → validate → main (PROD)
 
 **Tasks:**
 - [ ] Audit bundle with `wrangler pages functions build --outdir=dist` + analyse output size
-- [ ] Evaluate removing `imagekitio-react` in favour of plain `<img>` with CDN URL construction (already done via `CdnImage` component)
+- [x] Replace `imagekitio-react` with a custom `IKImage` component (`app/components/ik-image.tsx`) — package shipped Babel-compiled async generators requiring `regeneratorRuntime`, causing a crash on every page load
+- [ ] Re-implement LQIP (low-quality image placeholder) in `IKImage` — was dropped as part of the crash fix; use a blurred low-res ImageKit URL as a CSS background then crossfade to the full image on load
 - [ ] Remove `@notionhq/client` from the bundle when `USE_LOCAL_CONTENT=true` — ensure it's only imported inside server-only modules that are not bundled when the flag is off
 - [ ] Remove unused Radix UI imports (import only the specific `@radix-ui/react-*` packages in use)
 - [ ] Review `dompurify` — use `isomorphic-dompurify` or server-only import to avoid bundling browser polyfills

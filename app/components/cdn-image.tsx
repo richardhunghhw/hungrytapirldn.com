@@ -1,4 +1,4 @@
-import { IKImage } from 'imagekitio-react';
+import { IKImage } from '~/components/ik-image';
 
 const IMAGEKIT_URL_ENDPOINT = 'https://ik.imagekit.io/nixibbzora/';
 
