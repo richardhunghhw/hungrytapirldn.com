@@ -83,5 +83,5 @@ jobs:
         with:
           apiToken: '${{ env.CLOUDFLARE_API_TOKEN }}'
           accountId: '${{ env.CLOUDFLARE_ACCOUNT_ID }}'
-          command: pages deploy public --project-name=hungrytapir-store --compatibility-flags=nodejs_compat
+          command: pages deploy public --project-name=hungrytapir-store
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
